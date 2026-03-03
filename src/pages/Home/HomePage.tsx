@@ -89,7 +89,7 @@ const HeroSection = () => {
                         />
                         <div className="hero-image-gradient"></div>
                         <div className="hero-lms-badge">
-                            <span className="lms-title">AGORA LMS ENGINE.</span>
+                            <span className="lms-title">TUTORA LMS ENGINE.</span>
                             <span className="lms-subtitle">Theo dõi tiến độ học thuật thời gian thực.</span>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ const StatisticsSection = () => {
     const stats = [
         { value: "500+", label: "Gia sư Elite", sublabel: "Tuyển chọn Top 5%" },
         { value: "98%", label: "Ivy Target", sublabel: "Tỉ lệ đạt mục tiêu" },
-        { value: "12K+", label: "Giờ giảng", sublabel: "Mỗi tháng tại Agora" },
+        { value: "12K+", label: "Giờ giảng", sublabel: "Mỗi tháng tại TUTORA" },
         { value: "24/7", label: "LMS Support", sublabel: "Báo cáo thông minh" },
     ];
 
@@ -191,7 +191,7 @@ const FeaturesSection = () => {
                 </h2>
 
                 <p className="features-description">
-                    AGORA tìm kiếm những chuyên gia có tâm và có tầm. Chúng tôi mang đến cho bạn nền tảng công nghệ mạnh mẽ và cộng đồng học viên tiềm năng nhất.
+                    TUTORA tìm kiếm những chuyên gia có tâm và có tầm. Chúng tôi mang đến cho bạn nền tảng công nghệ mạnh mẽ và cộng đồng học viên tiềm năng nhất.
                 </p>
 
                 <ul className="benefits-list">
@@ -215,19 +215,19 @@ const FeaturesSection = () => {
 const TestimonialsSection = () => {
     const testimonials = [
         {
-            quote: "Quy trình kiểm định gia sư của Agora cực kỳ chuyên nghiệp. Con tôi không chỉ học giỏi hơn mà còn tự tin hơn trong việc tư duy logic.",
+            quote: "Quy trình kiểm định gia sư của TUTORA cực kỳ chuyên nghiệp. Con tôi không chỉ học giỏi hơn mà còn tự tin hơn trong việc tư duy logic.",
             name: "Trần Minh Anh",
             role: "Parent of IB Student",
             initial: "T",
         },
         {
-            quote: "LMS của Agora giúp tôi tiết kiệm 70% thời gian quản lý hồ sơ học viên. Tôi có thể tập trung hoàn toàn vào việc giảng dạy đỉnh cao.",
+            quote: "LMS của TUTORA giúp tôi tiết kiệm 70% thời gian quản lý hồ sơ học viên. Tôi có thể tập trung hoàn toàn vào việc giảng dạy đỉnh cao.",
             name: "David Nguyen",
             role: "Elite Tutor (CS)",
             initial: "D",
         },
         {
-            quote: "Agora không chỉ là gia sư, họ là người cố vấn lộ trình. Nhờ sự hướng dẫn sát sao, tôi đã chinh phục được ước mơ du học.",
+            quote: "TUTORA không chỉ là gia sư, họ là người cố vấn lộ trình. Nhờ sự hướng dẫn sát sao, tôi đã chinh phục được ước mơ du học.",
             name: "Lê Hoàng Nam",
             role: "Undergrad @ Stanford",
             initial: "L",
@@ -246,7 +246,7 @@ const TestimonialsSection = () => {
                         </h2>
                     </div>
                     <p className="testimonials-description">
-                        "Lắng nghe những trải nghiệm thực tế từ các học viên và gia sư đã đồng hành cùng AGORA."
+                        "Lắng nghe những trải nghiệm thực tế từ các học viên và gia sư đã đồng hành cùng TUTORA."
                     </p>
                 </div>
 

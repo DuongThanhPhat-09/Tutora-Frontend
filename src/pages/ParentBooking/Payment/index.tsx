@@ -121,7 +121,7 @@ const PaymentPage = () => {
                         <CheckCircle2 size={64} color="#059669" />
                     </div>
                     <h1>Thanh toán hoàn tất!</h1>
-                    <p>Cảm ơn bạn đã tin tưởng Agora. Buổi học của bạn đã được lên lịch.</p>
+                    <p>Cảm ơn bạn đã tin tưởng TUTORA. Buổi học của bạn đã được lên lịch.</p>
                     <div className={styles.successActions}>
                         <Button type="primary" size="large" onClick={() => navigate(`/parent/booking/${bookingId}`)}>
                             Xem chi tiết lịch học
@@ -187,7 +187,7 @@ const PaymentPage = () => {
 
                         <div className={styles.securityNote}>
                             <ShieldCheck size={16} />
-                            <p>Agora đảm bảo thanh toán an toàn. Tiền chỉ được chuyển cho gia sư sau khi buổi học hoàn thành.</p>
+                            <p>TUTORA đảm bảo thanh toán an toàn. Tiền chỉ được chuyển cho gia sư sau khi buổi học hoàn thành.</p>
                         </div>
                     </div>
                 </div>
@@ -222,7 +222,7 @@ const PaymentPage = () => {
                                         <Wallet size={24} />
                                     </div>
                                     <div className={styles.methodInfo}>
-                                        <h3>Số dư ví Agora</h3>
+                                        <h3>Số dư ví TUTORA</h3>
                                         <p>Số dư hiện tại: <strong>{formatPrice(paymentInfo?.walletBalance || 0)}</strong></p>
                                     </div>
                                 </div>

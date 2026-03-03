@@ -126,7 +126,7 @@ const Header = () => {
             <span className="logo-letter">A</span>
           </div>
           <div className="logo-text">
-            <span className="logo-name">AGORA</span>
+            <span className="logo-name">TUTORA</span>
             <span className="logo-tagline">Academic Heritage</span>
           </div>
         </Link>

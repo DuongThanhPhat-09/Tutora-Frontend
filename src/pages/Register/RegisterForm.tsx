@@ -105,7 +105,7 @@ const RegisterForm: React.FC = () => {
 
             saveUserToStorage(fullUserData);
             window.dispatchEvent(new Event("auth-change"));
-            toast.success(`Chào mừng ${formData.fullname} đến với Agora!`);
+            toast.success(`Chào mừng ${formData.fullname} đến với TUTORA!`);
             setTimeout(() => navigate("/"), 1500);
 
         } catch (error: any) {
@@ -128,7 +128,7 @@ const RegisterForm: React.FC = () => {
             {/* --- MAIN FORM --- */}
             <div className="register-form__header animate-fade-in-up">
                 <h2 className="register-form__title">Bắt đầu hành trình</h2>
-                <p className="register-form__subtitle">Tạo tài khoản Agora LMS.</p>
+                <p className="register-form__subtitle">Tạo tài khoản TUTORA LMS.</p>
             </div>
 
             <div className="register-form__body">

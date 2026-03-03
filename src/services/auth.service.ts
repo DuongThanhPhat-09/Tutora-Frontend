@@ -3,7 +3,7 @@
 import axios from "axios";
 
 const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5166') + '/api';
-const USER_LOCAL_STORAGE_KEY = "agora_user_data"; // Key để lưu thông tin user
+const USER_LOCAL_STORAGE_KEY = "TUTORA_user_data"; // Key để lưu thông tin user
 
 const api = axios.create({
   baseURL: API_BASE_URL,

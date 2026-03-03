@@ -33,7 +33,7 @@ export const ForbiddenPage: React.FC = () => (
         actionText="Về Trang Chủ"
         actionLink="/"
         secondaryActionText="Liên Hệ Hỗ Trợ"
-        secondaryActionLink="mailto:support@agora.edu"
+        secondaryActionLink="mailto:support@TUTORA.edu"
     />
 );
 

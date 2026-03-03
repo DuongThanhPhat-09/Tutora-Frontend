@@ -111,13 +111,13 @@ const AdminFinancialsPage = () => {
                                     <div className="admin-stat-icon admin-stat-icon-green">
                                         <span className="material-symbols-outlined">payments</span>
                                     </div>
-                                    <span className="admin-stat-badge bg-agora-green-5 text-agora-green">
+                                    <span className="admin-stat-badge bg-TUTORA-green-5 text-TUTORA-green">
                                         +{metrics?.revenuegrowth || 0}%
                                     </span>
                                 </div>
                                 <div className="admin-stat-content">
                                     <p className="admin-stat-label">Doanh thu nền tảng (30 ngày)</p>
-                                    <p className="admin-stat-value text-agora-green" style={{ marginTop: '4px' }}>
+                                    <p className="admin-stat-value text-TUTORA-green" style={{ marginTop: '4px' }}>
                                         {loading ? '...' : formatCompactNumber(metrics?.monthlyrevenue || 0)}
                                     </p>
                                 </div>
@@ -157,7 +157,7 @@ const AdminFinancialsPage = () => {
                             <div className="admin-stat-card" style={{ borderColor: 'rgba(212, 180, 131, 0.4)' }}>
                                 <div className="withdrawal-card-decoration"></div>
                                 <div className="admin-stat-header" style={{ position: 'relative', zIndex: 10 }}>
-                                    <div className="admin-stat-icon bg-agora-gold-20 text-amber-700">
+                                    <div className="admin-stat-icon bg-TUTORA-gold-20 text-amber-700">
                                         <span className="material-symbols-outlined">priority_high</span>
                                     </div>
                                     <span className="admin-stat-badge bg-amber-50 text-amber-700">

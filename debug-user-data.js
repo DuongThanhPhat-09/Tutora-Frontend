@@ -1,7 +1,7 @@
 // Debug helper - paste this in browser console to check user data structure
 // Usage: Open browser console (F12) and paste this code
 
-const userData = localStorage.getItem('agora_user_data');
+const userData = localStorage.getItem('TUTORA_user_data');
 if (userData) {
     const user = JSON.parse(userData);
     console.log('=== USER DATA STRUCTURE ===');

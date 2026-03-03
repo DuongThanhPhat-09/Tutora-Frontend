@@ -98,11 +98,11 @@ const HeroSection = ({ profile }: { profile: TutorFullProfile }) => {
                     <b className="click-to-view">Click để xem phỏng vấn học thuật</b>
                 </div>
 
-                {/* Agora Badge */}
-                <div className="agora-badge-container">
-                    <div className="agora-badge">
-                        <div className="agora-badge-dot"></div>
-                        <b className="agora-badge-text">Agora Original Interview</b>
+                {/* TUTORA Badge */}
+                <div className="TUTORA-badge-container">
+                    <div className="TUTORA-badge">
+                        <div className="TUTORA-badge-dot"></div>
+                        <b className="TUTORA-badge-text">TUTORA Original Interview</b>
                     </div>
                 </div>
 
@@ -188,7 +188,7 @@ const AcademicPortfolioSection = ({ certificates }: { certificates: CertificateI
         <div className="portfolio-header">
             <div className="portfolio-title-group">
                 <h2 className="section-title">Hồ sơ năng lực học thuật</h2>
-                <span className="portfolio-subtitle">Hệ thống Agora Academic Ledger v2.4</span>
+                <span className="portfolio-subtitle">Hệ thống TUTORA Academic Ledger v2.4</span>
             </div>
             <div className="verified-badge-green">
                 <b>Xác thực 100%</b>
@@ -232,7 +232,7 @@ const AcademicPortfolioSection = ({ certificates }: { certificates: CertificateI
             <div className="portfolio-footer">
                 <div className="portfolio-note">
                     <div className="note-dot green"></div>
-                    <b>Hồ sơ gốc lưu trữ bởi Agora</b>
+                    <b>Hồ sơ gốc lưu trữ bởi TUTORA</b>
                 </div>
                 <div className="portfolio-note">
                     <div className="note-dot green"></div>
@@ -397,7 +397,7 @@ const TestimonialsSection = ({ feedbacks, totalFeedbacks, tutorId }: {
                                 </div>
                                 <div className="container92">
                                     <div className="border2">
-                                        <b className="xc-thc-bi">Xác thực bởi Agora LMS</b>
+                                        <b className="xc-thc-bi">Xác thực bởi TUTORA LMS</b>
                                     </div>
                                     {('courseDuration' in testimonial && (testimonial as any).courseDuration) && (
                                         <div className="border2">
@@ -580,7 +580,7 @@ const BookingSidebar = ({
             <div className="verification-note">
                 <div className="note-header">
                     <VerifyIcon />
-                    <b>Đã xác minh bởi Agora Council</b>
+                    <b>Đã xác minh bởi TUTORA Council</b>
                 </div>
                 <i className="note-text">Hoàn học phí nếu không hài lòng sau buổi học đầu tiên.</i>
             </div>

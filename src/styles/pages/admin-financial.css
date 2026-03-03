@@ -6,15 +6,15 @@
 /* KPI Cards Specifics */
 .admin-stat-icon-green {
     background-color: rgba(61, 74, 62, 0.1);
-    /* agora-green/10 */
+    /* TUTORA-green/10 */
     color: var(--color-green);
 }
 
-.bg-agora-green-5 {
+.bg-TUTORA-green-5 {
     background-color: rgba(61, 74, 62, 0.05);
 }
 
-.text-agora-green {
+.text-TUTORA-green {
     color: var(--color-green);
 }
 
@@ -26,11 +26,11 @@
     background-color: #fffbeb;
 }
 
-.bg-agora-gold-20 {
+.bg-TUTORA-gold-20 {
     background-color: rgba(212, 180, 131, 0.2);
 }
 
-.bg-agora-gold-10 {
+.bg-TUTORA-gold-10 {
     background-color: rgba(212, 180, 131, 0.1);
 }
 
@@ -102,7 +102,7 @@
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-soft);
     border: 1px solid rgba(27, 34, 56, 0.05);
-    /* agora-navy/5 */
+    /* TUTORA-navy/5 */
     overflow: hidden;
     margin-bottom: 24px;
 }

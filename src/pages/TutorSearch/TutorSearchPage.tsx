@@ -313,7 +313,7 @@ const SearchHero = ({ searchTerm, onSearchTermChange, onSearch, onTrendingClick 
                         <span className="highlight">khai phá tri thức</span> gì?
                     </h1>
                     <p className="search-hero-subtitle">
-                        Kể cho Agora nghe về mục tiêu học tập của bạn, chúng tôi sẽ tìm người đồng<br />
+                        Kể cho TUTORA nghe về mục tiêu học tập của bạn, chúng tôi sẽ tìm người đồng<br />
                         hành phù hợp nhất.
                     </p>
                 </div>
@@ -616,7 +616,7 @@ const ResultsSection = ({ tutors, loading, error, totalCount, hasNext, onLoadMor
             <section className="results-section">
                 <div className="results-header">
                     <div className="results-header-left">
-                        <span className="results-label">Agora Selection</span>
+                        <span className="results-label">TUTORA Selection</span>
                         <h2 className="results-title">Đang tải...</h2>
                     </div>
                 </div>
@@ -629,7 +629,7 @@ const ResultsSection = ({ tutors, loading, error, totalCount, hasNext, onLoadMor
             <section className="results-section">
                 <div className="results-header">
                     <div className="results-header-left">
-                        <span className="results-label">Agora Selection</span>
+                        <span className="results-label">TUTORA Selection</span>
                         <h2 className="results-title" style={{ color: '#ef4444' }}>{error}</h2>
                     </div>
                 </div>
@@ -641,7 +641,7 @@ const ResultsSection = ({ tutors, loading, error, totalCount, hasNext, onLoadMor
         <section className="results-section">
             <div className="results-header">
                 <div className="results-header-left">
-                    <span className="results-label">Agora Selection</span>
+                    <span className="results-label">TUTORA Selection</span>
                     <h2 className="results-title">Chuyên gia đang online</h2>
                 </div>
                 <span className="results-count">{totalCount} Kết quả tìm thấy</span>

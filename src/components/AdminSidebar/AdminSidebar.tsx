@@ -4,7 +4,7 @@ import { clearUserFromStorage } from '../../services/auth.service';
 import '../../styles/layouts/admin-layout.css';
 import { toast } from 'react-toastify';
 
-// Logo Icon (Agora symbol) - same as TutorPortal/ParentLayout
+// Logo Icon (TUTORA symbol) - same as TutorPortal/ParentLayout
 const LogoIcon = () => (
     <svg className="admin-logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="currentColor">
         <path d="M14 2L2 8V20L14 26L26 20V8L14 2ZM14 4.5L22.5 9V19L14 23.5L5.5 19V9L14 4.5Z" />
@@ -25,7 +25,7 @@ const AdminSidebar = () => {
                 <div className="admin-sidebar-header">
                     <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10.5px', textDecoration: 'none', color: 'inherit' }}>
                         <LogoIcon />
-                        <h1 className="admin-logo">AGORA</h1>
+                        <h1 className="admin-logo">TUTORA</h1>
                     </Link>
                 </div>
 

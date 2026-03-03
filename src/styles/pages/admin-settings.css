@@ -633,7 +633,7 @@
     font-size: 18px;
     font-weight: 700;
     color: #991b1b;
-    /* agora-crimson */
+    /* TUTORA-crimson */
     font-family: var(--font-serif);
     margin: 0;
 }
@@ -693,7 +693,7 @@
     border: none;
     cursor: pointer;
     box-shadow: 0 10px 15px -3px rgba(26, 34, 56, 0.2);
-    /* shadow-agora-navy/20 approx */
+    /* shadow-TUTORA-navy/20 approx */
     transition: all 0.2s ease;
     display: flex;
     align-items: center;

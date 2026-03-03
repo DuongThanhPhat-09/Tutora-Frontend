@@ -32,7 +32,7 @@ const Footer = () => {
                             <div className="footer-logo-icon">
                                 <span>A</span>
                             </div>
-                            <span className="footer-logo-text">AGORA.</span>
+                            <span className="footer-logo-text">TUTORA.</span>
                         </div>
                         <p className="footer-tagline">
                             "Elevating educational standards through verified elite expertise."
@@ -70,7 +70,7 @@ const Footer = () => {
 
                 {/* Footer Bottom */}
                 <div className="footer-bottom">
-                    <span className="copyright">© 2024 AGORA ACADEMIC SYSTEM. ALL RIGHTS RESERVED.</span>
+                    <span className="copyright">© 2024 TUTORA ACADEMIC SYSTEM. ALL RIGHTS RESERVED.</span>
                     <div className="footer-legal">
                         <a href="#">Privacy</a>
                         <a href="#">Terms</a>

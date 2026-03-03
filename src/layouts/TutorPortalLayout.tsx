@@ -8,7 +8,7 @@ import NotificationDropdown from '../components/NotificationDropdown/Notificatio
 import { getUserInfoFromToken, clearUserFromStorage } from '../services/auth.service';
 import { toast } from 'react-toastify';
 
-// Logo Icon (Agora symbol)
+// Logo Icon (TUTORA symbol)
 const LogoIcon = () => (
     <svg className="tutor-portal-logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="currentColor">
         <path d="M14 2L2 8V20L14 26L26 20V8L14 2ZM14 4.5L22.5 9V19L14 23.5L5.5 19V9L14 4.5Z" />
@@ -240,7 +240,7 @@ const TutorPortalLayout: React.FC = () => {
                 <div className="tutor-portal-sidebar-logo">
                     <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', color: 'inherit' }}>
                         <LogoIcon />
-                        <span className="tutor-portal-logo-text">AGORA</span>
+                        <span className="tutor-portal-logo-text">TUTORA</span>
                     </Link>
                     {/* Mobile Close Button */}
                     <button

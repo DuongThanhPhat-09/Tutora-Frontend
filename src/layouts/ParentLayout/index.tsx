@@ -11,7 +11,7 @@ import { getNextLesson } from '../../services/lesson.service';
 import type { LessonResponse } from '../../services/lesson.service';
 import { StudentProvider, useStudentContext } from '../../contexts/StudentContext';
 
-// Logo Icon (Agora symbol) - same as TutorPortalLayout
+// Logo Icon (TUTORA symbol) - same as TutorPortalLayout
 const LogoIcon = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="currentColor">
     <path d="M14 2L2 8V20L14 26L26 20V8L14 2ZM14 4.5L22.5 9V19L14 23.5L5.5 19V9L14 4.5Z" />
@@ -288,7 +288,7 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
         <div className={styles.sidebarLogo}>
           <Link to="/" className={styles.logoLink}>
             <LogoIcon />
-            <span className={styles.logoText}>AGORA</span>
+            <span className={styles.logoText}>TUTORA</span>
           </Link>
           {/* Mobile Close Button */}
           <button

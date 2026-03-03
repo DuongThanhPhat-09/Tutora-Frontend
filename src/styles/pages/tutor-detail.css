@@ -106,15 +106,15 @@
     color: rgba(255, 255, 255, 0.6);
 }
 
-/* Agora Badge */
-.tutor-detail-page .agora-badge-container {
+/* TUTORA Badge */
+.tutor-detail-page .TUTORA-badge-container {
     position: absolute;
     top: 29px;
     left: 29px;
     z-index: 3;
 }
 
-.tutor-detail-page .agora-badge {
+.tutor-detail-page .TUTORA-badge {
     backdrop-filter: blur(12px);
     border-radius: 10.5px;
     background-color: rgba(26, 34, 56, 0.8);
@@ -125,14 +125,14 @@
     gap: 7px;
 }
 
-.tutor-detail-page .agora-badge-dot {
+.tutor-detail-page .TUTORA-badge-dot {
     width: 7px;
     height: 7px;
     border-radius: 9999px;
     background-color: var(--color-gold);
 }
 
-.tutor-detail-page .agora-badge-text {
+.tutor-detail-page .TUTORA-badge-text {
     font-size: 9px;
     letter-spacing: 0.9px;
     line-height: 13.5px;

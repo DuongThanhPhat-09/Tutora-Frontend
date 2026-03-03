@@ -54,7 +54,7 @@ const BankInfoManagementPage: React.FC = () => {
                     style={{ marginBottom: '16px' }}
                 />
                 <Title level={2}>Tài khoản ngân hàng</Title>
-                <Text type="secondary">Cài đặt tài khoản ngân hàng để nhận thu nhập từ Agora</Text>
+                <Text type="secondary">Cài đặt tài khoản ngân hàng để nhận thu nhập từ TUTORA</Text>
             </div>
 
             <div style={{ maxWidth: '800px' }}>

@@ -222,11 +222,11 @@ const HeroSection: React.FC<{ data: TutorProfileFormData; onPlayVideo: () => voi
                     </div>
                 )}
 
-                {/* Agora Badge */}
-                <div className="agora-badge-container">
-                    <div className="agora-badge">
-                        <div className="agora-badge-dot"></div>
-                        <b className="agora-badge-text">Agora Original Interview</b>
+                {/* TUTORA Badge */}
+                <div className="TUTORA-badge-container">
+                    <div className="TUTORA-badge">
+                        <div className="TUTORA-badge-dot"></div>
+                        <b className="TUTORA-badge-text">TUTORA Original Interview</b>
                     </div>
                 </div>
 
@@ -398,7 +398,7 @@ const AcademicPortfolioSection: React.FC<{ data: TutorProfileFormData }> = ({ da
                 <div className="portfolio-header">
                     <div className="portfolio-title-group">
                         <h2 className="section-title">Hồ sơ năng lực học thuật</h2>
-                        <span className="portfolio-subtitle">Hệ thống Agora Academic Ledger</span>
+                        <span className="portfolio-subtitle">Hệ thống TUTORA Academic Ledger</span>
                     </div>
                 </div>
                 <div className="portfolio-content">
@@ -420,7 +420,7 @@ const AcademicPortfolioSection: React.FC<{ data: TutorProfileFormData }> = ({ da
             <div className="portfolio-header">
                 <div className="portfolio-title-group">
                     <h2 className="section-title">Hồ sơ năng lực học thuật</h2>
-                    <span className="portfolio-subtitle">Hệ thống Agora Academic Ledger</span>
+                    <span className="portfolio-subtitle">Hệ thống TUTORA Academic Ledger</span>
                 </div>
                 {verifiedCount > 0 && (
                     <div className="verified-badge-green">
@@ -499,7 +499,7 @@ const AcademicPortfolioSection: React.FC<{ data: TutorProfileFormData }> = ({ da
                     <div className="portfolio-footer">
                         <div className="portfolio-note">
                             <div className="note-dot green"></div>
-                            <b>Hồ sơ gốc lưu trữ bởi Agora</b>
+                            <b>Hồ sơ gốc lưu trữ bởi TUTORA</b>
                         </div>
                         <div className="portfolio-note">
                             <div className="note-dot green"></div>
@@ -532,7 +532,7 @@ const StatsSection: React.FC<{ data: TutorProfileFormData }> = ({ data }) => {
                 <h2 className="section-title">Hiệu quả đào tạo thực tế</h2>
                 <div className="stats-badge">
                     <ShieldIcon />
-                    <b>Dữ liệu xác thực từ Agora LMS</b>
+                    <b>Dữ liệu xác thực từ TUTORA LMS</b>
                 </div>
             </div>
             {hasStats ? (
@@ -571,7 +571,7 @@ const TestimonialsSection: React.FC<{ data: TutorProfileFormData }> = ({ data })
                 <h2 className="section-title">Nhật ký thành công</h2>
                 <div className="stats-badge">
                     <ShieldIcon />
-                    <b>Xác thực bởi Agora LMS</b>
+                    <b>Xác thực bởi TUTORA LMS</b>
                 </div>
             </div>
             {hasTestimonials ? (
@@ -736,7 +736,7 @@ const BookingSidebar: React.FC<{ data: TutorProfileFormData }> = ({ data }) => {
             <div className="verification-note">
                 <div className="note-header">
                     <VerifyIcon />
-                    <b>Đã xác minh bởi Agora Council</b>
+                    <b>Đã xác minh bởi TUTORA Council</b>
                 </div>
                 <i className="note-text">Hoàn học phí nếu không hài lòng sau buổi học đầu tiên.</i>
             </div>

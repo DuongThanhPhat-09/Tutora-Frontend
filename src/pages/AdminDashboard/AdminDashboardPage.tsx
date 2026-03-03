@@ -45,7 +45,7 @@ const AdminDashboardPage = () => {
                         {/* GREETING */}
                         <div className="admin-greeting">
                             <h2 className="admin-greeting-title">Chào buổi sáng, Quản trị viên</h2>
-                            <p className="admin-greeting-text">Đây là những gì đang diễn ra tại Agora hôm nay.</p>
+                            <p className="admin-greeting-text">Đây là những gì đang diễn ra tại TUTORA hôm nay.</p>
                         </div>
 
                         {/* STATS GRID */}

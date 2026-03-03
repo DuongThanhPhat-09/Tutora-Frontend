@@ -1,6 +1,6 @@
 import type { AxiosInstance } from 'axios';
 
-const USER_LOCAL_STORAGE_KEY = 'agora_user_data';
+const USER_LOCAL_STORAGE_KEY = 'TUTORA_user_data';
 
 // Flag to prevent multiple redirects
 let isRedirecting = false;

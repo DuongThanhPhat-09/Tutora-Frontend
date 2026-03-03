@@ -340,7 +340,7 @@ const PaymentModal = ({ bookingId, isOpen, onClose, onPaymentSuccess }: PaymentM
                 <div className={styles.footer}>
                     <div className={styles.secureInfo}>
                         <CheckCircle2 size={14} />
-                        <span>Thanh toán an toàn &amp; bảo mật bởi Agora</span>
+                        <span>Thanh toán an toàn &amp; bảo mật bởi TUTORA</span>
                     </div>
                 </div>
             </div>

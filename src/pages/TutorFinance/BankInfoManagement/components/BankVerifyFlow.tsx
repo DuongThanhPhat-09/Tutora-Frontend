@@ -134,7 +134,7 @@ const BankVerifyFlow: React.FC<Props> = ({ onSuccess, onCancel, status }) => {
                         description={
                             <span>
                                 Vui lòng kiểm tra biến động số dư tài khoản <strong>{status?.maskedAccountNumber || requestData.accountNumber}</strong> {status?.bankName || requestData.bankName}.
-                                Nhập 6 chữ số trong nội dung chuyển khoản (Ví dụ: AGORA <strong>123456</strong>).
+                                Nhập 6 chữ số trong nội dung chuyển khoản (Ví dụ: TUTORA <strong>123456</strong>).
                             </span>
                         }
                         type="warning"
