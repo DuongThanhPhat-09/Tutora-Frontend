@@ -96,6 +96,30 @@ export const updateParentStudent = async (id: string, payload: IUpdateParentStud
   }
 };
 
+export const generateLinkCode = async (studentId: string): Promise<ApiResponse<StudentType>> => {
+  try {
+    const response = await api.post(`/parent/students/${studentId}/link-code`, {}, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ Error generating link code:', error.response?.data);
+    throw error;
+  }
+};
+
+export const linkWithCode = async (code: string): Promise<ApiResponse<StudentType>> => {
+  try {
+    const response = await api.post(`/parent/students/link-with-code`, { code }, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ Error linking with code:', error.response?.data);
+    throw error;
+  }
+};
+
 export const getParentBookings = async (params: IGetBookingParams = { page: 1, pageSize: 10 }) => {
   try {
     const response = await api.get(`/parent/bookings`, {

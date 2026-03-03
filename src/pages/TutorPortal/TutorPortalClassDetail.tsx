@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getTutorLessons, checkInLesson, checkOutLesson, type LessonResponse } from '../../services/lesson.service';
-import { Tag } from 'antd';
-import { toast } from 'react-toastify';
+import { getTutorLessons, /* checkInLesson, checkOutLesson, */ type LessonResponse } from '../../services/lesson.service';
+import { message as antMessage, Tag } from 'antd';
 import styles from '../../styles/pages/tutor-portal-class-detail.module.css';
 import LessonReportForm from './components/LessonReportForm';
 import AttachmentUploader from './components/AttachmentUploader';
@@ -97,8 +96,8 @@ const TutorPortalClassDetail: React.FC = () => {
     // Lesson management state
     const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
     const [showReportForm, setShowReportForm] = useState(false);
-    const [checkingIn, setCheckingIn] = useState(false);
-    const [checkingOut, setCheckingOut] = useState(false);
+    // const [checkingIn, setCheckingIn] = useState(false);
+    // const [checkingOut, setCheckingOut] = useState(false);
 
     // Real data from API
     const [lessons, setLessons] = useState<LessonResponse[]>([]);
@@ -204,6 +203,8 @@ const TutorPortalClassDetail: React.FC = () => {
     };
 
     // === Lesson Management Functions ===
+    // MVP Phase 1: Ẩn Check-in/Check-out
+    /*
     const canCheckIn = (lesson: LessonResponse): boolean => {
         if (lesson.status !== 'scheduled') return false;
         const now = new Date();
@@ -237,6 +238,7 @@ const TutorPortalClassDetail: React.FC = () => {
             setCheckingOut(false);
         }
     };
+    */
 
     const handleReportSuccess = async () => {
         setShowReportForm(false);
@@ -457,7 +459,8 @@ const TutorPortalClassDetail: React.FC = () => {
                                                         </Tag>
 
                                                         {/* Action Buttons */}
-                                                        {lesson.status === 'scheduled' && canCheckIn(lesson) && (
+                                                        {/* MVP Phase 1: Ẩn tính năng Check-in */}
+                                                        {/* {lesson.status === 'scheduled' && canCheckIn(lesson) && (
                                                             <button
                                                                 onClick={(e) => { e.stopPropagation(); handleCheckIn(lesson.lessonId); }}
                                                                 disabled={checkingIn}
@@ -471,9 +474,10 @@ const TutorPortalClassDetail: React.FC = () => {
                                                             >
                                                                 {checkingIn ? 'Đang xử lý...' : 'Check-in'}
                                                             </button>
-                                                        )}
+                                                        )} */}
 
-                                                        {lesson.status === 'in_progress' && !lesson.checkOutTime && (
+                                                        {/* MVP Phase 1: Ẩn tính năng Check-out */}
+                                                        {/* {lesson.status === 'in_progress' && !lesson.checkOutTime && (
                                                             <button
                                                                 onClick={(e) => { e.stopPropagation(); handleCheckOut(lesson.lessonId); }}
                                                                 disabled={checkingOut}
@@ -487,9 +491,10 @@ const TutorPortalClassDetail: React.FC = () => {
                                                             >
                                                                 {checkingOut ? 'Đang xử lý...' : 'Check-out'}
                                                             </button>
-                                                        )}
+                                                        )} */}
 
-                                                        {lesson.status === 'in_progress' && lesson.checkOutTime && (
+                                                        {/* MVP Phase 2: Cho phép nộp báo cáo mà không cần Check-in/Check-out */}
+                                                        {(lesson.status === 'in_progress' || lesson.status === 'scheduled') && (
                                                             <button
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
@@ -581,8 +586,9 @@ const TutorPortalClassDetail: React.FC = () => {
                                                             )}
                                                         </div>
 
-                                                        {/* Report Form (shown after check-out) */}
-                                                        {showReportForm && activeLessonId === lesson.lessonId && lesson.status === 'in_progress' && lesson.checkOutTime && (
+                                                        {/* Report Form */}
+                                                        {/* MVP Phase 2: Bỏ điều kiện checkOutTime */}
+                                                        {showReportForm && activeLessonId === lesson.lessonId && (lesson.status === 'in_progress' || lesson.status === 'scheduled') && (
                                                             <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                                                 <LessonReportForm
                                                                     lessonId={lesson.lessonId}
@@ -594,6 +600,7 @@ const TutorPortalClassDetail: React.FC = () => {
                                                         )}
 
                                                         {/* Check-in hint for scheduled lessons */}
+                                                        {/* MVP Phase 1: Ẩn 
                                                         {lesson.status === 'scheduled' && !canCheckIn(lesson) && (
                                                             <div style={{
                                                                 marginTop: '16px', padding: '12px 16px',
@@ -602,7 +609,7 @@ const TutorPortalClassDetail: React.FC = () => {
                                                             }}>
                                                                 Check-in chỉ khả dụng trong vòng 15 phút trước và sau giờ bắt đầu buổi học.
                                                             </div>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 )}
                                             </div>

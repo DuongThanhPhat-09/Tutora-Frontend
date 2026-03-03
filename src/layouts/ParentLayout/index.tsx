@@ -6,10 +6,10 @@ import { getUnreadCount } from '../../services/notification.service';
 import { signalRService } from '../../services/signalr.service';
 import NotificationDropdown from '../../components/NotificationDropdown/NotificationDropdown';
 import { getUserInfoFromToken, clearUserFromStorage } from '../../services/auth.service';
-import { toast } from 'react-toastify';
 import { getNextLesson } from '../../services/lesson.service';
 import type { LessonResponse } from '../../services/lesson.service';
 import { StudentProvider, useStudentContext } from '../../contexts/StudentContext';
+import { toast } from 'react-toastify';
 
 // Logo Icon (TUTORA symbol) - same as TutorPortalLayout
 const LogoIcon = () => (
@@ -65,12 +65,13 @@ const MessagesIcon = () => (
   </svg>
 );
 
-const FinanceIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-    <path d="M2 4C2 2.89543 2.89543 2 4 2H14C15.1046 2 16 2.89543 16 4V14C16 15.1046 15.1046 16 14 16H4C2.89543 16 2 15.1046 2 14V4Z" />
-    <path d="M9 5V13M6 8H12M6 10H12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-  </svg>
-);
+// MVP Phase 12: FinanceIcon hidden (Wallet removed from sidebar)
+// const FinanceIcon = () => (
+//   <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+//     <path d="M2 4C2 2.89543 2.89543 2 4 2H14C15.1046 2 16 2.89543 16 4V14C16 15.1046 15.1046 16 14 16H4C2.89543 16 2 15.1046 2 14V4Z" />
+//     <path d="M9 5V13M6 8H12M6 10H12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+//   </svg>
+// );
 
 const BookingIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -80,10 +81,18 @@ const BookingIcon = () => (
   </svg>
 );
 
-const SettingsIcon = () => (
+// SettingsIcon removed — replaced Settings nav with logout button
+// const SettingsIcon = () => (
+//   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+//     <circle cx="9" cy="9" r="2.5" />
+//     <path d="M9 1V3M9 15V17M1 9H3M15 9H17M3.05 3.05L4.46 4.46M13.54 13.54L14.95 14.95M3.05 14.95L4.46 13.54M13.54 4.46L14.95 3.05" strokeLinecap="round" />
+//   </svg>
+// );
+
+const AccountIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <circle cx="9" cy="9" r="2.5" />
-    <path d="M9 1V3M9 15V17M1 9H3M15 9H17M3.05 3.05L4.46 4.46M13.54 13.54L14.95 14.95M3.05 14.95L4.46 13.54M13.54 4.46L14.95 3.05" strokeLinecap="round" />
+    <circle cx="9" cy="7" r="3.5" />
+    <path d="M2 16c0-3.314 3.134-6 7-6s7 2.686 7 6" strokeLinecap="round" />
   </svg>
 );
 
@@ -120,21 +129,39 @@ const LessonsIcon = () => (
 );
 
 // Dispute Icon
-const DisputeIcon = () => (
+// MVP Phase 1: Ẩn Dispute
+// const DisputeIcon = () => (
+//   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+//     <path d="M9 6V9M9 12H9.01M3 14V4C3 2.89543 3.89543 2 5 2H13C14.1046 2 15 2.89543 15 4V14C15 15.1046 14.1046 16 13 16H5C3.89543 16 3 15.1046 3 14Z" strokeLinecap="round" strokeLinejoin="round" />
+//   </svg>
+// );
+
+const CalendarIcon = () => (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M9 6V9M9 12H9.01M3 14V4C3 2.89543 3.89543 2 5 2H13C14.1046 2 15 2.89543 15 4V14C15 15.1046 14.1046 16 13 16H5C3.89543 16 3 15.1046 3 14Z" strokeLinecap="round" strokeLinejoin="round" />
+    <rect x="2" y="3" width="14" height="13" rx="2" />
+    <path d="M12 1v4" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6 1v4" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M2 7h14" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-const navItems = [
-  { path: '/parent/dashboard', label: 'Tổng quan', icon: DashboardIcon },
-  { path: '/parent/student', label: 'Con em', icon: ChildrenIcon },
+const parentNavItems = [
+  { path: '/parent/dashboard', label: 'Dashboard', icon: DashboardIcon },
+  { path: '/parent/student', label: 'Children', icon: ChildrenIcon },
   { path: '/parent/lessons', label: 'Buổi học', icon: LessonsIcon },
-  { path: '/parent/messages', label: 'Tin nhắn', icon: MessagesIcon },
-  { path: '/parent/wallet', label: 'Tài chính', icon: FinanceIcon },
-  { path: '/parent/booking', label: 'Đặt lịch', icon: BookingIcon },
-  { path: '/parent/disputes', label: 'Khiếu nại', icon: DisputeIcon },
-  { path: '/parent/settings', label: 'Cài đặt', icon: SettingsIcon },
+  { path: '/parent/calendar', label: 'Thời khóa biểu', icon: CalendarIcon },
+  { path: '/parent/messages', label: 'Messages', icon: MessagesIcon },
+  { path: '/parent/booking', label: 'Booking', icon: BookingIcon },
+  // { path: '/parent/disputes', label: 'Khiếu nại', icon: DisputeIcon },
+];
+
+const studentNavItems = [
+  { path: '/student/dashboard', label: 'Dashboard', icon: DashboardIcon },
+  { path: '/student/booking', label: 'Booking', icon: BookingIcon },
+  { path: '/student/lessons', label: 'Buổi học', icon: LessonsIcon },
+  { path: '/student/calendar', label: 'Thời khóa biểu', icon: CalendarIcon },
+  { path: '/student/messages', label: 'Messages', icon: MessagesIcon },
+  { path: '/student/account', label: 'Tài khoản', icon: AccountIcon },
 ];
 
 interface ParentLayoutProps {
@@ -147,15 +174,26 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
   const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  const [showStudentDropdown, setShowStudentDropdown] = useState(false);
+  const studentDropdownRef = useRef<HTMLDivElement>(null);
   const [parentData, setParentData] = useState({
     name: 'User',
     initials: 'U',
     role: 'PARENT',
   });
+  const [studentData, setStudentData] = useState({
+    name: '',
+    grade: '',
+    initials: '',
+  });
   const [nextLesson, setNextLesson] = useState<LessonResponse | null>(null);
-  const [showStudentDropdown, setShowStudentDropdown] = useState(false);
-  const studentDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Student context from StudentProvider
   const { students, selectedStudent, selectStudent } = useStudentContext();
+
+  const isStudentContext = location.pathname.startsWith('/student');
+  const navItems = isStudentContext ? studentNavItems : parentNavItems;
+  const accountPath = isStudentContext ? '/student/account' : '/parent/settings';
 
   const isActive = (path: string) => location.pathname.startsWith(path);
 
@@ -189,8 +227,17 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
         role: user.role || 'PARENT',
       });
 
-      // Load next lesson
-      loadNextLesson();
+      // Only load next lesson for Parent role (Student role gets 403 on /parent/students)
+      if (user.role?.toLowerCase() !== 'student') {
+        loadNextLesson();
+      } else {
+        // For Student role, set student data directly from token
+        setStudentData({
+          name: displayName,
+          grade: 'Grade 8 • Active',
+          initials: initials,
+        });
+      }
     } else {
       console.warn('⚠️ ParentLayout - No user data found in localStorage');
     }
@@ -465,6 +512,8 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
           {children || <Outlet />}
         </div>
       </main>
+
+
     </div>
   );
 };

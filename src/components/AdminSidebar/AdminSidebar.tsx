@@ -1,12 +1,10 @@
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { Popconfirm } from 'antd';
 import { clearUserFromStorage } from '../../services/auth.service';
 import '../../styles/layouts/admin-layout.css';
-import { toast } from 'react-toastify';
 
 // Logo Icon (TUTORA symbol) - same as TutorPortal/ParentLayout
 const LogoIcon = () => (
-    <svg className="admin-logo-icon" width="28" height="28" viewBox="0 0 28 28" fill="currentColor">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="currentColor">
         <path d="M14 2L2 8V20L14 26L26 20V8L14 2ZM14 4.5L22.5 9V19L14 23.5L5.5 19V9L14 4.5Z" />
         <path d="M14 8L8 11V17L14 20L20 17V11L14 8Z" />
     </svg>
@@ -59,7 +57,8 @@ const AdminSidebar = () => {
                         <span className="admin-nav-badge">4</span>
                     </a>
 
-                    <a
+                    {/* MVP Phase 1: Tạm ẩn tính năng quản lý khiếu nại */}
+                    {/* <a
                         className={`admin-nav-item ${location.pathname.startsWith('/admin/disputes') ? 'admin-nav-item-active' : ''}`}
                         onClick={() => navigate('/admin/disputes')}
                         title="Khiếu nại"
@@ -67,7 +66,7 @@ const AdminSidebar = () => {
                         <span className="material-symbols-outlined admin-nav-icon">gavel</span>
                         <span className="admin-nav-text">Khiếu nại</span>
                         <span className="admin-nav-badge-alert">!</span>
-                    </a>
+                    </a> */}
 
                     <a
                         className={`admin-nav-item ${location.pathname.startsWith('/admin/warnings') ? 'admin-nav-item-active' : ''}`}
@@ -109,24 +108,10 @@ const AdminSidebar = () => {
 
             {/* Sidebar Footer */}
             <div className="admin-sidebar-footer">
-                <Popconfirm
-                    title="Đăng xuất"
-                    description="Bạn có chắc muốn đăng xuất không?"
-                    onConfirm={() => {
-                        clearUserFromStorage();
-                        toast.success('Đăng xuất thành công!');
-                        navigate('/login');
-                    }}
-                    okText="Đăng xuất"
-                    cancelText="Hủy"
-                    okButtonProps={{ danger: true }}
-                    placement="topRight"
-                >
-                    <button className="admin-signout-btn" title="Đăng xuất">
-                        <span className="material-symbols-outlined">logout</span>
-                        <span className="admin-signout-text">Đăng xuất</span>
-                    </button>
-                </Popconfirm>
+                <button className="admin-signout-btn" onClick={() => { clearUserFromStorage(); navigate('/login'); }}>
+                    <span className="material-symbols-outlined">logout</span>
+                    Đăng xuất
+                </button>
             </div>
         </aside>
     );

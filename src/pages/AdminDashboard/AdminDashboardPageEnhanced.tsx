@@ -209,7 +209,8 @@ const AdminDashboardPageEnhanced = () => {
                                 </div>
                             </div>
 
-                            {/* Card 6: Active Disputes */}
+                            {/* MVP Phase 1: Hide Disputes */}
+                            {/* Card 6: Active Disputes
                             <div className="admin-stat-card admin-stat-card-alert">
                                 <div className="admin-stat-glow"></div>
                                 <div className="admin-stat-header">
@@ -224,7 +225,7 @@ const AdminDashboardPageEnhanced = () => {
                                         <span className="admin-stat-badge admin-stat-badge-crimson">Cần xử lý</span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Card 7: Total Users */}
                             <div className="admin-stat-card">
@@ -356,14 +357,15 @@ const AdminDashboardPageEnhanced = () => {
                                         <span className="material-symbols-outlined">verified_user</span>
                                         Xem xét gia sư chờ duyệt ({metrics?.pendingreview || 0})
                                     </button>
-                                    <button
+                                    {/* MVP Phase 1: Hide Disputes */}
+                                    {/* <button
                                         className="admin-action-btn admin-action-btn-outline"
                                         style={{ width: '100%', justifyContent: 'flex-start', gap: '12px' }}
                                         onClick={() => navigate('/admin/disputes')}
                                     >
                                         <span className="material-symbols-outlined">gavel</span>
                                         Giải quyết khiếu nại ({metrics?.activedisputes || 0})
-                                    </button>
+                                    </button> */}
                                     <button
                                         className="admin-action-btn admin-action-btn-outline"
                                         style={{ width: '100%', justifyContent: 'flex-start', gap: '12px' }}

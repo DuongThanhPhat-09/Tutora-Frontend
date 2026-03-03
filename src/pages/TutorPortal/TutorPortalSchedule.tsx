@@ -11,7 +11,8 @@ import { AddAvailabilityModal, EditAvailabilityModal } from './components';
 import { getAvailability, deleteAvailability, DAY_OF_WEEK_MAP } from '../../services/availability.service';
 import type { AvailabilitySlot } from '../../services/availability.service';
 import { getUserIdFromToken } from '../../services/auth.service';
-import { getTutorLessons, type LessonResponse } from '../../services/lesson.service';
+import { getTutorCalendar } from '../../services/lesson.service';
+import { CalendarView, type CalendarDayDto } from '../../components/CalendarView/CalendarView';
 
 // Mở rộng dayjs với các plugin
 dayjs.extend(weekday);
@@ -120,7 +121,7 @@ const TutorPortalSchedule: React.FC = () => {
     const [deletingSlotId, setDeletingSlotId] = useState<number | null>(null);
 
     // FROM MILESTONE_3: State cho lessons tab
-    const [lessons, setLessons] = useState<LessonResponse[]>([]);
+    const [calendarData, setCalendarData] = useState<CalendarDayDto[]>([]);
     const [isLoadingLessons, setIsLoadingLessons] = useState(false);
 
     // Zoom state
@@ -212,15 +213,16 @@ const TutorPortalSchedule: React.FC = () => {
         }
     }, []);
 
-    // FROM MILESTONE_3: Fetch lessons từ API
-    const fetchLessons = useCallback(async () => {
+    // FETCH CALENDAR FOR LESSONS TAB
+    const fetchCalendar = useCallback(async () => {
         setIsLoadingLessons(true);
         try {
-            const response = await getTutorLessons(1, 100);
-            const lessonsData = Array.isArray(response.content)
-                ? response.content
-                : response.content?.items || [];
-            setLessons(lessonsData);
+            const startDate = dayjs().subtract(7, 'day').format('YYYY-MM-DD');
+            const endDate = dayjs().add(30, 'day').format('YYYY-MM-DD');
+            const response = await getTutorCalendar(startDate, endDate);
+
+            // Map specific fields if necessary or cast directly (same interface fields mostly)
+            setCalendarData((response.content || []) as unknown as CalendarDayDto[]);
         } catch (error) {
             toast.error('Không thể tải lịch dạy. Vui lòng thử lại.');
         } finally {
@@ -233,12 +235,12 @@ const TutorPortalSchedule: React.FC = () => {
         fetchAvailability();
     }, [fetchAvailability]);
 
-    // FROM MILESTONE_3: Fetch lessons khi chuyển sang tab lessons
+    // Fetch calendar when switching to lessons tab
     useEffect(() => {
         if (activeTab === 'lessons') {
-            fetchLessons();
+            fetchCalendar();
         }
-    }, [activeTab, fetchLessons]);
+    }, [activeTab, fetchCalendar]);
 
     // Xử lý xóa lịch rảnh với Popconfirm
     const handleDeleteAvailability = async (slot: LocalAvailabilitySlot) => {

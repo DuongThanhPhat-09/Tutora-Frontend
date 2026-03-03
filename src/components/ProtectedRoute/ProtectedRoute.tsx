@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { getCurrentUser } from "../../services/auth.service";
+import { getCurrentUser, getUserInfoFromToken } from "../../services/auth.service";
 
 interface ProtectedRouteProps {
     allowedRoles?: string[];
@@ -19,11 +19,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     }
 
     if (allowedRoles && allowedRoles.length > 0) {
-        // Kiểm tra Role (Giả sử user object có trường 'role' hoặc 'roles')
-        // Cần đảm bảo cấu trúc user object khớp với auth.service
-        const userRole = user.role; // Hoặc user.roles tùy backend
+        // Decode JWT để lấy role (localStorage chỉ lưu accessToken, không có field role)
+        const userInfo = getUserInfoFromToken();
+        const userRole = (userInfo?.role || '').toLowerCase();
 
-        if (!allowedRoles.includes(userRole)) {
+        if (!allowedRoles.some(r => r.toLowerCase() === userRole)) {
             // Đã đăng nhập nhưng không có quyền -> 403
             return <Navigate to="/403" replace />;
         }

@@ -18,12 +18,15 @@ setupAuthInterceptor(api);
 // ============================================
 
 export interface CreateFeedbackRequest {
-  lessonId: number;
-  bookingId: number;
+  lessonId?: number;
+  bookingId?: number;
   toUserId: string;
   rating: number;
   comment?: string;
-  feedbackType: 'post_lesson' | 'early_cancellation';
+  feedbackType: 'post_lesson' | 'early_termination';
+  initialGoal?: string;
+  actualResult?: string;
+  courseDuration?: string;
 }
 
 export interface ReplyFeedbackRequest {
@@ -153,6 +156,23 @@ export const canLeaveFeedback = async (
     return response.data;
   } catch (error: any) {
     console.error('Error checking feedback eligibility:', error.message);
+    throw error;
+  }
+};
+
+/**
+ * Check if user can leave early termination feedback for a booking
+ */
+export const canLeaveBookingFeedback = async (
+  bookingId: number
+): Promise<ApiResponse<boolean>> => {
+  try {
+    const response = await api.get(`/feedback/can-leave-booking/${bookingId}`, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('Error checking booking feedback eligibility:', error.message);
     throw error;
   }
 };

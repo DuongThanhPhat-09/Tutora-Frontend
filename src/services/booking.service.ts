@@ -67,6 +67,9 @@ export interface BookingResponseDTO {
     escrowStatus?: string | null;
     // Channel navigation
     channelId?: number;
+    // Refund fields
+    refundAmount?: number | null;
+    refundStatus?: string | null;
 }
 
 export interface PromotionValidateResult {
@@ -153,10 +156,11 @@ export const applyPromotion = async (bookingId: number, promotionCode: string): 
 };
 
 /** DELETE /api/bookings/:id — Cancel a pending booking */
-export const cancelBooking = async (bookingId: number): Promise<ApiResponse<string>> => {
+export const cancelBooking = async (bookingId: number, reason?: string): Promise<ApiResponse<string>> => {
     try {
         const response = await api.delete(`/bookings/${bookingId}`, {
             headers: getAuthHeaders(),
+            params: reason ? { reason } : undefined,
         });
         return response.data;
     } catch (error: any) {
@@ -170,7 +174,7 @@ export const cancelBooking = async (bookingId: number): Promise<ApiResponse<stri
 };
 
 /** GET /api/parent/bookings — Get list of parent bookings */
-export const getParentBookings = async (params: { page?: number; pageSize?: number; status?: string }): Promise<ApiResponse<{ content: BookingResponseDTO[], totalElements: number }>> => {
+export const getParentBookings = async (params: { page?: number; pageSize?: number; status?: string }): Promise<ApiResponse<{ items: BookingResponseDTO[], totalCount: number }>> => {
     try {
         const response = await api.get('/parent/bookings', {
             headers: getAuthHeaders(),
@@ -183,7 +187,7 @@ export const getParentBookings = async (params: { page?: number; pageSize?: numb
 };
 
 /** GET /api/tutors/bookings — Get list of tutor booking requests */
-export const getTutorBookings = async (params: { page?: number; pageSize?: number; status?: string }): Promise<ApiResponse<{ content: BookingResponseDTO[], totalElements: number }>> => {
+export const getTutorBookings = async (params: { page?: number; pageSize?: number; status?: string }): Promise<ApiResponse<{ items: BookingResponseDTO[], totalCount: number }>> => {
     try {
         const response = await api.get('/tutors/bookings', {
             headers: getAuthHeaders(),

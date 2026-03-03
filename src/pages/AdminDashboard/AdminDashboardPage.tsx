@@ -84,8 +84,9 @@ const AdminDashboardPage = () => {
                                 </div>
                             </div>
 
+                            {/* MVP Phase 1: Hide Disputes */}
                             {/* Card 3 */}
-                            <div className="admin-stat-card admin-stat-card-alert">
+                            {/* <div className="admin-stat-card admin-stat-card-alert">
                                 <div className="admin-stat-glow"></div>
                                 <div className="admin-stat-header">
                                     <span className="admin-stat-label">Khiếu nại đang hoạt động</span>
@@ -99,7 +100,7 @@ const AdminDashboardPage = () => {
                                         <span className="admin-stat-badge admin-stat-badge-crimson">Cần xử lý</span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Card 4 */}
                             <div className="admin-stat-card">
@@ -172,8 +173,9 @@ const AdminDashboardPage = () => {
                                             </td>
                                         </tr>
 
+                                        {/* MVP Phase 1: Hide Disputes */}
                                         {/* Row 2 */}
-                                        <tr className="admin-table-row">
+                                        {/* <tr className="admin-table-row">
                                             <td className="admin-table-td admin-table-id">#DS-9921</td>
                                             <td className="admin-table-td">
                                                 <div className="admin-table-type">
@@ -200,7 +202,7 @@ const AdminDashboardPage = () => {
                                             <td className="admin-table-td admin-table-td-right">
                                                 <button className="admin-action-btn admin-action-btn-crimson">Giải quyết</button>
                                             </td>
-                                        </tr>
+                                        </tr> */}
 
                                         {/* Row 3 */}
                                         <tr className="admin-table-row">

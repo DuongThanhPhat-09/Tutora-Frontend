@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -49,6 +50,7 @@ const TrustedBanner = () => {
 
 // Hero Section
 const HeroSection = () => {
+    const navigate = useNavigate();
     return (
         <section className="hero-section">
             <div className="hero-container">
@@ -74,8 +76,8 @@ const HeroSection = () => {
                     </p>
 
                     <div className="hero-buttons">
-                        <button className="btn-primary">TÌM GIA SƯ ELITE</button>
-                        <button className="btn-secondary">TRỞ THÀNH GIA SƯ</button>
+                        <button className="btn-primary" onClick={() => navigate('/tutor-search')}>TÌM GIA SƯ ELITE</button>
+                        <button className="btn-secondary" onClick={() => navigate('/register')}>TRỞ THÀNH GIA SƯ</button>
                     </div>
                 </div>
 
@@ -205,7 +207,7 @@ const FeaturesSection = () => {
                     ))}
                 </ul>
 
-                <button className="btn-apply">NỘP HỒ SƠ GIA SƯ ELITE</button>
+                <button className="btn-apply" onClick={() => window.location.href = '/register'}>NỘP HỒ SƠ GIA SƯ ELITE</button>
             </div>
         </section>
     );

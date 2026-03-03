@@ -94,6 +94,22 @@ export interface NoShowActionResultDto {
   refundAmount?: number;
 }
 
+export interface CalendarLessonDto {
+  lessonId: number;
+  scheduledStart: string;
+  scheduledEnd: string;
+  studentName?: string;
+  tutorName?: string;
+  subjectName?: string;
+  status: string;
+  meetingLink?: string;
+}
+
+export interface CalendarDayDto {
+  date: string;
+  lessons: CalendarLessonDto[];
+}
+
 // ============================================
 // API Functions
 // ============================================
@@ -239,6 +255,29 @@ export const uploadDisputeEvidence = async (
     return response.data;
   } catch (error: any) {
     console.error('Error uploading evidence:', error.message);
+    throw error;
+  }
+};
+
+/**
+ * Get parent calendar view
+ */
+export const getParentCalendar = async (
+  startDate?: string,
+  endDate?: string
+): Promise<ApiResponse<CalendarDayDto[]>> => {
+  try {
+    const params: any = {};
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+
+    const response = await api.get('/parentlesson/calendar', {
+      headers: getAuthHeaders(),
+      params,
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching calendar:', error.message);
     throw error;
   }
 };

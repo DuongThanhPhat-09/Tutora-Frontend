@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
     ArrowLeft,
     Calendar,
@@ -13,14 +13,18 @@ import {
     XCircle,
     AlertCircle,
     Copy,
+    MessageSquare,
+    ArrowRight,
 } from 'lucide-react';
 import {
     getBookingById,
+    cancelBooking,
     type BookingResponseDTO
 } from '../../../services/booking.service';
+import { canLeaveBookingFeedback } from '../../../services/feedback.service';
+import CreateFeedbackModal from '../../ParentLessons/components/CreateFeedbackModal';
 import styles from './styles.module.css';
-import { Spin } from 'antd';
-import { toast } from 'react-toastify';
+import { message as antMessage, Spin, Modal, Input } from 'antd';
 
 // ===== HELPERS =====
 const DAY_NAMES = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
@@ -51,7 +55,10 @@ const formatPackage = (pkg: string) => {
 
 const STATUS_CONFIG: Record<string, { label: string; className: string; icon: React.ElementType }> = {
     pending_tutor: { label: 'Chờ gia sư xác nhận', className: 'statusPending', icon: AlertCircle },
+    accepted: { label: 'Chờ đặt cọc', className: 'statusWarning', icon: Clock },
     pending_payment: { label: 'Chờ thanh toán', className: 'statusWarning', icon: Clock },
+    deposit_paid: { label: 'Đã cọc (50%)', className: 'statusActive', icon: CheckCircle2 },
+    pending_remaining_payment: { label: 'Thanh toán khoản còn lại', className: 'statusWarning', icon: Clock },
     active: { label: 'Đang học', className: 'statusActive', icon: CheckCircle2 },
     completed: { label: 'Hoàn thành', className: 'statusCompleted', icon: CheckCircle2 },
     cancelled: { label: 'Đã hủy', className: 'statusCancelled', icon: XCircle },
@@ -63,7 +70,7 @@ const TIMELINE_STEPS = [
     { key: 'created', label: 'Tạo booking' },
     { key: 'pending_tutor', label: 'Chờ gia sư' },
     { key: 'accepted', label: 'Gia sư xác nhận' },
-    { key: 'pending_payment', label: 'Thanh toán' },
+    { key: 'deposit_paid', label: 'Đã cọc (50%)' },
     { key: 'active', label: 'Bắt đầu học' },
     { key: 'completed', label: 'Hoàn thành' },
 ];
@@ -71,7 +78,10 @@ const TIMELINE_STEPS = [
 const getTimelineProgress = (status: string) => {
     const progressMap: Record<string, number> = {
         pending_tutor: 2,
-        pending_payment: 4,
+        accepted: 3,
+        pending_payment: 3,
+        deposit_paid: 4,
+        pending_remaining_payment: 4,
         active: 5,
         completed: 6,
         cancelled: 0,
@@ -84,8 +94,17 @@ const getTimelineProgress = (status: string) => {
 const BookingDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const basePath = pathname.startsWith('/student') ? '/student' : '/parent';
     const [booking, setBooking] = useState<BookingResponseDTO | null>(null);
     const [loading, setLoading] = useState(true);
+    const [canReview, setCanReview] = useState(false);
+    const [showReviewModal, setShowReviewModal] = useState(false);
+
+    // Cancellation state
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [cancelReason, setCancelReason] = useState('');
+    const [cancelLoading, setCancelLoading] = useState(false);
 
     const bookingId = Number(id);
 
@@ -95,8 +114,16 @@ const BookingDetailPage = () => {
                 setLoading(true);
                 const res = await getBookingById(bookingId);
                 setBooking(res.content);
-            } catch (error) {
-                toast.error('Không thể tải chi tiết đặt lịch.');
+
+                // Check early termination feedback eligibility
+                if (['cancelled', 'completed', 'payment_timeout'].includes(res.content.status)) {
+                    if (['Escrowed', 'paid'].includes(res.content.paymentStatus)) {
+                        const feedbackRes = await canLeaveBookingFeedback(bookingId);
+                        setCanReview(feedbackRes.content);
+                    }
+                }
+            } catch {
+                antMessage.error('Không thể tải chi tiết đặt lịch.');
             } finally {
                 setLoading(false);
             }
@@ -120,7 +147,7 @@ const BookingDetailPage = () => {
                     <AlertCircle size={48} />
                     <h2>Không tìm thấy booking</h2>
                     <p>Booking #{id} không tồn tại hoặc bạn không có quyền xem.</p>
-                    <button className={styles.backBtnPrimary} onClick={() => navigate('/parent/booking')} type="button">
+                    <button className={styles.backBtnPrimary} onClick={() => navigate(`${basePath}/booking`)} type="button">
                         Quay lại danh sách
                     </button>
                 </div>
@@ -137,7 +164,7 @@ const BookingDetailPage = () => {
         <div className={styles.page}>
             {/* Top Bar */}
             <div className={styles.topBar}>
-                <button className={styles.backBtn} onClick={() => navigate('/parent/booking')} type="button">
+                <button className={styles.backBtn} onClick={() => navigate(`${basePath}/booking`)} type="button">
                     <ArrowLeft size={18} />
                     <span>Quay lại</span>
                 </button>
@@ -245,8 +272,12 @@ const BookingDetailPage = () => {
                         </div>
                         <div className={styles.priceBreakdown}>
                             <div className={styles.priceRow}>
-                                <span>Giá gói ({formatPackage(booking.packageType)})</span>
+                                <span>Giá gốc khóa học</span>
                                 <span>{formatPrice(booking.price)}</span>
+                            </div>
+                            <div className={styles.priceRow}>
+                                <span>Phí dịch vụ</span>
+                                <span>{formatPrice(booking.platformFee)}</span>
                             </div>
                             {booking.discountApplied > 0 && (
                                 <div className={`${styles.priceRow} ${styles.priceDiscount}`}>
@@ -261,18 +292,27 @@ const BookingDetailPage = () => {
                                 <span>Tổng thanh toán</span>
                                 <span>{formatPrice(booking.finalPrice)}</span>
                             </div>
-                            <div className={styles.priceRow + ' ' + styles.priceFee}>
-                                <span>Phí nền tảng</span>
-                                <span>{formatPrice(booking.platformFee)}</span>
+                            <div className={styles.priceRow} style={{ marginTop: '8px', color: '#6b7280' }}>
+                                <span><ArrowRight size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Số tiền đặt cọc (50%)</span>
+                                <span>{formatPrice(booking.depositAmount || 0)}</span>
+                            </div>
+                            <div className={styles.priceRow} style={{ color: '#6b7280' }}>
+                                <span><ArrowRight size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} /> Số tiền còn lại (50%)</span>
+                                <span>{formatPrice(booking.remainingAmount || 0)}</span>
                             </div>
                         </div>
 
                         {/* Payment Status */}
                         <div className={styles.paymentStatusBox}>
-                            {booking.paymentStatus === 'paid' ? (
+                            {booking.paymentStatus === 'Escrowed' ? (
                                 <>
                                     <CheckCircle2 size={18} className={styles.paymentPaid} />
-                                    <span className={styles.paymentPaid}>Đã thanh toán</span>
+                                    <span className={styles.paymentPaid}>Đã thanh toán nốt</span>
+                                </>
+                            ) : booking.paymentStatus === 'DepositEscrowed' ? (
+                                <>
+                                    <CheckCircle2 size={18} className={styles.paymentPaid} />
+                                    <span className={styles.paymentPaid}>Đã thanh toán cọc (50%)</span>
                                 </>
                             ) : (
                                 <>
@@ -341,31 +381,133 @@ const BookingDetailPage = () => {
                                         ? 'Booking bị hủy tự động do quá hạn thanh toán 24h.'
                                         : 'Booking đã được hủy theo yêu cầu.'}
                                 </p>
+                                {booking.refundAmount != null && booking.refundAmount > 0 && (
+                                    <div style={{ marginTop: 8, padding: 8, background: '#f5f5f5', borderRadius: 4 }}>
+                                        <div style={{ fontWeight: 500, color: '#333' }}>Tiền hoàn lại: {formatPrice(booking.refundAmount)}</div>
+                                        <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>
+                                            Trạng thái: {booking.refundStatus === 'refunded' ? 'Đã hoàn trả' : 'Đang xử lý (Chờ Admin duyệt)'}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
 
                     {/* Action Buttons */}
                     <div className={styles.actionButtons}>
-                        {booking.status === 'pending_tutor' && (
-                            <button className={styles.cancelBtn} type="button">
+                        {canReview && (
+                            <button
+                                className={styles.payBtn}
+                                style={{ background: '#4F46E5', color: 'white', marginBottom: '10px' }}
+                                type="button"
+                                onClick={() => setShowReviewModal(true)}
+                            >
+                                <MessageSquare size={16} />
+                                <span>Đánh giá khóa học</span>
+                            </button>
+                        )}
+                        {['pending_tutor', 'accepted', 'pending_payment', 'deposit_paid', 'pending_remaining_payment', 'ongoing', 'paid'].includes(booking.status) && (
+                            <button
+                                className={styles.cancelBtn}
+                                type="button"
+                                onClick={() => setShowCancelModal(true)}
+                            >
                                 <XCircle size={16} />
                                 <span>Hủy booking</span>
                             </button>
                         )}
-                        {booking.status === 'pending_payment' && (
+                        {['accepted', 'pending_payment'].includes(booking.status) && (
                             <button
                                 className={styles.payBtn}
                                 type="button"
-                                onClick={() => navigate(`/parent/booking/${booking.bookingId}/payment`)}
+                                onClick={() => navigate(`${basePath}/booking/${booking.bookingId}/payment`)}
                             >
                                 <CreditCard size={16} />
-                                <span>Thanh toán ngay</span>
+                                <span>Thanh toán cọc (50%)</span>
+                            </button>
+                        )}
+                        {['deposit_paid', 'pending_remaining_payment'].includes(booking.status) && (
+                            <button
+                                className={styles.payBtn}
+                                type="button"
+                                onClick={() => navigate(`${basePath}/booking/${booking.bookingId}/payment`)}
+                            >
+                                <CreditCard size={16} />
+                                <span>Thanh toán khoản còn lại</span>
                             </button>
                         )}
                     </div>
                 </div>
             </div>
+
+            {/* Feedback Modal */}
+            <CreateFeedbackModal
+                open={showReviewModal}
+                onClose={() => setShowReviewModal(false)}
+                onSuccess={() => {
+                    setShowReviewModal(false);
+                    setCanReview(false);
+                }}
+                feedbackType="early_termination"
+                bookingId={booking.bookingId}
+                tutorId={booking.tutor?.tutorId || ''}
+                tutorName={booking.tutor?.fullName}
+                subjectName={booking.subject?.subjectName}
+            />
+
+            {/* Cancel Booking Modal */}
+            <Modal
+                title="Hủy Booking"
+                open={showCancelModal}
+                onCancel={() => {
+                    setShowCancelModal(false);
+                    setCancelReason('');
+                }}
+                confirmLoading={cancelLoading}
+                onOk={async () => {
+                    if (!cancelReason.trim()) {
+                        antMessage.warning('Vui lòng nhập lý do hủy booking');
+                        return;
+                    }
+                    setCancelLoading(true);
+                    try {
+                        await cancelBooking(booking.bookingId, cancelReason.trim());
+                        antMessage.success('Hủy booking thành công');
+                        setShowCancelModal(false);
+                        const res = await getBookingById(booking.bookingId);
+                        setBooking(res.content);
+                        if (['cancelled', 'completed', 'payment_timeout'].includes(res.content.status)) {
+                            if (['Escrowed', 'paid'].includes(res.content.paymentStatus)) {
+                                const feedbackRes = await canLeaveBookingFeedback(booking.bookingId);
+                                setCanReview(feedbackRes.content);
+                            }
+                        }
+                    } catch (err: any) {
+                        antMessage.error(err.response?.data?.message || 'Không thể hủy booking');
+                    } finally {
+                        setCancelLoading(false);
+                    }
+                }}
+                okText="Xác nhận hủy"
+                cancelText="Đóng"
+                okButtonProps={{ danger: true }}
+            >
+                <div style={{ marginBottom: 16 }}>
+                    <p>Bạn có chắc chắn muốn hủy booking <strong>BK-{booking.bookingId}</strong> không?</p>
+                    {['deposit_paid', 'ongoing', 'Escrowed', 'paid'].includes(booking.status) || ['DepositEscrowed', 'Escrowed', 'paid'].includes(booking.paymentStatus) ? (
+                        <p style={{ color: '#d97706', fontSize: 13 }}>
+                            Lưu ý: Bạn đã thanh toán cho khóa học này. Hệ thống sẽ tính toán số tiền hoàn lại (nếu có) dựa trên số buổi học gia sư đã dạy.
+                        </p>
+                    ) : null}
+                </div>
+                <Input.TextArea
+                    rows={4}
+                    placeholder="Vui lòng nhập lý do hủy booking..."
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                    required
+                />
+            </Modal>
         </div>
     );
 };

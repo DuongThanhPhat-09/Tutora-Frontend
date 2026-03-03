@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { createChannel } from '../../services/chat.service';
+import { getCurrentUserRole } from '../../services/auth.service';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import BookingModal from './BookingModal';
@@ -492,12 +494,14 @@ const BookingSidebar = ({
     hourlyRate,
     trialLessonPrice,
     availabilities,
-    onBooking
+    onBooking,
+    onChat
 }: {
     hourlyRate: number | null,
     trialLessonPrice: number | null,
     availabilities: AvailabilitySlot[] | null,
-    onBooking: () => void
+    onBooking: () => void,
+    onChat: () => void
 }) => {
     // Group availability by day
     const dayLabelsMap: Record<number, string> = {
@@ -526,7 +530,7 @@ const BookingSidebar = ({
                 <div className="booking-header">
                     <span className="booking-label">Bắt đầu lộ trình học thuật</span>
                     <div className="price-display">
-                        <b className="price-amount">{formatCurrency(hourlyRate)}</b>
+                        <b className="price-amount">{formatCurrency(hourlyRate ? Math.round(hourlyRate * 1.05) : null)}</b>
                         <b className="price-unit">/ BUỔI HỌC</b>
                     </div>
                 </div>
@@ -571,7 +575,7 @@ const BookingSidebar = ({
                     <button className="btn-start" onClick={onBooking}>
                         <b>ĐẶT LỊCH NGAY</b>
                     </button>
-                    <button className="btn-chat">
+                    <button className="btn-chat" onClick={onChat}>
                         <b>CHAT TƯ VẤN</b>
                     </button>
                 </div>
@@ -701,10 +705,33 @@ const TutorDetailSkeleton = () => (
 // Main TutorDetailPage Component
 const TutorDetailPage = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const [profile, setProfile] = useState<TutorFullProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showBooking, setShowBooking] = useState(false);
+    const [chatLoading, setChatLoading] = useState(false);
+
+    // Handle "CHAT TƯ VẤN" button
+    const handleChatTuVan = async () => {
+        if (!id || chatLoading) return;
+        setChatLoading(true);
+        try {
+            const res = await createChannel(id);
+            const channelId = res?.content?.channelId;
+            // Navigate to messages page based on role
+            const role = getCurrentUserRole();
+            const basePath = role === 'Student' ? '/student/messages' : '/parent/messages';
+            navigate(channelId ? `${basePath}?channel=${channelId}` : basePath);
+        } catch (err) {
+            console.error('❌ Failed to create chat channel:', err);
+            // Fallback: navigate to messages page anyway
+            const role = getCurrentUserRole();
+            navigate(role === 'Student' ? '/student/messages' : '/parent/messages');
+        } finally {
+            setChatLoading(false);
+        }
+    };
 
     useEffect(() => {
         let mounted = true;
@@ -788,6 +815,7 @@ const TutorDetailPage = () => {
                         trialLessonPrice={profile.trialLessonPrice}
                         availabilities={profile.availabilities}
                         onBooking={() => setShowBooking(true)}
+                        onChat={handleChatTuVan}
                     />
                 </div>
             </main>

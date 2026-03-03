@@ -70,10 +70,10 @@ const ParentBooking = () => {
         page: currentPage,
         pageSize: pageSize,
       });
-      setBookings(res.content.content);
-      setTotalItems(res.content.totalElements);
-    } catch (error) {
-      toast.error('Không thể tải danh sách đặt lịch.');
+      setBookings(res.content.items || []);
+      setTotalItems(res.content.totalCount || 0);
+    } catch {
+      antMessage.error('Không thể tải danh sách đặt lịch.');
     } finally {
       setLoading(false);
     }
@@ -250,6 +250,30 @@ const ParentBooking = () => {
                         <span className={styles.priceFinal}>{formatPrice(booking.finalPrice)}</span>
                       </div>
                       <div className={styles.cardActions}>
+                        {(booking.status === 'accepted' || booking.status === 'pending_payment') && (
+                          <button
+                            className={styles.actionBtnPrimary}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/parent/booking/${booking.bookingId}/payment`);
+                            }}
+                            type="button"
+                          >
+                            Thanh toán cọc
+                          </button>
+                        )}
+                        {(booking.status === 'pending_remaining_payment' || booking.status === 'deposit_paid') && (
+                          <button
+                            className={styles.actionBtnPrimary}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/parent/booking/${booking.bookingId}/payment`);
+                            }}
+                            type="button"
+                          >
+                            Thanh toán nốt
+                          </button>
+                        )}
                         <span className={styles.cardDate}>{formatDate(booking.createdAt)}</span>
                         <button
                           className={styles.viewBtn}

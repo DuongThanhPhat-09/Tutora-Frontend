@@ -33,6 +33,29 @@ export const getUserProfile = async (userId: string) => {
     }
 };
 
+export interface IUpdateUserProfile {
+    fullname: string;
+    birthdate: string;
+    address: string;
+    gender: string;
+    avatarurl?: string;
+}
+
+export const updateUserProfile = async (userId: string, payload: IUpdateUserProfile) => {
+    try {
+        const user = getCurrentUser();
+        const response = await api.put(`/users/${userId}`, payload, {
+            headers: {
+                Authorization: `Bearer ${user?.accessToken}`
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        console.error('Error updating user profile:', error);
+        throw error;
+    }
+};
+
 /**
  * Parse ekycRawData JSON string into EKYCContent object
  * @param ekycRawData - JSON string from backend

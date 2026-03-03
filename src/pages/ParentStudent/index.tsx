@@ -12,6 +12,7 @@ import {
 } from '../../services/student.service';
 import AddStudentModal from './components/AddStudentModal';
 import EditStudentModal from './components/EditStudentModal';
+import LinkCodeModal from './components/LinkCodeModal';
 
 // ── Icons ──
 
@@ -119,6 +120,13 @@ const EditIcon = () => (
   </svg>
 );
 
+const LinkIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4">
+    <path d="M5.5 8.5a3.5 3.5 0 005 0l1.5-1.5a3.5 3.5 0 00-5-5L6 3" strokeLinecap="round" />
+    <path d="M8.5 5.5a3.5 3.5 0 00-5 0L2 7a3.5 3.5 0 005 5L8 11" strokeLinecap="round" />
+  </svg>
+);
+
 const TrashIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3">
     <path d="M3 4h8l-.5 8a1 1 0 01-1 1H4.5a1 1 0 01-1-1L3 4zM5.5 6v4M8.5 6v4M1 4h12M5 4V2.5a.5.5 0 01.5-.5h3a.5.5 0 01.5.5V4" strokeLinecap="round" />
@@ -133,6 +141,7 @@ const ParentStudent = () => {
   const [editingStudent, setEditingStudent] = useState<StudentType | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [linkCodeStudent, setLinkCodeStudent] = useState<StudentType | null>(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -174,6 +183,16 @@ const ParentStudent = () => {
       console.error('Error adding student:', err);
       toast.error('Failed to add student');
     }
+  };
+
+  const handleLinkCodeClick = (student: StudentType) => {
+    setLinkCodeStudent(student);
+    setOpenMenuId(null);
+  };
+
+  const handleLinkCodeGenerated = (updated: StudentType) => {
+    setLinkCodeStudent(updated);
+    setStudents((prev) => prev.map((s) => s.studentId === updated.studentId ? updated : s));
   };
 
   const handleEditClick = (student: StudentType) => {
@@ -342,6 +361,9 @@ const ParentStudent = () => {
                         </button>
                         {openMenuId === student.studentId && (
                           <div className={styles.dropdownMenu} onClick={(e) => e.stopPropagation()}>
+                            <button className={styles.dropdownItem} onClick={() => handleLinkCodeClick(student)} type="button">
+                              <LinkIcon /><span>Mã liên kết</span>
+                            </button>
                             <button className={styles.dropdownItem} onClick={() => handleEditClick(student)} type="button">
                               <EditIcon /><span>Edit</span>
                             </button>
@@ -431,6 +453,13 @@ const ParentStudent = () => {
 
       <AddStudentModal isOpen={isAddModalOpen} onClose={handleAddModalClose} onSubmit={handleAddStudent} />
       <EditStudentModal isOpen={isEditModalOpen} onClose={handleEditModalClose} onSubmit={handleEditSubmit} student={editingStudent} />
+      {linkCodeStudent && (
+        <LinkCodeModal
+          student={linkCodeStudent}
+          onClose={() => setLinkCodeStudent(null)}
+          onCodeGenerated={handleLinkCodeGenerated}
+        />
+      )}
     </div>
   );
 };

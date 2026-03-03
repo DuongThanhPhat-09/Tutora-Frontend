@@ -105,3 +105,28 @@ export const sendMessageREST = async (
   }
 };
 
+/**
+ * POST /api/chat/channels — Create or get existing channel with a tutor.
+ * Used by "CHAT TƯ VẤN" on TutorDetailPage (no booking required).
+ */
+export const createChannel = async (
+  tutorId: string,
+): Promise<ApiResponse<{ channelId: number }>> => {
+  try {
+    const response = await api.post(
+      `/chat/channels`,
+      { tutorId },
+      { headers: getAuthHeaders() },
+    );
+
+    console.log('✅ Channel created/retrieved:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ Error creating channel:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+    throw error;
+  }
+};

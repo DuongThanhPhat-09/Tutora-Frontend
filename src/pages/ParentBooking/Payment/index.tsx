@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     getPaymentInfo,
@@ -20,8 +20,7 @@ import {
     GraduationCap,
     CheckCircle2
 } from 'lucide-react';
-import { Spin, QRCode, Button, Radio } from 'antd';
-import { toast } from 'react-toastify';
+import { message as antMessage, Spin, Button, Radio } from 'antd';
 
 const PaymentPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -32,6 +31,8 @@ const PaymentPage = () => {
     const [paymentMethod, setPaymentMethod] = useState<'payos' | 'wallet'>('payos');
     const [isPaying, setIsPaying] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
+    const [waitingForPayOS, setWaitingForPayOS] = useState(false);
+    const payosWindowRef = useRef<Window | null>(null);
 
     const bookingId = Number(id);
 
@@ -63,6 +64,59 @@ const PaymentPage = () => {
 
         if (bookingId) fetchData();
     }, [bookingId, navigate]);
+
+    // Listen for localStorage changes from PaymentCallback page (in new tab)
+    useEffect(() => {
+        if (!waitingForPayOS) return;
+
+        const handleStorage = (event: StorageEvent) => {
+            if (event.key === 'payos_payment_result' && event.newValue) {
+                try {
+                    const result = JSON.parse(event.newValue);
+                    if (result.isPaid) {
+                        setWaitingForPayOS(false);
+                        localStorage.removeItem('payos_payment_result');
+                        setPaymentSuccess(true);
+                        antMessage.success('Thanh toán thành công!');
+                    } else if (result.cancel) {
+                        setWaitingForPayOS(false);
+                        localStorage.removeItem('payos_payment_result');
+                        antMessage.info('Thanh toán đã bị hủy.');
+                    }
+                } catch (e) {
+                    console.error('[PaymentPage] Failed to parse payment result:', e);
+                }
+            }
+        };
+
+        window.addEventListener('storage', handleStorage);
+        return () => window.removeEventListener('storage', handleStorage);
+    }, [waitingForPayOS]);
+
+    // Check if new tab was closed by user
+    useEffect(() => {
+        if (!waitingForPayOS) return;
+
+        const interval = setInterval(() => {
+            if (payosWindowRef.current && payosWindowRef.current.closed) {
+                const stored = localStorage.getItem('payos_payment_result');
+                if (stored) {
+                    const result = JSON.parse(stored);
+                    if (result.isPaid) {
+                        setWaitingForPayOS(false);
+                        localStorage.removeItem('payos_payment_result');
+                        setPaymentSuccess(true);
+                        antMessage.success('Thanh toán thành công!');
+                        return;
+                    }
+                }
+                setWaitingForPayOS(false);
+                payosWindowRef.current = null;
+            }
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, [waitingForPayOS]);
 
     // Polling payment status for PayOS
     useEffect(() => {
@@ -107,18 +161,34 @@ const PaymentPage = () => {
 
     if (loading) {
         return (
-            <div className={styles.loadingOverlay}>
-                <Spin size="large" tip="Đang chuẩn bị thông tin thanh toán..." />
+            <div className={styles.pageWrapper}>
+                <div className={styles.loadingOverlay} style={{ height: '50vh', display: 'flex', alignItems: 'center', justifyItems: 'center', width: '100%', placeContent: 'center' }}>
+                    <Spin size="large" tip="Đang chuẩn bị thông tin thanh toán...">
+                        <div style={{ padding: '50px' }} />
+                    </Spin>
+                </div>
             </div>
         );
     }
 
     if (paymentSuccess) {
         return (
-            <div className={styles.successContainer}>
-                <div className={styles.successCard}>
-                    <div className={styles.successIcon}>
-                        <CheckCircle2 size={64} color="#059669" />
+            <div className={styles.pageWrapper}>
+                <div className={styles.successContainer}>
+                    <div className={styles.successCard}>
+                        <div className={styles.successIcon}>
+                            <CheckCircle2 size={64} color="#059669" />
+                        </div>
+                        <h1>Thanh toán hoàn tất!</h1>
+                        <p>Cảm ơn bạn đã tin tưởng Agora. Buổi học của bạn đã được lên lịch.</p>
+                        <div className={styles.successActions}>
+                            <Button type="primary" size="large" onClick={() => navigate(`/parent/booking/${bookingId}`)}>
+                                Xem chi tiết lịch học
+                            </Button>
+                            <Button size="large" onClick={() => navigate('/parent/booking')}>
+                                Quản lý lớp học
+                            </Button>
+                        </div>
                     </div>
                     <h1>Thanh toán hoàn tất!</h1>
                     <p>Cảm ơn bạn đã tin tưởng TUTORA. Buổi học của bạn đã được lên lịch.</p>
@@ -192,28 +262,29 @@ const PaymentPage = () => {
                     </div>
                 </div>
 
-                {/* Right Column: Payment Methods */}
-                <main className={styles.main}>
-                    <div className={styles.card}>
-                        <h2 className={styles.cardTitle}>Chọn phương thức thanh toán</h2>
-
-                        <Radio.Group
-                            onChange={(e) => setPaymentMethod(e.target.value)}
-                            value={paymentMethod}
-                            className={styles.methodGroup}
-                        >
-                            <label className={`${styles.methodItem} ${paymentMethod === 'payos' ? styles.methodActive : ''}`}>
-                                <Radio value="payos" />
-                                <div className={styles.methodContent}>
-                                    <div className={styles.methodIcon}>
-                                        <CreditCard size={24} />
-                                    </div>
-                                    <div className={styles.methodInfo}>
-                                        <h3>Quét mã QR Ngân hàng (PayOS)</h3>
-                                        <p>Hỗ trợ tất cả ứng dụng Mobile Banking</p>
-                                    </div>
+                <div className={styles.layout}>
+                    {/* Left Column: Summary */}
+                    <div className={styles.sidebar}>
+                        <div className={styles.card}>
+                            <h2 className={styles.cardTitle}>Tóm tắt đơn hàng</h2>
+                            <div className={styles.tutorBrief}>
+                                <img src={booking?.tutor?.avatarUrl} alt="" className={styles.avatar} />
+                                <div>
+                                    <h3>{booking?.tutor?.fullName || 'N/A'}</h3>
+                                    <p><GraduationCap size={14} /> Gia sư {booking?.subject?.subjectName || 'N/A'}</p>
                                 </div>
-                            </label>
+                            </div>
+
+                            <div className={styles.bookingDetails}>
+                                <div className={styles.detailItem}>
+                                    <Clock size={16} />
+                                    <span>Gói {booking?.sessionCount} buổi học</span>
+                                </div>
+                                <div className={styles.detailItem}>
+                                    <MapPin size={16} />
+                                    <span>Học {booking?.packageType === 'online' ? 'Trực tuyến' : 'Trực tiếp'}</span>
+                                </div>
+                            </div>
 
                             <label className={`${styles.methodItem} ${paymentMethod === 'wallet' ? styles.methodActive : ''}`}>
                                 <Radio value="wallet" />
@@ -226,67 +297,122 @@ const PaymentPage = () => {
                                         <p>Số dư hiện tại: <strong>{formatPrice(paymentInfo?.walletBalance || 0)}</strong></p>
                                     </div>
                                 </div>
-                            </label>
-                        </Radio.Group>
+                                {booking?.discountApplied && booking.discountApplied > 0 ? (
+                                    <div className={styles.priceRow}>
+                                        <span>Giảm giá:</span>
+                                        <span className={styles.discount}>-{formatPrice(booking.discountApplied)}</span>
+                                    </div>
+                                ) : null}
+                                <div className={`${styles.priceRow} ${styles.totalRow}`}>
+                                    <span>Tổng cộng:</span>
+                                    <span className={styles.totalPrice}>{formatPrice(paymentInfo?.amount || 0)}</span>
+                                </div>
+                            </div>
 
-                        <div className={styles.paymentActionArea}>
-                            {paymentMethod === 'payos' ? (
-                                <div className={styles.payosArea}>
-                                    <div className={styles.qrContainer}>
-                                        <QRCode value={paymentInfo?.checkoutUrl || ''} size={200} />
-                                        <p className={styles.qrHint}>Mở ứng dụng Ngân hàng để quét mã</p>
-                                    </div>
-                                    <div className={styles.transferInfo}>
-                                        <div className={styles.infoRow}>
-                                            <span>Chủ tài khoản:</span>
-                                            <strong>{paymentInfo?.accountName}</strong>
-                                        </div>
-                                        <div className={styles.infoRow}>
-                                            <span>Số tài khoản:</span>
-                                            <strong>{paymentInfo?.accountNumber}</strong>
-                                        </div>
-                                        <div className={styles.infoRow}>
-                                            <span>Ngân hàng:</span>
-                                            <strong>MB Bank</strong>
-                                        </div>
-                                        <div className={styles.infoRow}>
-                                            <span>Số tiền:</span>
-                                            <strong className={styles.amount}>{formatPrice(paymentInfo?.amount || 0)}</strong>
-                                        </div>
-                                    </div>
-                                    <div className={styles.waitingStatus}>
-                                        <Spin size="small" />
-                                        <span>Đang chờ bạn thực hiện thanh toán... Hệ thống sẽ tự động cập nhật.</span>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className={styles.walletArea}>
-                                    {paymentInfo && paymentInfo.walletBalance < paymentInfo.amount ? (
-                                        <div className={styles.insufficientFunds}>
-                                            <AlertCircle size={20} />
-                                            <p>Số dư không đủ để thanh toán. Vui lòng chọn phương thức khác hoặc nạp thêm tiền.</p>
-                                        </div>
-                                    ) : (
-                                        <p className={styles.walletHint}>
-                                            Hệ thống sẽ khấu trừ trực tiếp <strong>{formatPrice(paymentInfo?.amount || 0)}</strong> từ ví của bạn.
-                                        </p>
-                                    )}
-                                    <Button
-                                        type="primary"
-                                        size="large"
-                                        block
-                                        disabled={!paymentInfo || paymentInfo.walletBalance < paymentInfo.amount || isPaying}
-                                        loading={isPaying}
-                                        onClick={handleWalletPay}
-                                        className={styles.payBtn}
-                                    >
-                                        Xác nhận thanh toán bằng ví
-                                    </Button>
-                                </div>
-                            )}
+                            <div className={styles.securityNote}>
+                                <ShieldCheck size={16} />
+                                <p>Agora đảm bảo thanh toán an toàn. Tiền chỉ được chuyển cho gia sư sau khi buổi học hoàn thành.</p>
+                            </div>
                         </div>
                     </div>
-                </main>
+
+                    {/* Right Column: Payment Methods */}
+                    <main className={styles.main}>
+                        <div className={styles.card}>
+                            <h2 className={styles.cardTitle}>Chọn phương thức thanh toán</h2>
+
+                            <Radio.Group
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                value={paymentMethod}
+                                className={styles.methodGroup}
+                            >
+                                <label className={`${styles.methodItem} ${paymentMethod === 'payos' ? styles.methodActive : ''}`}>
+                                    <Radio value="payos" />
+                                    <div className={styles.methodContent}>
+                                        <div className={styles.methodIcon}>
+                                            <CreditCard size={24} />
+                                        </div>
+                                        <div className={styles.methodInfo}>
+                                            <h3>Quét mã QR Ngân hàng (PayOS)</h3>
+                                            <p>Hỗ trợ tất cả ứng dụng Mobile Banking</p>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <label className={`${styles.methodItem} ${paymentMethod === 'wallet' ? styles.methodActive : ''}`}>
+                                    <Radio value="wallet" />
+                                    <div className={styles.methodContent}>
+                                        <div className={styles.methodIcon}>
+                                            <Wallet size={24} />
+                                        </div>
+                                        <div className={styles.methodInfo}>
+                                            <h3>Số dư ví Agora</h3>
+                                            <p>Số dư hiện tại: <strong>{formatPrice(paymentInfo?.walletBalance || 0)}</strong></p>
+                                        </div>
+                                    </div>
+                                </label>
+                            </Radio.Group>
+
+                            <div className={styles.paymentActionArea}>
+                                {paymentMethod === 'payos' ? (
+                                    <div className={styles.payosArea}>
+                                        <div className={styles.qrContainer} style={{ marginBottom: '20px' }}>
+                                            <p className={styles.qrHint} style={{ fontSize: '16px' }}>
+                                                Hệ thống sử dụng cổng thanh toán an toàn PayOS. Vui lòng nhấn nút bên dưới để mở trang thanh toán và lấy mã QR chuyển khoản chính xác.
+                                            </p>
+                                        </div>
+                                        <Button
+                                            type="primary"
+                                            size="large"
+                                            block
+                                            disabled={!paymentInfo?.checkoutUrl}
+                                            onClick={() => {
+                                                if (paymentInfo?.checkoutUrl) {
+                                                    localStorage.removeItem('payos_payment_result');
+                                                    const w = window.open(paymentInfo.checkoutUrl, '_blank');
+                                                    payosWindowRef.current = w;
+                                                    setWaitingForPayOS(true);
+                                                }
+                                            }}
+                                            className={styles.payBtn}
+                                            style={{ marginTop: '16px', marginBottom: '16px' }}
+                                        >
+                                            Chuyển đến trang thanh toán PayOS
+                                        </Button>
+                                        <div className={styles.waitingStatus}>
+                                            <Spin size="small" />
+                                            <span>Đang chờ bạn thực hiện thanh toán... Hệ thống sẽ tự động cập nhật.</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={styles.walletArea}>
+                                        {paymentInfo && paymentInfo.walletBalance < paymentInfo.amount ? (
+                                            <div className={styles.insufficientFunds}>
+                                                <AlertCircle size={20} />
+                                                <p>Số dư không đủ để thanh toán. Vui lòng chọn phương thức khác hoặc nạp thêm tiền.</p>
+                                            </div>
+                                        ) : (
+                                            <p className={styles.walletHint}>
+                                                Hệ thống sẽ khấu trừ trực tiếp <strong>{formatPrice(paymentInfo?.amount || 0)}</strong> từ ví của bạn.
+                                            </p>
+                                        )}
+                                        <Button
+                                            type="primary"
+                                            size="large"
+                                            block
+                                            disabled={!paymentInfo || paymentInfo.walletBalance < paymentInfo.amount || isPaying}
+                                            loading={isPaying}
+                                            onClick={handleWalletPay}
+                                            className={styles.payBtn}
+                                        >
+                                            Xác nhận thanh toán bằng ví
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </main>
+                </div>
             </div>
         </div>
     );

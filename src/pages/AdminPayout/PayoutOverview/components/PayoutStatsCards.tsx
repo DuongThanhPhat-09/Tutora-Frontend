@@ -28,7 +28,7 @@ const PayoutStatsCards: React.FC<Props> = ({ overview, loading }) => {
                 <Col xs={24} sm={12} lg={6}>
                     <Card loading={loading} hoverable>
                         <Statistic
-                            title="Yêu cầu hôm nay"
+                            title="Yêu cầu tháng này"
                             value={todayStats?.totalRequests || 0}
                             prefix={<FileTextOutlined style={{ color: '#1890ff' }} />}
                             styles={{ content: { color: '#1890ff' } }}
@@ -92,7 +92,7 @@ const PayoutStatsCards: React.FC<Props> = ({ overview, loading }) => {
                 <Col xs={24} sm={12} lg={6}>
                     <Card loading={loading} hoverable>
                         <Statistic
-                            title="Tổng chi hôm nay"
+                            title="Tổng chi tháng này"
                             value={formatCurrency(financialStats?.totalPayoutToday || 0)}
                             prefix={<DollarOutlined style={{ color: '#1890ff' }} />}
                         />

@@ -187,6 +187,30 @@
     color: rgba(242, 240, 228, 0.5);
 }
 
+/* Logout Button */
+.tutor-portal-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10.5px;
+    width: calc(100% - 42px);
+    margin: 0 21px 21px;
+    padding: 10.5px 14px;
+    border-radius: 7px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: rgba(242, 240, 228, 0.6);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.tutor-portal-logout-btn:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+}
+
 /* ===== HEADER ===== */
 .tutor-portal-header {
     width: 100%;

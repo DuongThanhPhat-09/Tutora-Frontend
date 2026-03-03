@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Header.css";
-// Import Supabase và kiểu dữ liệu User
-import { supabase } from "../../lib/supabase";
 import { clearUserFromStorage, getCurrentUser, getUserInfoFromToken } from "../../services/auth.service";
 import { Popconfirm } from "antd";
 import { LogOut, LayoutDashboard } from "lucide-react";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userDisplayName, setUserDisplayName] = useState<string>("User");
-  const [userAvatar, setUserAvatar] = useState<string>("");
 
   // Determine portal path based on role
   const getPortalPath = () => {
@@ -30,93 +28,32 @@ const Header = () => {
 
   const portalPath = getPortalPath();
 
-  // Ẩn user info trên trang đăng ký/đăng nhập (vì có thể có OAuth session chưa complete)
+  // Ẩn user info trên trang đăng ký/đăng nhập
   const isAuthPage = location.pathname === "/register" || location.pathname === "/login";
 
-  // Helper function to generate avatar from name
-  const generateAvatarFromName = (name: string) => {
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=631b1b&color=fff&size=128`;
-  };
-
-  // Function to check login status from localStorage
-  const checkLoginStatus = () => {
-    const localUser = getCurrentUser();
-    if (localUser && localUser.accessToken) {
+  useEffect(() => {
+    // Check if user is logged in from localStorage
+    const user = getCurrentUser();
+    if (user && user.accessToken) {
       setIsLoggedIn(true);
-      const userData = getUserInfoFromToken();
-      const displayName = userData?.fullname ||
-        (userData?.firstName && userData?.lastName ? `${userData.firstName} ${userData.lastName}` : null) ||
-        localUser.fullname ||
+
+      const userInfo = getUserInfoFromToken();
+      const displayName = userInfo?.fullname ||
+        (userInfo?.firstName && userInfo?.lastName ? `${userInfo.firstName} ${userInfo.lastName}` : null) ||
+        userInfo?.email?.split('@')[0] ||
         "User";
       setUserDisplayName(displayName);
-      setUserAvatar(generateAvatarFromName(displayName));
-      return true;
+    } else {
+      setIsLoggedIn(false);
     }
-    return false;
-  };
+  }, [location.pathname]); // Re-check on navigation
 
-  useEffect(() => {
-    // 1. Kiểm tra localStorage trước (cho SimpleAuth login)
-    const hasLocalUser = checkLoginStatus();
-
-    // 2. Nếu không có local user, kiểm tra Supabase session (cho OAuth login)
-    if (!hasLocalUser) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) {
-          setIsLoggedIn(true);
-          const userData = getUserInfoFromToken();
-          const displayName = userData?.fullname ||
-            session.user.user_metadata?.full_name ||
-            session.user.email?.split('@')[0] ||
-            "User";
-          setUserDisplayName(displayName);
-          const avatarUrl = session.user.user_metadata?.avatar_url || generateAvatarFromName(displayName);
-          setUserAvatar(avatarUrl);
-        }
-      });
-    }
-
-    // 3. Lắng nghe Supabase auth state changes (OAuth login/logout)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        setIsLoggedIn(true);
-        const userData = getUserInfoFromToken();
-        const displayName = userData?.fullname ||
-          session.user.user_metadata?.full_name ||
-          session.user.email?.split('@')[0] ||
-          "User";
-        setUserDisplayName(displayName);
-        const avatarUrl = session.user.user_metadata?.avatar_url || generateAvatarFromName(displayName);
-        setUserAvatar(avatarUrl);
-      } else if (!getCurrentUser()) {
-        setIsLoggedIn(false);
-      }
-    });
-
-    // 4. Lắng nghe storage changes + custom auth event
-    const handleAuthChange = () => {
-      const localUser = getCurrentUser();
-      if (localUser && localUser.accessToken) {
-        checkLoginStatus();
-      } else {
-        setIsLoggedIn(false);
-      }
-    };
-    window.addEventListener("storage", handleAuthChange);
-    window.addEventListener("auth-change", handleAuthChange);
-
-    return () => {
-      subscription.unsubscribe();
-      window.removeEventListener("storage", handleAuthChange);
-      window.removeEventListener("auth-change", handleAuthChange);
-    };
-  }, []);
-
-  const confirmLogout = async () => {
-    await supabase.auth.signOut();
+  const confirmLogout = () => {
     clearUserFromStorage();
     setIsLoggedIn(false);
+    setIsLoggedIn(false);
     setIsMenuOpen(false);
+    navigate("/login");
   };
   return (
     <header className="header">
@@ -278,16 +215,23 @@ const Header = () => {
                     gap: "0.5rem",
                   }}
                 >
-                  <img
-                    src={userAvatar}
-                    alt="Avatar"
+                  <div
                     style={{
-                      width: "32px",
-                      height: "32px",
-                      borderRadius: "50%",
-                      border: "2px solid #d4b483",
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      border: '2px solid #d4b483',
+                      background: '#631b1b',
+                      color: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '14px',
+                      fontWeight: 600,
                     }}
-                  />
+                  >
+                    {userDisplayName.charAt(0).toUpperCase()}
+                  </div>
                   <span style={{ fontWeight: 600 }}>
                     {userDisplayName}
                   </span>

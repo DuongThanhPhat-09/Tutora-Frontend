@@ -9,8 +9,8 @@ import { TutorDetailPage } from './pages/TutorDetail';
 import { AdminDashboardPage } from './pages/AdminDashboard';
 import { UserManagementPage } from './pages/AdminUserManagement';
 import { AdminVettingPage } from './pages/AdminVetting';
-import { AdminDisputesPage } from './pages/AdminDisputes';
-import AdminDisputeDetailPageExpanded from './pages/AdminDisputes/AdminDisputeDetailPageExpanded';
+// import { AdminDisputesPage } from './pages/AdminDisputes';
+// import AdminDisputeDetailPageExpanded from './pages/AdminDisputes/AdminDisputeDetailPageExpanded';
 import { AdminFinancialsPage } from './pages/AdminFinancials';
 import { AdminSettingsPage } from './pages/AdminSettings';
 import AdminWarningsPage from './pages/AdminWarnings/AdminWarningsPage';
@@ -29,6 +29,7 @@ import {
 import NotFoundPage from './pages/Error/NotFoundPage';
 import UnauthorizedPage from './pages/Error/UnauthorizedPage';
 import ForbiddenPage from './pages/Error/ForbiddenPage';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -40,12 +41,18 @@ import ParentWallet from './pages/ParentWallet';
 import ParentMessage from './pages/ParentMessage';
 import PaymentPage from './pages/ParentBooking/Payment';
 import StudentDashboard from './pages/StudentDashboard';
-import StudentCourses from './pages/StudentCourses';
+import StudentLinkAccount from './pages/StudentLinkAccount';
+import StudentAccount from './pages/StudentAccount';
 import ParentStudent from './pages/ParentStudent';
 import PaymentCallback from './pages/PaymentCallback/PaymentCallback';
 import ParentLessons from './pages/ParentLessons';
 import ParentLessonDetail from './pages/ParentLessons/ParentLessonDetail';
-import ParentDisputes from './pages/ParentDisputes';
+import ParentCalendar from './pages/ParentLessons/ParentCalendar';
+// import ParentDisputes from './pages/ParentDisputes';
+import StudentBooking from './pages/StudentBooking';
+import StudentLessons from './pages/StudentLessons';
+import StudentLessonDetail from './pages/StudentLessons/StudentLessonDetail';
+import StudentCalendar from './pages/StudentLessons/StudentCalendar';
 import TutorFinanceDashboardPage from './pages/TutorFinance/TutorFinanceDashboard/TutorFinanceDashboardPage';
 import TransactionHistoryPage from './pages/TutorFinance/TransactionHistory/TransactionHistoryPage';
 import BankInfoManagementPage from './pages/TutorFinance/BankInfoManagement/BankInfoManagementPage';
@@ -105,18 +112,17 @@ function App() {
         <Route
           path="/admin"
           element={
-            // <ProtectedRoute allowedRoles={["Admin"]}>
-            //   <AdminLayout />
-            // </ProtectedRoute>
-            <AdminLayout />
+            <ProtectedRoute allowedRoles={["Admin"]}>
+              <AdminLayout />
+            </ProtectedRoute>
           }
         >
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboardPage />} />
           <Route path="users" element={<UserManagementPage />} />
           <Route path="vetting" element={<AdminVettingPage />} />
-          <Route path="disputes" element={<AdminDisputesPage />} />
-          <Route path="disputes/:disputeId" element={<AdminDisputeDetailPageExpanded />} />
+          {/* <Route path="disputes" element={<AdminDisputesPage />} /> */}
+          {/* <Route path="disputes/:disputeId" element={<AdminDisputeDetailPageExpanded />} /> */}
           <Route path="financials" element={<AdminFinancialsPage />} />
           <Route path="warnings" element={<AdminWarningsPage />} />
           <Route path="settings" element={<AdminSettingsPage />} />
@@ -128,8 +134,12 @@ function App() {
           <Route path="payout/fraud-logs" element={<FraudLogsPage />} />
         </Route>
 
-        {/* Tutor Portal - New Layout based on Figma */}
-        <Route path="/tutor-portal" element={<TutorPortalLayout />}>
+        {/* Tutor Portal - PROTECTED */}
+        <Route path="/tutor-portal" element={
+          <ProtectedRoute allowedRoles={["Tutor"]}>
+            <TutorPortalLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<Navigate to="/tutor-portal/dashboard" replace />} />
           <Route path="dashboard" element={<TutorPortalDashboard />} />
           <Route path="profile" element={<TutorPortalProfile />} />
@@ -151,10 +161,9 @@ function App() {
         <Route
           path="/parent"
           element={
-            // <ProtectedRoute allowedRoles={["Admin"]}>
-            //   <AdminLayout />
-            // </ProtectedRoute>
-            <ParentLayout />
+            <ProtectedRoute allowedRoles={["Parent"]}>
+              <ParentLayout />
+            </ProtectedRoute>
           }
         >
           <Route index element={<Navigate to="/parent/dashboard" replace />} />
@@ -165,24 +174,32 @@ function App() {
           <Route path="student" element={<ParentStudent />} />
           <Route path="wallet" element={<ParentWallet />} />
           <Route path="messages" element={<ParentMessage />} />
+          <Route path="calendar" element={<ParentCalendar />} />
           <Route path="lessons" element={<ParentLessons />} />
           <Route path="lessons/:lessonId" element={<ParentLessonDetail />} />
-          <Route path="disputes" element={<ParentDisputes />} />
+          {/* <Route path="disputes" element={<ParentDisputes />} /> */}
         </Route>
 
         {/* Student Layout - PROTECTED */}
         <Route
           path="/student"
           element={
-            // <ProtectedRoute allowedRoles={["Admin"]}>
-            //   <AdminLayout />
-            // </ProtectedRoute>
-            <ParentLayout />
+            <ProtectedRoute allowedRoles={["Student"]}>
+              <ParentLayout />
+            </ProtectedRoute>
           }
         >
           <Route index element={<Navigate to="/student/dashboard" replace />} />
           <Route path="dashboard" element={<StudentDashboard />} />
-          <Route path="courses" element={<StudentCourses />} />
+          <Route path="booking" element={<StudentBooking />} />
+          <Route path="booking/:id" element={<BookingDetail />} />
+          <Route path="booking/:id/payment" element={<PaymentPage />} />
+          <Route path="lessons" element={<StudentLessons />} />
+          <Route path="lessons/:lessonId" element={<StudentLessonDetail />} />
+          <Route path="calendar" element={<StudentCalendar />} />
+          <Route path="messages" element={<ParentMessage />} />
+          <Route path="link-account" element={<StudentLinkAccount />} />
+          <Route path="account" element={<StudentAccount />} />
         </Route>
 
         {/* PayOS callback - loaded inside iframe after payment */}

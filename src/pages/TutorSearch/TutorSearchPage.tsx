@@ -241,7 +241,7 @@ const mapApiTutorToUi = (apiTutor: TutorSearchResultResponse): Tutor => {
         result: apiTutor.successRate || apiTutor.specialty || "—",
         resultType: getResultType(type),
         highlights: apiTutor.highlights || [],
-        price: apiTutor.hourlyRate ? Number(apiTutor.hourlyRate) : 0,
+        price: apiTutor.hourlyRate ? Math.round(Number(apiTutor.hourlyRate) * 1.05) : 0,
     };
 };
 
