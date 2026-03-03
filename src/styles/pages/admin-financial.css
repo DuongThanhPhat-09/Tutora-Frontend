@@ -263,3 +263,30 @@
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 768px) {
+    .admin-tabs-container {
+        padding: 16px 16px 0;
+        gap: 16px;
+        overflow-x: auto;
+    }
+
+    .admin-tab-text {
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .admin-ledger-title {
+        font-size: 18px;
+    }
+
+    .amount-text {
+        font-size: 14px;
+    }
+
+    .btn-process,
+    .btn-reject {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+}
