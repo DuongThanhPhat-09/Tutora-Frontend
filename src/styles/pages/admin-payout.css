@@ -63,3 +63,19 @@
 .timeline-dot-pending {
     color: #faad14;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .admin-payout-container {
+        padding: 16px;
+    }
+
+    .stat-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .bank-info-display {
+        padding: 12px;
+    }
+}

@@ -330,3 +330,57 @@
     padding: 24px;
     overflow-y: auto;
 }
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet: hide sidebar, full-width main */
+@media (max-width: 1024px) {
+    .workspace-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .workspace-sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .workspace-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .workspace-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .breadcrumb {
+        padding: 16px;
+    }
+
+    .page-greeting {
+        font-size: 20px;
+        line-height: 28px;
+    }
+
+    .dashboard-content {
+        padding: 16px;
+    }
+
+    .search-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+}
