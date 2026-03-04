@@ -1,20 +1,20 @@
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { Popconfirm } from 'antd';
 import styles from './styles.module.css';
-import { useEffect } from 'react';
+
 import NotificationDropdown from '../../components/NotificationDropdown/NotificationDropdown';
-import { clearUserFromStorage, getUserInfoFromToken } from '../../services/auth.service';
+import { clearUserFromStorage } from '../../services/auth.service';
 import { toast } from 'react-toastify';
 
 // Shared icons & hooks
 import {
-    LogoIcon, NotificationIcon, ClockIcon,
+    LogoIcon, NotificationIcon,
     DashboardIcon, MessagesIcon, BookingIcon,
     AccountIcon, MenuIcon, CloseIcon, LogoutIcon,
     LessonsIcon, CalendarIcon,
 } from '../shared/icons';
 import {
-    useUserData, useNotifications, useSidebarState, useNextLesson, getInitials,
+    useUserData, useNotifications, useSidebarState, getInitials,
 } from '../shared/useLayoutData';
 
 // Student-specific navigation items
@@ -39,15 +39,7 @@ const StudentLayout: React.FC<StudentLayoutProps> = ({ children }) => {
         notificationCount, showNotificationDropdown,
         setShowNotificationDropdown, handleRefreshNotificationCount,
     } = useNotifications();
-    const { nextLesson, loadNextLesson } = useNextLesson();
 
-    // Load next lesson on mount (Student role can access their own lessons)
-    useEffect(() => {
-        const user = getUserInfoFromToken();
-        if (user) {
-            loadNextLesson();
-        }
-    }, [loadNextLesson]);
 
     const isActive = (path: string) => location.pathname.startsWith(path);
 
@@ -125,21 +117,7 @@ const StudentLayout: React.FC<StudentLayoutProps> = ({ children }) => {
                                 </div>
                             </div>
 
-                            {/* Next Lesson Indicator */}
-                            {nextLesson && (
-                                <div className={styles.nextLesson}>
-                                    <ClockIcon />
-                                    <span>
-                                        Tiếp: {new Date(nextLesson.scheduledStart).toLocaleDateString('vi-VN', {
-                                            day: '2-digit',
-                                            month: '2-digit'
-                                        })} {new Date(nextLesson.scheduledStart).toLocaleTimeString('vi-VN', {
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}
-                                    </span>
-                                </div>
-                            )}
+
                         </div>
 
                         {/* Spacer */}

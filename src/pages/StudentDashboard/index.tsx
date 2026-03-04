@@ -13,12 +13,13 @@ import {
   ChevronRight,
   ArrowRight,
 } from 'lucide-react';
-import { getStudentPendingLessons, getStudentCalendar, getStudentBookings } from '../../services/student-lesson.service';
+import { getStudentPendingLessons, getStudentCalendar, getStudentBookings, getStudentLessons } from '../../services/student-lesson.service';
 import { getUserInfoFromToken } from '../../services/auth.service';
 import styles from './styles.module.css';
 
 const StudentDashboard = () => {
-  const [lessons, setLessons] = useState<any[]>([]);
+  const [lessons, setLessons] = useState<any[]>([]);         // all lessons
+  const [pendingLessons, setPendingLessons] = useState<any[]>([]); // pending only
   const [bookings, setBookings] = useState<any[]>([]);
   const [calendarDays, setCalendarDays] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,17 +39,27 @@ const StudentDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [lessonsRes, bookingsRes] = await Promise.allSettled([
+      const [allLessonsRes, pendingLessonsRes, bookingsRes] = await Promise.allSettled([
+        getStudentLessons({ page: 1, pageSize: 50 }),
         getStudentPendingLessons(),
         getStudentBookings({ page: 1, pageSize: 10 }),
       ]);
 
-      if (lessonsRes.status === 'fulfilled') {
-        setLessons(Array.isArray(lessonsRes.value.content) ? lessonsRes.value.content : []);
+      if (allLessonsRes.status === 'fulfilled') {
+        const data = allLessonsRes.value.content;
+        const items = Array.isArray(data) ? data : (data as any)?.items || [];
+        setLessons(items);
+      }
+      if (pendingLessonsRes.status === 'fulfilled') {
+        setPendingLessons(Array.isArray(pendingLessonsRes.value.content) ? pendingLessonsRes.value.content : []);
       }
       if (bookingsRes.status === 'fulfilled') {
         const b = bookingsRes.value.content;
-        setBookings(Array.isArray(b) ? b : (b as any)?.content || []);
+        const allBookings = Array.isArray(b) ? b : (b as any)?.items || [];
+        const activeBookings = allBookings.filter((bk: any) =>
+          !['cancelled', 'rejected', 'expired'].includes(bk.status?.toLowerCase())
+        );
+        setBookings(activeBookings);
       }
     } catch (err) {
       console.error('Dashboard fetch error:', err);
@@ -71,7 +82,10 @@ const StudentDashboard = () => {
   // Derived stats
   const totalBookings = bookings.length;
   const totalLessons = lessons.length;
-  const pendingCount = lessons.filter((l: any) => l.status === 'pending_confirmation').length;
+  // Đếm cả lessons pending + bookings cần hành động (chờ thanh toán, đã cọc)
+  const pendingCount = pendingLessons.length + bookings.filter((bk: any) =>
+    ['pending_payment', 'deposit_paid', 'pending_confirmation'].includes(bk.status?.toLowerCase())
+  ).length;
   const completedCount = lessons.filter((l: any) => l.status === 'completed').length;
 
   // Today's lessons
@@ -267,15 +281,20 @@ const StudentDashboard = () => {
               </div>
               <div className={styles.bookingCards}>
                 {bookings.slice(0, 4).map((booking: any, idx: number) => {
-                  const progress = booking.completedLessons && booking.totalLessons
-                    ? Math.round((booking.completedLessons / booking.totalLessons) * 100) : 0;
                   const colors = ['#1A2130', '#7C3AED', '#DC2626', '#0891B2'];
                   const bgColors = ['rgba(26,33,48,0.08)', 'rgba(124,58,237,0.08)', 'rgba(220,38,38,0.08)', 'rgba(8,145,178,0.08)'];
+                  const subjectName = booking.subject?.subjectName || `Booking #${booking.bookingId}`;
+                  const tutorName = booking.tutor?.fullName || 'N/A';
+                  const statusLabel = booking.status === 'confirmed' ? 'Đã xác nhận'
+                    : booking.status === 'pending_payment' ? 'Chờ thanh toán'
+                      : booking.status === 'deposit_paid' ? 'Đã cọc 50%'
+                        : booking.status === 'completed' ? 'Hoàn thành'
+                          : booking.status || '';
 
                   return (
                     <Link
-                      to={`/student/booking/${booking.bookingId || booking.id}`}
-                      key={booking.bookingId || booking.id || idx}
+                      to={`/student/booking/${booking.bookingId}`}
+                      key={booking.bookingId || idx}
                       className={styles.bookingCard}
                     >
                       <div className={styles.bookingCardHeader}>
@@ -286,24 +305,24 @@ const StudentDashboard = () => {
                           <BookOpen size={20} />
                         </div>
                         <div className={styles.bookingCardInfo}>
-                          <div className={styles.bookingCardMastery}>Tiến độ</div>
-                          <div className={styles.bookingCardMasteryValue}>{progress}%</div>
+                          <div className={styles.bookingCardMastery}>{statusLabel}</div>
+                          <div className={styles.bookingCardMasteryValue}>{booking.sessionCount || 0} buổi</div>
                         </div>
                       </div>
                       <div className={styles.bookingCardTitle}>
-                        {booking.subjectName || booking.subject || `Booking #${booking.bookingId || booking.id}`}
+                        {subjectName}
                       </div>
                       <div className={styles.bookingCardTutor}>
-                        Gia sư: {booking.tutorName || booking.tutor || 'N/A'}
+                        Gia sư: {tutorName}
                       </div>
                       <div className={styles.bookingCardProgress}>
                         <div
                           className={styles.bookingCardProgressBar}
-                          style={{ width: `${progress}%`, background: colors[idx % 4] }}
+                          style={{ width: booking.paymentStatus === 'fully_paid' ? '100%' : booking.paymentStatus === 'deposit_paid' ? '50%' : '0%', background: colors[idx % 4] }}
                         />
                       </div>
                       <div className={styles.bookingCardFooter}>
-                        <span>{booking.completedLessons || 0}/{booking.totalLessons || 0} buổi</span>
+                        <span>{Intl.NumberFormat('vi-VN').format(booking.finalPrice || 0)}đ</span>
                         <ArrowRight size={14} />
                       </div>
                     </Link>

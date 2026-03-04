@@ -36,19 +36,24 @@ const StudentCalendar: React.FC = () => {
     };
 
     return (
-        <div className={s.studentPage}>
-            <div className={s.pageHeader}>
-                <div>
+        <div className={s.page}>
+            {/* Top Bar */}
+            <div className={s.topBar}>
+                <div className={s.topBarLeft}>
                     <h1 className={s.pageTitle}>Thời khóa biểu</h1>
                     <p className={s.pageSubtitle}>Xem lịch học của bạn theo tuần</p>
                 </div>
             </div>
-            <div className={s.calendarWrapper}>
-                <CalendarView
-                    data={calendarData}
-                    isLoading={isLoading}
-                    onLessonClick={handleLessonClick}
-                />
+
+            {/* Main Content */}
+            <div className={s.mainContent}>
+                <div className={s.calendarWrapper}>
+                    <CalendarView
+                        data={calendarData}
+                        isLoading={isLoading}
+                        onLessonClick={handleLessonClick}
+                    />
+                </div>
             </div>
         </div>
     );

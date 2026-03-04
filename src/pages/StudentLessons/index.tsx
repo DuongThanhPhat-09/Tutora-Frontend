@@ -55,91 +55,100 @@ const StudentLessons = () => {
     const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
     return (
-        <div className={s.studentPage}>
-            <div className={s.pageHeader}>
-                <div>
+        <div className={s.page}>
+            {/* Top Bar */}
+            <div className={s.topBar}>
+                <div className={s.topBarLeft}>
                     <h1 className={s.pageTitle}>Buổi học</h1>
                     <p className={s.pageSubtitle}>Theo dõi và quản lý buổi học của bạn</p>
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className={s.tabsRow}>
-                {TABS.map((t) => (
-                    <button
-                        key={t.key}
-                        className={`${s.tab} ${activeTab === t.key ? s.active : ''}`}
-                        onClick={() => { setActiveTab(t.key); setPage(1); }}
-                    >
-                        {t.label}
-                    </button>
-                ))}
-            </div>
-
-            {/* Content */}
-            {loading ? (
-                <div className={s.loadingCenter}><Spin size="large" /></div>
-            ) : lessons.length === 0 ? (
-                <div className={s.emptyState}>
-                    <div className={s.emptyStateIcon}>📖</div>
-                    Chưa có buổi học nào
-                </div>
-            ) : (
-                <>
-                    <div className={s.cardList}>
-                        {lessons.map((lesson: any, idx: number) => {
-                            const st = STATUS_MAP[lesson.status] || { label: lesson.status, cls: '' };
-                            const startTime = lesson.scheduledStartTime || lesson.scheduledStart;
-                            const iconColor = lesson.status === 'pending_confirmation'
-                                ? { bg: 'rgba(245,158,11,0.08)', fg: '#F59E0B' }
-                                : lesson.status === 'completed'
-                                    ? { bg: 'rgba(16,185,129,0.08)', fg: '#10B981' }
-                                    : { bg: 'rgba(99,102,241,0.08)', fg: '#6366F1' };
-
-                            return (
-                                <div
-                                    key={lesson.lessonId || idx}
-                                    className={s.card}
-                                    onClick={() => navigate(`/student/lessons/${lesson.lessonId}`)}
+            {/* Main Content */}
+            <div className={s.mainContent}>
+                <div className={s.contentPanel}>
+                    {/* Tabs */}
+                    <div className={s.tabBar}>
+                        <div className={s.tabGroup}>
+                            {TABS.map((t) => (
+                                <button
+                                    key={t.key}
+                                    className={`${s.tab} ${activeTab === t.key ? s.active : ''}`}
+                                    onClick={() => { setActiveTab(t.key); setPage(1); }}
                                 >
-                                    <div
-                                        className={s.cardIcon}
-                                        style={{ background: iconColor.bg, color: iconColor.fg }}
-                                    >
-                                        <GraduationCap size={20} />
-                                    </div>
-                                    <div className={s.cardBody}>
-                                        <div className={s.cardTitle}>
-                                            {lesson.subjectName || `Buổi học #${lesson.lessonId}`}
-                                        </div>
-                                        <div className={s.cardMeta}>
-                                            <Clock size={12} />
-                                            {startTime ? dayjs(startTime).format('DD/MM/YYYY HH:mm') : 'N/A'}
-                                            <span>•</span>
-                                            {lesson.tutorName || 'Gia sư'}
-                                        </div>
-                                    </div>
-                                    <div className={s.cardRight}>
-                                        <span className={`${s.badge} ${st.cls}`}>{st.label}</span>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                    {t.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
-                    {totalPages > 1 && (
-                        <div className={s.pagination}>
-                            <button className={s.paginationBtn} disabled={page <= 1} onClick={() => setPage(page - 1)}>
-                                <ChevronLeft size={16} />
-                            </button>
-                            <span className={s.paginationInfo}>{page}/{totalPages}</span>
-                            <button className={s.paginationBtn} disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
-                                <ChevronRight size={16} />
-                            </button>
+                    {/* Content */}
+                    {loading ? (
+                        <div className={s.loadingCenter}><Spin size="large" /></div>
+                    ) : lessons.length === 0 ? (
+                        <div className={s.emptyState}>
+                            <div className={s.emptyStateIcon}>📖</div>
+                            <div className={s.emptyStateText}>Chưa có buổi học nào</div>
+                            <div className={s.emptyStateSub}>Buổi học sẽ xuất hiện khi booking được xác nhận</div>
                         </div>
+                    ) : (
+                        <>
+                            <div className={s.cardList}>
+                                {lessons.map((lesson: any, idx: number) => {
+                                    const st = STATUS_MAP[lesson.status] || { label: lesson.status, cls: '' };
+                                    const startTime = lesson.scheduledStartTime || lesson.scheduledStart;
+                                    const iconColor = lesson.status === 'pending_confirmation'
+                                        ? { bg: 'rgba(245,158,11,0.08)', fg: '#d97706' }
+                                        : lesson.status === 'completed'
+                                            ? { bg: 'rgba(16,185,129,0.08)', fg: '#059669' }
+                                            : { bg: 'rgba(99,102,241,0.08)', fg: '#6366F1' };
+
+                                    return (
+                                        <div
+                                            key={lesson.lessonId || idx}
+                                            className={s.card}
+                                            onClick={() => navigate(`/student/lessons/${lesson.lessonId}`)}
+                                        >
+                                            <div
+                                                className={s.cardIcon}
+                                                style={{ background: iconColor.bg, color: iconColor.fg }}
+                                            >
+                                                <GraduationCap size={20} />
+                                            </div>
+                                            <div className={s.cardBody}>
+                                                <div className={s.cardTitle}>
+                                                    {lesson.subjectName || `Buổi học #${lesson.lessonId}`}
+                                                </div>
+                                                <div className={s.cardMeta}>
+                                                    <Clock size={12} />
+                                                    {startTime ? dayjs(startTime).format('DD/MM/YYYY HH:mm') : 'N/A'}
+                                                    <span>•</span>
+                                                    {lesson.tutorName || 'Gia sư'}
+                                                </div>
+                                            </div>
+                                            <div className={s.cardRight}>
+                                                <span className={`${s.badge} ${st.cls}`}>{st.label}</span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {totalPages > 1 && (
+                                <div className={s.pagination}>
+                                    <button className={s.paginationBtn} disabled={page <= 1} onClick={() => setPage(page - 1)}>
+                                        <ChevronLeft size={16} />
+                                    </button>
+                                    <span className={s.paginationInfo}>{page}/{totalPages}</span>
+                                    <button className={s.paginationBtn} disabled={page >= totalPages} onClick={() => setPage(page + 1)}>
+                                        <ChevronRight size={16} />
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
-                </>
-            )}
+                </div>
+            </div>
         </div>
     );
 };
