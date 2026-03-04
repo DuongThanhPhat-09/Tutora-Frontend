@@ -746,6 +746,8 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
     const [loadingStudents, setLoadingStudents] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [bookingSuccess, setBookingSuccess] = useState(false);
+    const [successBookingId, setSuccessBookingId] = useState<number | null>(null);
     const [slotDuration, setSlotDuration] = useState(2);
     const [formData, setFormData] = useState<BookingFormData>({
         studentId: userRole === 'Student' ? (currentUserId || '') : '',
@@ -792,6 +794,8 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
         if (!isOpen) {
             setStep(0);
             setSubmitError(null);
+            setBookingSuccess(false);
+            setSuccessBookingId(null);
             setSlotDuration(2);
             setFormData({
                 studentId: userRole === 'Student' ? (currentUserId || '') : '',
@@ -807,6 +811,13 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
             });
         }
     }, [isOpen]);
+
+    // Auto-dismiss error toast after 5 seconds
+    useEffect(() => {
+        if (!submitError) return;
+        const timer = setTimeout(() => setSubmitError(null), 5000);
+        return () => clearTimeout(timer);
+    }, [submitError]);
 
     if (!isOpen) return null;
 
@@ -851,9 +862,13 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
                 promotionCode: formData.promotionCode || undefined,
             };
 
-            await createBooking(payload);
-            alert('✅ Booking đã được tạo thành công! Gia sư sẽ xác nhận trong thời gian sớm nhất.');
-            onClose();
+            const result = await createBooking(payload);
+            setSuccessBookingId(result.content?.bookingId || null);
+            setBookingSuccess(true);
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+                onClose();
+            }, 5000);
         } catch (err: any) {
             console.error('createBooking failed:', err);
             const msg = err.response?.data?.message || 'Có lỗi xảy ra khi tạo booking. Vui lòng thử lại.';
@@ -880,6 +895,61 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
     return (
         <div className="bm-overlay" onClick={onClose}>
             <div className="bm-modal" onClick={(e) => e.stopPropagation()}>
+                {/* ===== SUCCESS OVERLAY ===== */}
+                {bookingSuccess && (
+                    <div className="bm-success-overlay">
+                        <div className="bm-success-content">
+                            <div className="bm-success-icon-wrapper">
+                                <div className="bm-success-icon">
+                                    <svg viewBox="0 0 52 52" className="bm-success-checkmark">
+                                        <circle className="bm-success-circle" cx="26" cy="26" r="25" fill="none" />
+                                        <path className="bm-success-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 className="bm-success-title">Đặt lịch thành công!</h3>
+                            <p className="bm-success-desc">
+                                Yêu cầu booking của bạn đã được gửi đến <strong>{tutorName}</strong>.
+                                Gia sư sẽ xác nhận trong thời gian sớm nhất.
+                            </p>
+                            {successBookingId && (
+                                <div className="bm-success-booking-id">
+                                    Mã booking: <strong>#{successBookingId}</strong>
+                                </div>
+                            )}
+                            <div className="bm-success-steps">
+                                <div className="bm-success-step">
+                                    <div className="bm-success-step-num">1</div>
+                                    <span>Gia sư xem xét yêu cầu</span>
+                                </div>
+                                <div className="bm-success-step">
+                                    <div className="bm-success-step-num">2</div>
+                                    <span>Xác nhận & thanh toán</span>
+                                </div>
+                                <div className="bm-success-step">
+                                    <div className="bm-success-step-num">3</div>
+                                    <span>Bắt đầu học!</span>
+                                </div>
+                            </div>
+                            <button className="bm-success-close-btn" onClick={onClose} type="button">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== ERROR TOAST ===== */}
+                {submitError && (
+                    <div className="bm-toast-error">
+                        <div className="bm-toast-error-icon">✕</div>
+                        <div className="bm-toast-error-content">
+                            <div className="bm-toast-error-title">Đặt lịch thất bại</div>
+                            <div className="bm-toast-error-msg">{submitError}</div>
+                        </div>
+                        <button className="bm-toast-error-close" onClick={() => setSubmitError(null)} type="button">✕</button>
+                    </div>
+                )}
+
                 {/* Modal Header */}
                 <div className="bm-header">
                     <div className="bm-header-info">
@@ -909,11 +979,6 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
                     {step === 2 && <StepSchedule {...stepProps} />}
                     {step === 3 && <StepReview {...stepProps} />}
                 </div>
-
-                {/* Error */}
-                {submitError && (
-                    <div className="bm-error-bar">{submitError}</div>
-                )}
 
                 {/* Footer */}
                 <div className="bm-footer">

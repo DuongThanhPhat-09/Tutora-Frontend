@@ -34,6 +34,7 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ParentLayout from './layouts/ParentLayout';
+import StudentLayout from './layouts/StudentLayout';
 import ParentDashboard from './pages/ParentDashboard';
 import ParentBooking from './pages/ParentBooking';
 import BookingDetail from './pages/ParentBooking/Details';
@@ -185,7 +186,7 @@ function App() {
           path="/student"
           element={
             <ProtectedRoute allowedRoles={["Student"]}>
-              <ParentLayout />
+              <StudentLayout />
             </ProtectedRoute>
           }
         >
