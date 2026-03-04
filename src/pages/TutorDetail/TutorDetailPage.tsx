@@ -75,8 +75,18 @@ const formatCurrency = (amount: number | null) => {
 
 // Hero Section
 const HeroSection = ({ profile }: { profile: TutorFullProfile }) => {
-    // Flatten subjects tags
-    const tags = profile.subjects?.flatMap(s => s.tags || []) || [];
+    // Flatten subjects tags (handle tags being a JSON string or an array)
+    const parseTags = (tags: unknown): string[] => {
+        if (Array.isArray(tags)) return tags;
+        if (typeof tags === 'string') {
+            try {
+                const parsed = JSON.parse(tags);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch { return []; }
+        }
+        return [];
+    };
+    const tags = profile.subjects?.flatMap(s => parseTags(s.tags)) || [];
 
     return (
         <section className="tutor-hero-section">
