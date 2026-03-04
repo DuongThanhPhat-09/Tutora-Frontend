@@ -6,13 +6,16 @@ import type { StudentType } from '../../types/student.type';
 import {
   getStudents,
   deleteStudent,
-  createParentStudent,
+  createParentStudentWithCredentials,
   updateParentStudent,
   type ICreateParentStudent,
+  type StudentCredentials,
 } from '../../services/student.service';
 import AddStudentModal from './components/AddStudentModal';
 import EditStudentModal from './components/EditStudentModal';
 import LinkCodeModal from './components/LinkCodeModal';
+import CredentialsModal from './components/CredentialsModal';
+import ParentCodeModal from './components/ParentCodeModal';
 
 // ── Icons ──
 
@@ -142,6 +145,8 @@ const ParentStudent = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [linkCodeStudent, setLinkCodeStudent] = useState<StudentType | null>(null);
+  const [newCredentials, setNewCredentials] = useState<StudentCredentials | null>(null);
+  const [isParentCodeOpen, setIsParentCodeOpen] = useState(false);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -174,11 +179,15 @@ const ParentStudent = () => {
 
   const handleAddStudent = async (payload: ICreateParentStudent) => {
     try {
-      await createParentStudent(payload);
+      const result = await createParentStudentWithCredentials(payload);
       toast.success('Student added successfully');
       const response = await getStudents();
       if (response.statusCode === 200) setStudents(response.content);
       setIsAddModalOpen(false);
+      // Show auto-generated credentials
+      if (result.content) {
+        setNewCredentials(result.content);
+      }
     } catch (err) {
       console.error('Error adding student:', err);
       toast.error('Failed to add student');
@@ -258,6 +267,15 @@ const ParentStudent = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+          <button
+            className={styles.addChildBtn}
+            onClick={() => setIsParentCodeOpen(true)}
+            type="button"
+            style={{ background: '#3b82f6', marginRight: 8 }}
+          >
+            <LinkIcon />
+            <span>Invite Code</span>
+          </button>
           <button className={styles.addChildBtn} onClick={handleAddClick} type="button">
             <PlusIcon />
             <span>Add Child</span>
@@ -459,6 +477,13 @@ const ParentStudent = () => {
           onClose={() => setLinkCodeStudent(null)}
           onCodeGenerated={handleLinkCodeGenerated}
         />
+      )}
+      <CredentialsModal
+        credentials={newCredentials}
+        onClose={() => setNewCredentials(null)}
+      />
+      {isParentCodeOpen && (
+        <ParentCodeModal onClose={() => setIsParentCodeOpen(false)} />
       )}
     </div>
   );

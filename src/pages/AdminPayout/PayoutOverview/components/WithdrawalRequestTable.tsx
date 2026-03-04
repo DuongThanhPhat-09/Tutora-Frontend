@@ -76,7 +76,7 @@ const WithdrawalRequestTable: React.FC<Props> = ({
                     type="primary"
                     ghost
                     icon={<EyeOutlined />}
-                    onClick={() => navigate(`/admin/payouts/${record.withdrawalId}`)}
+                    onClick={() => navigate(`/admin-portal/payouts/${record.withdrawalId}`)}
                     size="small"
                 >
                     Xử lý

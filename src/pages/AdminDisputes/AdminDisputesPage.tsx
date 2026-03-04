@@ -260,7 +260,7 @@ const AdminDisputesPage = () => {
                                                     <td className="dispute-td dispute-td-right">
                                                         <button
                                                             className="dispute-action-btn"
-                                                            onClick={() => navigate(`/admin/disputes/${dispute.disputeId}`)}
+                                                            onClick={() => navigate(`/admin-portal/disputes/${dispute.disputeId}`)}
                                                         >
                                                             Xem chi tiết
                                                         </button>

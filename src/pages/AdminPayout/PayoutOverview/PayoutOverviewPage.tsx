@@ -77,7 +77,7 @@ const PayoutOverviewPage: React.FC = () => {
                     <div style={{ display: 'flex', gap: '12px' }}>
                         <Button
                             icon={<SearchOutlined />}
-                            onClick={() => navigate('/admin/payouts/history')}
+                            onClick={() => navigate('/admin-portal/payouts/history')}
                         >
                             Lịch sử rút tiền
                         </Button>
@@ -85,7 +85,7 @@ const PayoutOverviewPage: React.FC = () => {
                             type="primary"
                             ghost
                             icon={<SecurityScanOutlined />}
-                            onClick={() => navigate('/admin/payout/fraud-logs')}
+                            onClick={() => navigate('/admin-portal/payout/fraud-logs')}
                             danger
                         >
                             Nhật ký an toàn (Fraud Logs)

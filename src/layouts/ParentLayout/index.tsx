@@ -1,167 +1,30 @@
-import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { Popconfirm } from 'antd';
 import styles from './styles.module.css';
-import { useState, useEffect, useRef } from 'react';
-import { getUnreadCount } from '../../services/notification.service';
-import { signalRService } from '../../services/signalr.service';
+import { useEffect } from 'react';
 import NotificationDropdown from '../../components/NotificationDropdown/NotificationDropdown';
-import { getUserInfoFromToken, clearUserFromStorage } from '../../services/auth.service';
-import { getNextLesson } from '../../services/lesson.service';
-import type { LessonResponse } from '../../services/lesson.service';
+import { clearUserFromStorage, getUserInfoFromToken } from '../../services/auth.service';
 import { StudentProvider, useStudentContext } from '../../contexts/StudentContext';
 import { toast } from 'react-toastify';
 
-// Logo Icon (TUTORA symbol) - same as TutorPortalLayout
-const LogoIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="currentColor">
-    <path d="M14 2L2 8V20L14 26L26 20V8L14 2ZM14 4.5L22.5 9V19L14 23.5L5.5 19V9L14 4.5Z" />
-    <path d="M14 8L8 11V17L14 20L20 17V11L14 8Z" />
-  </svg>
-);
+// Shared icons & hooks
+import {
+  LogoIcon, NotificationIcon, ClockIcon,
+  DashboardIcon, ChildrenIcon, MessagesIcon, BookingIcon,
+  MenuIcon, CloseIcon, LogoutIcon, LessonsIcon, CalendarIcon,
+} from '../shared/icons';
+import {
+  useUserData, useNotifications, useSidebarState, useNextLesson,
+} from '../shared/useLayoutData';
 
-// Notification Bell Icon
-const NotificationIcon = () => (
-  <svg width="18" height="20" viewBox="0 0 18 20" fill="currentColor">
-    <path d="M9 0C5.68629 0 3 2.68629 3 6V11L1 14V15H17V14L15 11V6C15 2.68629 12.3137 0 9 0Z" />
-    <path d="M9 20C10.6569 20 12 18.6569 12 17H6C6 18.6569 7.34315 20 9 20Z" />
-  </svg>
-);
-
-// Clock Icon for next lesson
-const ClockIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <circle cx="7" cy="7" r="5.5" />
-    <path d="M7 4V7L9 8.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-// Dropdown Arrow
-const ChevronDown = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M3 4.5L6 7.5L9 4.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-// Nav Icons
-const DashboardIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-    <path d="M2 4C2 2.89543 2.89543 2 4 2H7C7.55228 2 8 2.44772 8 3V7C8 7.55228 7.55228 8 7 8H4C2.89543 8 2 7.10457 2 6V4Z" />
-    <path d="M2 12C2 10.8954 2.89543 10 4 10H7C7.55228 10 8 10.4477 8 11V15C8 15.5523 7.55228 16 7 16H4C2.89543 16 2 15.1046 2 14V12Z" />
-    <path d="M10 3C10 2.44772 10.4477 2 11 2H14C15.1046 2 16 2.89543 16 4V6C16 7.10457 15.1046 8 14 8H11C10.4477 8 10 7.55228 10 7V3Z" />
-    <path d="M10 11C10 10.4477 10.4477 10 11 10H14C15.1046 10 16 10.8954 16 12V14C16 15.1046 15.1046 16 14 16H11C10.4477 16 10 15.5523 10 15V11Z" />
-  </svg>
-);
-
-const ChildrenIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-    <path d="M9 8C10.6569 8 12 6.65685 12 5C12 3.34315 10.6569 2 9 2C7.34315 2 6 3.34315 6 5C6 6.65685 7.34315 8 9 8Z" />
-    <path d="M2 16C2 12.6863 5.13401 10 9 10C12.866 10 16 12.6863 16 16H2Z" />
-  </svg>
-);
-
-const MessagesIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M1 4L9 9L17 4M1 14V4C1 2.89543 1.89543 2 3 2H15C16.1046 2 17 2.89543 17 4V14C17 15.1046 16.1046 16 15 16H3C1.89543 16 1 15.1046 1 14Z" strokeLinecap="round" />
-  </svg>
-);
-
-// MVP Phase 12: FinanceIcon hidden (Wallet removed from sidebar)
-// const FinanceIcon = () => (
-//   <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-//     <path d="M2 4C2 2.89543 2.89543 2 4 2H14C15.1046 2 16 2.89543 16 4V14C16 15.1046 15.1046 16 14 16H4C2.89543 16 2 15.1046 2 14V4Z" />
-//     <path d="M9 5V13M6 8H12M6 10H12" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-//   </svg>
-// );
-
-const BookingIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M11 3V1M7 3V1M3 13V5C3 3.89543 3.89543 3 5 3H13C14.1046 3 15 3.89543 15 5V13C15 14.1046 14.1046 15 13 15H5C3.89543 15 3 14.1046 3 13Z" strokeLinecap="round" />
-    <path d="M7 8L9 10L12 7" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M3 8H15" strokeLinecap="round" />
-  </svg>
-);
-
-// SettingsIcon removed — replaced Settings nav with logout button
-// const SettingsIcon = () => (
-//   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-//     <circle cx="9" cy="9" r="2.5" />
-//     <path d="M9 1V3M9 15V17M1 9H3M15 9H17M3.05 3.05L4.46 4.46M13.54 13.54L14.95 14.95M3.05 14.95L4.46 13.54M13.54 4.46L14.95 3.05" strokeLinecap="round" />
-//   </svg>
-// );
-
-const AccountIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <circle cx="9" cy="7" r="3.5" />
-    <path d="M2 16c0-3.314 3.134-6 7-6s7 2.686 7 6" strokeLinecap="round" />
-  </svg>
-);
-
-// Hamburger Menu Icon for mobile
-const MenuIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M3 5H17M3 10H17M3 15H17" strokeLinecap="round" />
-  </svg>
-);
-
-// Close Icon for mobile sidebar
-const CloseIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M5 5L15 15M15 5L5 15" strokeLinecap="round" />
-  </svg>
-);
-
-// Logout Icon
-const LogoutIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M6 16H3C2.44772 16 2 15.5523 2 15V3C2 2.44772 2.44772 2 3 2H6" strokeLinecap="round" />
-    <path d="M12 12L16 9L12 6" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M16 9H7" strokeLinecap="round" />
-  </svg>
-);
-
-// Navigation items matching Figma design
-// Lessons Icon
-const LessonsIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <path d="M2 4C2 2.89543 2.89543 2 4 2H14C15.1046 2 16 2.89543 16 4V14C16 15.1046 15.1046 16 14 16H4C2.89543 16 2 15.1046 2 14V4Z" strokeLinecap="round" />
-    <path d="M6 6H12M6 9H12M6 12H9" strokeLinecap="round" />
-  </svg>
-);
-
-// Dispute Icon
-// MVP Phase 1: Ẩn Dispute
-// const DisputeIcon = () => (
-//   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-//     <path d="M9 6V9M9 12H9.01M3 14V4C3 2.89543 3.89543 2 5 2H13C14.1046 2 15 2.89543 15 4V14C15 15.1046 14.1046 16 13 16H5C3.89543 16 3 15.1046 3 14Z" strokeLinecap="round" strokeLinejoin="round" />
-//   </svg>
-// );
-
-const CalendarIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-    <rect x="2" y="3" width="14" height="13" rx="2" />
-    <path d="M12 1v4" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M6 1v4" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M2 7h14" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
+// Parent-specific navigation items
 const parentNavItems = [
-  { path: '/parent/dashboard', label: 'Dashboard', icon: DashboardIcon },
-  { path: '/parent/student', label: 'Children', icon: ChildrenIcon },
-  { path: '/parent/lessons', label: 'Buổi học', icon: LessonsIcon },
-  { path: '/parent/calendar', label: 'Thời khóa biểu', icon: CalendarIcon },
-  { path: '/parent/messages', label: 'Messages', icon: MessagesIcon },
-  { path: '/parent/booking', label: 'Booking', icon: BookingIcon },
-  // { path: '/parent/disputes', label: 'Khiếu nại', icon: DisputeIcon },
-];
-
-const studentNavItems = [
-  { path: '/student/dashboard', label: 'Dashboard', icon: DashboardIcon },
-  { path: '/student/booking', label: 'Booking', icon: BookingIcon },
-  { path: '/student/lessons', label: 'Buổi học', icon: LessonsIcon },
-  { path: '/student/calendar', label: 'Thời khóa biểu', icon: CalendarIcon },
-  { path: '/student/messages', label: 'Messages', icon: MessagesIcon },
-  { path: '/student/account', label: 'Tài khoản', icon: AccountIcon },
+  { path: '/parent-portal/dashboard', label: 'Dashboard', icon: DashboardIcon },
+  { path: '/parent-portal/student', label: 'Children', icon: ChildrenIcon },
+  { path: '/parent-portal/lessons', label: 'Buổi học', icon: LessonsIcon },
+  { path: '/parent-portal/calendar', label: 'Thời khóa biểu', icon: CalendarIcon },
+  { path: '/parent-portal/messages', label: 'Messages', icon: MessagesIcon },
+  { path: '/parent-portal/booking', label: 'Booking', icon: BookingIcon },
 ];
 
 interface ParentLayoutProps {
@@ -170,154 +33,30 @@ interface ParentLayoutProps {
 
 const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0);
-  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
-  const [showStudentDropdown, setShowStudentDropdown] = useState(false);
-  const studentDropdownRef = useRef<HTMLDivElement>(null);
-  const [parentData, setParentData] = useState({
-    name: 'User',
-    initials: 'U',
-    role: 'PARENT',
-  });
-  const [_studentData, setStudentData] = useState({
-    name: '',
-    grade: '',
-    initials: '',
-  });
-  const [nextLesson, setNextLesson] = useState<LessonResponse | null>(null);
+  const userData = useUserData();
+  const { sidebarOpen, setSidebarOpen } = useSidebarState();
+  const {
+    notificationCount, showNotificationDropdown,
+    setShowNotificationDropdown, handleRefreshNotificationCount,
+  } = useNotifications();
+  const { nextLesson, loadNextLesson } = useNextLesson();
+
+
 
   // Student context from StudentProvider
-  const { students, selectedStudent, selectStudent } = useStudentContext();
-
-  const isStudentContext = location.pathname.startsWith('/student');
-  const navItems = isStudentContext ? studentNavItems : parentNavItems;
-  // accountPath removed — not currently used
+  useStudentContext();
 
   const isActive = (path: string) => location.pathname.startsWith(path);
 
-  // Helper function to get initials from name
-  const getInitials = (name: string) => {
-    const parts = name.trim().split(' ');
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    }
-    return name.substring(0, 2).toUpperCase();
-  };
-
-  // Load user data from auth service
+  // Load next lesson on mount
   useEffect(() => {
     const user = getUserInfoFromToken();
-
-    console.log('🔍 ParentLayout - Loading user data from token:', user);
-
     if (user) {
-      const displayName = user.fullname ||
-        (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : null) ||
-        user.email?.split('@')[0] ||
-        'User';
-      const initials = getInitials(displayName);
-
-      console.log('✅ ParentLayout - Setting parent data:', { displayName, initials, role: user.role });
-
-      setParentData({
-        name: displayName,
-        initials: initials,
-        role: user.role || 'PARENT',
-      });
-
-      // Only load next lesson for Parent role (Student role gets 403 on /parent/students)
-      if (user.role?.toLowerCase() !== 'student') {
-        loadNextLesson();
-      } else {
-        // For Student role, set student data directly from token
-        setStudentData({
-          name: displayName,
-          grade: 'Grade 8 • Active',
-          initials: initials,
-        });
-      }
-    } else {
-      console.warn('⚠️ ParentLayout - No user data found in localStorage');
+      loadNextLesson();
     }
-  }, []);
+  }, [loadNextLesson]);
 
-  const loadNextLesson = async () => {
-    try {
-      const lesson = await getNextLesson();
-      if (lesson) {
-        setNextLesson(lesson);
-      }
-    } catch (error) {
-      console.error('❌ ParentLayout - Error loading next lesson:', error);
-    }
-  };
 
-  // Close student dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (studentDropdownRef.current && !studentDropdownRef.current.contains(event.target as Node)) {
-        setShowStudentDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Close sidebar on route change
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [location.pathname]);
-
-  // Handle scroll lock when sidebar open on mobile
-  useEffect(() => {
-    if (sidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [sidebarOpen]);
-
-  // Fetch unread notification count on mount
-  useEffect(() => {
-    const fetchNotificationCount = async () => {
-      try {
-        const count = await getUnreadCount();
-        setNotificationCount(count);
-      } catch (error) {
-        console.error('Failed to fetch notification count:', error);
-        // Keep count at 0 on error
-      }
-    };
-
-    fetchNotificationCount();
-
-    // Setup SignalR listener for real-time notification updates
-    const handleNotificationCountUpdate = (count: number) => {
-      console.log('📬 Notification count updated via SignalR:', count);
-      setNotificationCount(count);
-    };
-
-    signalRService.onNotificationCountUpdated(handleNotificationCountUpdate);
-
-    // Cleanup
-    return () => {
-      signalRService.offNotificationCountUpdated();
-    };
-  }, []);
-
-  const handleRefreshNotificationCount = async () => {
-    try {
-      const count = await getUnreadCount();
-      setNotificationCount(count);
-    } catch (error) {
-      console.error('Failed to refresh notification count:', error);
-    }
-  };
 
   return (
     <div className={styles.layout}>
@@ -329,7 +68,7 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
         />
       )}
 
-      {/* Sidebar (Left) — must be before main for CSS sibling selector */}
+      {/* Sidebar (Left) */}
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
         {/* Logo Section */}
         <div className={styles.sidebarLogo}>
@@ -348,7 +87,7 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
 
         {/* Navigation */}
         <nav className={styles.sidebarNav}>
-          {navItems.map((item) => (
+          {parentNavItems.map((item) => (
             <div
               key={item.path}
               className={`${styles.navItem} ${isActive(item.path) ? styles.navItemActive : ''}`}
@@ -378,56 +117,8 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
               <MenuIcon />
             </button>
 
-            {/* Left: Student Selector + Next Lesson */}
+            {/* Left */}
             <div className={styles.headerLeft}>
-              {/* Student Selector */}
-              <div className={styles.studentSelectorWrap} ref={studentDropdownRef}>
-                <button
-                  className={styles.studentSelector}
-                  onClick={() => setShowStudentDropdown(!showStudentDropdown)}
-                >
-                  <div className={styles.studentAvatar}>
-                    <span>{selectedStudent ? getInitials(selectedStudent.fullName) : '?'}</span>
-                  </div>
-                  <div className={styles.studentInfo}>
-                    <span className={styles.studentName}>{selectedStudent?.fullName || 'Chọn học sinh'}</span>
-                    <span className={styles.studentGrade}>{selectedStudent?.gradeLevel || ''}{selectedStudent?.school ? ` • ${selectedStudent.school}` : ''}</span>
-                  </div>
-                  <div className={`${styles.dropdownArrow} ${showStudentDropdown ? styles.dropdownArrowOpen : ''}`}>
-                    <ChevronDown />
-                  </div>
-                </button>
-
-                {/* Student Dropdown */}
-                {showStudentDropdown && students.length > 0 && (
-                  <div className={styles.studentDropdown}>
-                    {students.map(student => (
-                      <div
-                        key={student.studentId}
-                        className={`${styles.studentDropdownItem} ${selectedStudent?.studentId === student.studentId ? styles.studentDropdownItemActive : ''}`}
-                        onClick={() => {
-                          selectStudent(student);
-                          setShowStudentDropdown(false);
-                        }}
-                      >
-                        <div className={styles.studentDropdownAvatar}>
-                          <span>{getInitials(student.fullName)}</span>
-                        </div>
-                        <div className={styles.studentDropdownInfo}>
-                          <span className={styles.studentDropdownName}>{student.fullName}</span>
-                          <span className={styles.studentDropdownGrade}>
-                            {student.gradeLevel}{student.school ? ` • ${student.school}` : ''}
-                          </span>
-                        </div>
-                        {selectedStudent?.studentId === student.studentId && (
-                          <span className={styles.studentDropdownCheck}>✓</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               {/* Next Lesson Indicator */}
               {nextLesson && (
                 <div className={styles.nextLesson}>
@@ -475,11 +166,11 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
               {/* User Info */}
               <div className={styles.headerUser}>
                 <div className={styles.headerUserInfo}>
-                  <span className={styles.headerUserName}>{parentData.name}</span>
-                  <span className={styles.headerUserRole}>{parentData.role}</span>
+                  <span className={styles.headerUserName}>{userData.name}</span>
+                  <span className={styles.headerUserRole}>{userData.role}</span>
                 </div>
                 <div className={styles.headerAvatar}>
-                  <span>{parentData.initials}</span>
+                  <span>{userData.initials}</span>
                 </div>
               </div>
 
@@ -512,8 +203,6 @@ const ParentLayoutInner: React.FC<ParentLayoutProps> = ({ children }) => {
           {children || <Outlet />}
         </div>
       </main>
-
-
     </div>
   );
 };

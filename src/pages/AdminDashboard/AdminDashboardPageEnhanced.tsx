@@ -352,7 +352,7 @@ const AdminDashboardPageEnhanced = () => {
                                     <button
                                         className="admin-action-btn admin-action-btn-outline"
                                         style={{ width: '100%', justifyContent: 'flex-start', gap: '12px' }}
-                                        onClick={() => navigate('/admin/vetting')}
+                                        onClick={() => navigate('/admin-portal/vetting')}
                                     >
                                         <span className="material-symbols-outlined">verified_user</span>
                                         Xem xét gia sư chờ duyệt ({metrics?.pendingreview || 0})
@@ -361,7 +361,7 @@ const AdminDashboardPageEnhanced = () => {
                                     {/* <button
                                         className="admin-action-btn admin-action-btn-outline"
                                         style={{ width: '100%', justifyContent: 'flex-start', gap: '12px' }}
-                                        onClick={() => navigate('/admin/disputes')}
+                                        onClick={() => navigate('/admin-portal/disputes')}
                                     >
                                         <span className="material-symbols-outlined">gavel</span>
                                         Giải quyết khiếu nại ({metrics?.activedisputes || 0})
@@ -369,7 +369,7 @@ const AdminDashboardPageEnhanced = () => {
                                     <button
                                         className="admin-action-btn admin-action-btn-outline"
                                         style={{ width: '100%', justifyContent: 'flex-start', gap: '12px' }}
-                                        onClick={() => navigate('/admin/financials')}
+                                        onClick={() => navigate('/admin-portal/financials')}
                                     >
                                         <span className="material-symbols-outlined">account_balance_wallet</span>
                                         Quản lý tài chính
@@ -377,7 +377,7 @@ const AdminDashboardPageEnhanced = () => {
                                     <button
                                         className="admin-action-btn admin-action-btn-outline"
                                         style={{ width: '100%', justifyContent: 'flex-start', gap: '12px' }}
-                                        onClick={() => navigate('/admin/users')}
+                                        onClick={() => navigate('/admin-portal/users')}
                                     >
                                         <span className="material-symbols-outlined">group</span>
                                         Quản lý người dùng

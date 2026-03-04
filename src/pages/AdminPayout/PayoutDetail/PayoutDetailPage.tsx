@@ -118,7 +118,7 @@ const PayoutDetailPage: React.FC = () => {
                     <Breadcrumb
                         items={[
                             { title: 'Quản trị' },
-                            { title: 'Quản lý thanh toán', onClick: () => navigate('/admin/payouts'), className: 'clickable' },
+                            { title: 'Quản lý thanh toán', onClick: () => navigate('/admin-portal/payouts'), className: 'clickable' },
                             { title: `Yêu cầu #${id}` },
                         ]}
                     />
@@ -128,7 +128,7 @@ const PayoutDetailPage: React.FC = () => {
                                 <Button
                                     icon={<ArrowLeftOutlined />}
                                     type="text"
-                                    onClick={() => navigate('/admin/payouts')}
+                                    onClick={() => navigate('/admin-portal/payouts')}
                                     style={{ marginRight: '8px' }}
                                 />
                                 Yêu cầu rút tiền #{id}

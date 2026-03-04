@@ -190,10 +190,10 @@ const ParentBooking = () => {
                   <div
                     key={booking.bookingId}
                     className={styles.bookingCard}
-                    onClick={() => navigate(`/parent/booking/${booking.bookingId}`)}
+                    onClick={() => navigate(`/parent-portal/booking/${booking.bookingId}`)}
                     role="button"
                     tabIndex={0}
-                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/parent/booking/${booking.bookingId}`)}
+                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/parent-portal/booking/${booking.bookingId}`)}
                   >
                     {/* Card Header */}
                     <div className={styles.cardHeader}>
@@ -255,7 +255,7 @@ const ParentBooking = () => {
                             className={styles.actionBtnPrimary}
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate(`/parent/booking/${booking.bookingId}/payment`);
+                              navigate(`/parent-portal/booking/${booking.bookingId}/payment`);
                             }}
                             type="button"
                           >
@@ -267,7 +267,7 @@ const ParentBooking = () => {
                             className={styles.actionBtnPrimary}
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate(`/parent/booking/${booking.bookingId}/payment`);
+                              navigate(`/parent-portal/booking/${booking.bookingId}/payment`);
                             }}
                             type="button"
                           >
@@ -280,7 +280,7 @@ const ParentBooking = () => {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            navigate(`/parent/booking/${booking.bookingId}`);
+                            navigate(`/parent-portal/booking/${booking.bookingId}`);
                           }}
                         >
                           <Eye size={14} />

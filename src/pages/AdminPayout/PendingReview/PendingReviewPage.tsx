@@ -56,7 +56,7 @@ const PendingReviewPage: React.FC = () => {
                 <Breadcrumb
                     items={[
                         { title: 'Quản trị' },
-                        { title: 'Quản lý thanh toán', onClick: () => navigate('/admin/payouts'), className: 'clickable' },
+                        { title: 'Quản lý thanh toán', onClick: () => navigate('/admin-portal/payouts'), className: 'clickable' },
                         { title: 'Chờ xét duyệt' },
                     ]}
                     style={{ marginBottom: '16px' }}

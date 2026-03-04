@@ -75,86 +75,192 @@ const formatCurrency = (amount: number | null) => {
 
 // Hero Section
 const HeroSection = ({ profile }: { profile: TutorFullProfile }) => {
-    // Flatten subjects tags
-    const tags = profile.subjects?.flatMap(s => s.tags || []) || [];
+    const [showVideoModal, setShowVideoModal] = useState(false);
+    // Flatten subjects tags (handle tags being a JSON string or an array)
+    const parseTags = (tags: unknown): string[] => {
+        if (Array.isArray(tags)) return tags;
+        if (typeof tags === 'string') {
+            try {
+                const parsed = JSON.parse(tags);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch { return []; }
+        }
+        return [];
+    };
+    const tags = profile.subjects?.flatMap(s => parseTags(s.tags)) || [];
 
     return (
-        <section className="tutor-hero-section">
-            <div className="component-2">
-                <img
-                    className="interview-thumbnail"
-                    src={(() => {
-                        if (!profile.videoIntroUrl) return "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800";
-                        const match = profile.videoIntroUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
-                        return match?.[1] ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800";
+        <>
+            <section className="tutor-hero-section">
+                <div className="component-2">
+                    {(() => {
+                        if (!profile.videoIntroUrl) {
+                            return (
+                                <img
+                                    className="interview-thumbnail"
+                                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800"
+                                    alt={profile.fullName || "Tutor Interview"}
+                                />
+                            );
+                        }
+                        const ytMatch = profile.videoIntroUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]+)/);
+                        if (ytMatch?.[1]) {
+                            return (
+                                <img
+                                    className="interview-thumbnail"
+                                    src={`https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`}
+                                    alt={profile.fullName || "Tutor Interview"}
+                                />
+                            );
+                        }
+                        // Direct video URL — render as video element
+                        return (
+                            <video
+                                className="interview-thumbnail"
+                                src={profile.videoIntroUrl}
+                                muted
+                                style={{ objectFit: 'cover', width: '100%', height: '351.4px' }}
+                            />
+                        );
                     })()}
-                    alt={profile.fullName || "Tutor Interview"}
-                />
-                <div className="gradient-overlay"></div>
+                    <div className="gradient-overlay"></div>
 
-                {/* Play Button */}
-                <div className="play-button-container">
-                    <div className="play-button">
-                        <PlayIcon />
-                    </div>
-                    <b className="click-to-view">Click để xem phỏng vấn học thuật</b>
-                </div>
-
-                {/* TUTORA Badge */}
-                <div className="TUTORA-badge-container">
-                    <div className="TUTORA-badge">
-                        <div className="TUTORA-badge-dot"></div>
-                        <b className="TUTORA-badge-text">TUTORA Original Interview</b>
-                    </div>
-                </div>
-
-                {/* Tutor Info Card */}
-                <div className="tutor-info-card">
-                    <div className="tutor-info-content">
-                        <div className="tutor-mini-avatar">
-                            <img src={profile.avatarUrl || "https://randomuser.me/api/portraits/lego/1.jpg"} alt={profile.fullName || ""} />
-                            <div className="mini-avatar-gradient"></div>
-                        </div>
-                        <div className="tutor-info-text">
-                            <div className="university-badge">
-                                <b>{profile.education?.split(',')[0] || "University"}</b>
+                    {/* Play Button */}
+                    {profile.videoIntroUrl && (
+                        <div className="play-button-container" onClick={() => setShowVideoModal(true)} style={{ cursor: 'pointer' }}>
+                            <div className="play-button">
+                                <PlayIcon />
                             </div>
-                            <h1 className="tutor-name">{profile.fullName}</h1>
-                            <p className="tutor-credential">{profile.headline}</p>
+                            <b className="click-to-view">Click để xem phỏng vấn học thuật</b>
+                        </div>
+                    )}
+
+                    {/* TUTORA Badge */}
+                    <div className="TUTORA-badge-container">
+                        <div className="TUTORA-badge">
+                            <div className="TUTORA-badge-dot"></div>
+                            <b className="TUTORA-badge-text">TUTORA Original Interview</b>
                         </div>
                     </div>
-                </div>
 
-                {/* Rating Card */}
-                <div className="rating-card-container">
-                    <div className="rating-card">
-                        <div className="rating-stars">
-                            <div className="stars-row">
-                                {[1, 2, 3, 4, 5].map((i) => (
-                                    <StarIcon key={i} filled={i <= Math.round(profile.averageRating || 0)} />
-                                ))}
+                    {/* Tutor Info Card */}
+                    <div className="tutor-info-card">
+                        <div className="tutor-info-content">
+                            <div className="tutor-mini-avatar">
+                                <img src={profile.avatarUrl || "https://randomuser.me/api/portraits/lego/1.jpg"} alt={profile.fullName || ""} />
+                                <div className="mini-avatar-gradient"></div>
                             </div>
-                            <b className="rating-text">{(profile.averageRating || 0).toFixed(1)} ({profile.totalFeedbacks || 0} ĐÁNH GIÁ)</b>
+                            <div className="tutor-info-text">
+                                <div className="university-badge">
+                                    <b>{profile.education?.split(',')[0] || "University"}</b>
+                                </div>
+                                <h1 className="tutor-name">{profile.fullName}</h1>
+                                <p className="tutor-credential">{profile.headline}</p>
+                            </div>
                         </div>
-                        <div className="rating-divider"></div>
-                        <div className="favorite-button">
-                            <HeartIcon />
+                    </div>
+
+                    {/* Rating Card */}
+                    <div className="rating-card-container">
+                        <div className="rating-card">
+                            <div className="rating-stars">
+                                <div className="stars-row">
+                                    {[1, 2, 3, 4, 5].map((i) => (
+                                        <StarIcon key={i} filled={i <= Math.round(profile.averageRating || 0)} />
+                                    ))}
+                                </div>
+                                <b className="rating-text">{(profile.averageRating || 0).toFixed(1)} ({profile.totalFeedbacks || 0} ĐÁNH GIÁ)</b>
+                            </div>
+                            <div className="rating-divider"></div>
+                            <div className="favorite-button">
+                                <HeartIcon />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Subject Tags */}
-            <div className="subject-tags">
-                {tags.length > 0 ? tags.map((tag, index) => (
-                    <div key={index} className="subject-tag">
-                        <b>{tag}</b>
+                {/* Subject Tags */}
+                <div className="subject-tags">
+                    {tags.length > 0 ? tags.map((tag, index) => (
+                        <div key={index} className="subject-tag">
+                            <b>{tag}</b>
+                        </div>
+                    )) : (
+                        <div className="subject-tag"><b>Chưa cập nhật môn học</b></div>
+                    )}
+                </div>
+
+                {/* Mobile Rating Bar (visible only on mobile) */}
+                <div className="mobile-rating-bar">
+                    <div className="rating-stars">
+                        <div className="stars-row">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <StarIcon key={i} filled={i <= Math.round(profile.averageRating || 0)} />
+                            ))}
+                        </div>
+                        <b className="rating-text">{(profile.averageRating || 0).toFixed(1)} ({profile.totalFeedbacks || 0} đánh giá)</b>
                     </div>
-                )) : (
-                    <div className="subject-tag"><b>Chưa cập nhật môn học</b></div>
-                )}
-            </div>
-        </section>
+                    <div className="favorite-button">
+                        <HeartIcon />
+                    </div>
+                </div>
+            </section>
+
+            {/* Video Modal */}
+            {showVideoModal && profile.videoIntroUrl && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 9999,
+                        padding: '20px'
+                    }}
+                    onClick={() => setShowVideoModal(false)}
+                >
+                    <button
+                        onClick={() => setShowVideoModal(false)}
+                        style={{
+                            position: 'absolute',
+                            top: '20px',
+                            right: '20px',
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            border: '1px solid rgba(255, 255, 255, 0.3)',
+                            borderRadius: '50%',
+                            width: '44px',
+                            height: '44px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#fff',
+                            fontSize: '24px',
+                            transition: 'background 0.3s'
+                        }}
+                    >
+                        ✕
+                    </button>
+                    <video
+                        src={profile.videoIntroUrl!}
+                        controls
+                        autoPlay
+                        style={{
+                            maxWidth: '90%',
+                            maxHeight: '80vh',
+                            borderRadius: '12px',
+                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
+        </>
     );
 };
 
@@ -426,7 +532,7 @@ const TestimonialsSection = ({ feedbacks, totalFeedbacks, tutorId }: {
                         </div>
                     </div>
                 ) : (
-                    <p className="empty-message-center" style={{ width: '100%', textAlign: 'center', padding: '40px' }}>
+                    <p className="empty-message-center" style={{ width: '100%', textAlign: 'center', padding: '40px', color: 'rgba(62, 47, 40, 0.5)', fontStyle: 'italic' }}>
                         {loadingMore ? 'Đang tải đánh giá...' : 'Gia sư chưa có đánh giá nào.'}
                     </p>
                 )}
@@ -721,13 +827,13 @@ const TutorDetailPage = () => {
             const channelId = res?.content?.channelId;
             // Navigate to messages page based on role
             const role = getCurrentUserRole();
-            const basePath = role === 'Student' ? '/student/messages' : '/parent/messages';
+            const basePath = role === 'Student' ? '/student-portal/messages' : '/parent-portal/messages';
             navigate(channelId ? `${basePath}?channel=${channelId}` : basePath);
         } catch (err) {
             console.error('❌ Failed to create chat channel:', err);
             // Fallback: navigate to messages page anyway
             const role = getCurrentUserRole();
-            navigate(role === 'Student' ? '/student/messages' : '/parent/messages');
+            navigate(role === 'Student' ? '/student-portal/messages' : '/parent-portal/messages');
         } finally {
             setChatLoading(false);
         }
@@ -820,6 +926,20 @@ const TutorDetailPage = () => {
                 </div>
             </main>
             <Footer />
+
+            {/* Mobile Sticky CTA Bar */}
+            <div className="mobile-sticky-cta">
+                <div className="mobile-cta-price">
+                    <span className="mobile-cta-price-amount">{formatCurrency(profile.hourlyRate ? Math.round(profile.hourlyRate * 1.05) : null)}</span>
+                    <span className="mobile-cta-price-unit">/ buổi học</span>
+                </div>
+                <button className="mobile-cta-book" onClick={() => setShowBooking(true)}>
+                    <b>ĐẶT LỊCH</b>
+                </button>
+                <button className="mobile-cta-chat" onClick={handleChatTuVan}>
+                    <b>CHAT</b>
+                </button>
+            </div>
 
             <BookingModal
                 isOpen={showBooking}

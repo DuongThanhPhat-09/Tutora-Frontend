@@ -281,22 +281,7 @@ const TutorPortalLayout: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                {/* Logout Button */}
-                <button
-                    className="tutor-portal-logout-btn"
-                    onClick={() => {
-                        clearUserFromStorage();
-                        navigate('/login');
-                    }}
-                    title="Đăng xuất"
-                >
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M6 15H3C2.44772 15 2 14.5523 2 14V4C2 3.44772 2.44772 3 3 3H6" strokeLinecap="round" />
-                        <path d="M12 12L16 9L12 6" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M16 9H7" strokeLinecap="round" />
-                    </svg>
-                    <span>Đăng xuất</span>
-                </button>
+
             </aside>
 
             {/* Main Content */}
@@ -364,7 +349,7 @@ const TutorPortalLayout: React.FC = () => {
                                 okButtonProps={{ danger: true }}
                             >
                                 <button
-                                    className="tutor-portal-logout-btn"
+                                    className="tutor-portal-header-logout-btn"
                                     title="Đăng xuất"
                                 >
                                     <LogoutIcon />

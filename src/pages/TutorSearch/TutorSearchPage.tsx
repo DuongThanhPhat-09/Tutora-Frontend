@@ -144,11 +144,11 @@ const gradeLevelGroups = [
 
 const budgetRangeOptions = [
     { value: "all", label: "MỌI GIÁ" },
-    { value: "under_50", label: "Dưới $50/h" },
-    { value: "50_100", label: "$50 - $100/h" },
-    { value: "100_200", label: "$100 - $200/h" },
-    { value: "200_500", label: "$200 - $500/h" },
-    { value: "over_500", label: "Trên $500/h" },
+    { value: "under_50", label: "Dưới 50.000đ/h" },
+    { value: "50_100", label: "50.000đ - 100.000đ/h" },
+    { value: "100_200", label: "100.000đ - 200.000đ/h" },
+    { value: "200_500", label: "200.000đ - 500.000đ/h" },
+    { value: "over_500", label: "Trên 500.000đ/h" },
 ];
 
 const teachingModeOptions = [
@@ -576,7 +576,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
                 <div className="tutor-pricing">
                     <span className="pricing-label">HỌC PHÍ CHUẨN</span>
                     <div className="pricing-value">
-                        <span className="price-amount">${tutor.price}</span>
+                        <span className="price-amount">{tutor.price.toLocaleString('vi-VN')}đ</span>
                         <span className="price-unit">/h</span>
                     </div>
                 </div>

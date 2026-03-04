@@ -104,7 +104,7 @@ const FraudLogsPage: React.FC = () => {
                 <Breadcrumb
                     items={[
                         { title: 'Quản trị' },
-                        { title: 'Quản lý thanh toán', href: '/admin/payouts' },
+                        { title: 'Quản lý thanh toán', href: '/admin-portal/payouts' },
                         { title: 'Nhật ký an toàn (Fraud Logs)' },
                     ]}
                     style={{ marginBottom: '16px' }}

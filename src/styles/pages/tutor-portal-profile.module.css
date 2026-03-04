@@ -1150,7 +1150,7 @@
 .editBar {
     position: fixed;
     bottom: 0;
-    left: 224px;
+    left: var(--sidebar-width, 68px);
     right: 0;
     height: 56px;
     display: flex;
@@ -1161,6 +1161,7 @@
     backdrop-filter: blur(12px);
     border-top: 1px solid rgba(62, 47, 40, 0.1);
     z-index: 50;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .editBarLeft {
@@ -1770,7 +1771,7 @@
     }
 
     .editBar {
-        left: 280px;
+        left: var(--sidebar-width, 68px);
     }
 }
 
@@ -1789,7 +1790,7 @@
     }
 
     .editBar {
-        left: 320px;
+        left: var(--sidebar-width, 68px);
     }
 }
 

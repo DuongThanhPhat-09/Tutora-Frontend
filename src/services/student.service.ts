@@ -137,3 +137,67 @@ export const getParentBookings = async (params: IGetBookingParams = { page: 1, p
     throw error;
   }
 };
+
+// === New: Parent-Student Auth Flow ===
+
+export interface StudentCredentials {
+  studentId: string;
+  userId: string;
+  username: string;
+  temporaryPassword: string;
+  fullName: string;
+  parentId: string;
+  createdAt: string;
+}
+
+/**
+ * Create student and returns auto-generated credentials
+ */
+export const createParentStudentWithCredentials = async (
+  payload: ICreateParentStudent
+): Promise<ApiResponse<StudentCredentials>> => {
+  try {
+    const response = await api.post<ApiResponse<StudentCredentials>>(`/parent/students`, payload, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ Error creating student with credentials:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+    throw error;
+  }
+};
+
+/**
+ * Parent generates an invite code for students to self-link
+ */
+export const generateParentCode = async (): Promise<ApiResponse<{ parentCode: string }>> => {
+  try {
+    const response = await api.post(`/parent/students/parent-code`, {}, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ Error generating parent code:', error.response?.data);
+    throw error;
+  }
+};
+
+/**
+ * Student uses a parent code to self-link with a parent
+ */
+export const studentSelfLink = async (parentCode: string): Promise<ApiResponse<StudentType>> => {
+  try {
+    const response = await api.post(`/parent/students/self-link`, { parentCode }, {
+      headers: getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ Error self-linking with parent code:', error.response?.data);
+    throw error;
+  }
+};
+

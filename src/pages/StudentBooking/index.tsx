@@ -61,113 +61,121 @@ const StudentBooking = () => {
     const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
     return (
-        <div className={s.studentPage}>
-            <div className={s.pageHeader}>
-                <div>
+        <div className={s.page}>
+            {/* Top Bar */}
+            <div className={s.topBar}>
+                <div className={s.topBarLeft}>
                     <h1 className={s.pageTitle}>Booking</h1>
                     <p className={s.pageSubtitle}>Quản lý lịch đặt gia sư của bạn</p>
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className={s.tabsRow}>
-                {TABS.map((t) => (
-                    <button
-                        key={t.key}
-                        className={`${s.tab} ${activeTab === t.key ? s.active : ''}`}
-                        onClick={() => { setActiveTab(t.key); setPage(1); }}
-                    >
-                        {t.label}
-                    </button>
-                ))}
-            </div>
-
-            {/* Content */}
-            {loading ? (
-                <div className={s.loadingCenter}><Spin size="large" /></div>
-            ) : bookings.length === 0 ? (
-                <div className={s.emptyState}>
-                    <div className={s.emptyStateIcon}>📚</div>
-                    Chưa có booking nào
-                </div>
-            ) : (
-                <>
-                    <div className={s.cardList}>
-                        {bookings.map((b: any) => {
-                            const st = STATUS_MAP[b.status] || { label: b.status, cls: '' };
-                            return (
-                                <div
-                                    key={b.bookingId || b.id}
-                                    className={s.card}
-                                    onClick={() => navigate(`/student/booking/${b.bookingId || b.id}`)}
+            {/* Main Content */}
+            <div className={s.mainContent}>
+                <div className={s.contentPanel}>
+                    {/* Tabs */}
+                    <div className={s.tabBar}>
+                        <div className={s.tabGroup}>
+                            {TABS.map((t) => (
+                                <button
+                                    key={t.key}
+                                    className={`${s.tab} ${activeTab === t.key ? s.active : ''}`}
+                                    onClick={() => { setActiveTab(t.key); setPage(1); }}
                                 >
-                                    <div
-                                        className={s.cardIcon}
-                                        style={{ background: 'rgba(99,102,241,0.08)', color: '#6366F1' }}
-                                    >
-                                        <BookOpen size={20} />
-                                    </div>
-                                    <div className={s.cardBody}>
-                                        <div className={s.cardTitle}>
-                                            {b.subjectName || b.subject?.subjectName || `Booking #${b.bookingId || b.id}`}
-                                        </div>
-                                        <div className={s.cardMeta}>
-                                            <User size={12} /> {b.tutorName || b.tutor?.fullName || 'N/A'}
-                                            <span style={{ margin: '0 4px' }}>•</span>
-                                            <Clock size={12} /> {b.createdAt ? dayjs(b.createdAt).format('DD/MM/YYYY') : 'N/A'}
-                                        </div>
-                                    </div>
-                                    <div className={s.cardRight}>
-                                        <span className={`${s.badge} ${st.cls}`}>{st.label}</span>
-                                        {b.paymentStatus && (
-                                            <div style={{ marginTop: '8px', fontSize: '13px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-                                                <span style={{
-                                                    padding: '2px 8px',
-                                                    borderRadius: '12px',
-                                                    background: b.paymentStatus === 'Paid' ? '#D1FAE5' : '#FEF3C7',
-                                                    color: b.paymentStatus === 'Paid' ? '#065F46' : '#92400E',
-                                                    fontWeight: 500,
-                                                    fontSize: '11px'
-                                                }}>
-                                                    {b.paymentStatus === 'Paid' ? 'Đã thanh toán' :
-                                                        b.paymentStatus === 'DepositPaid' ? 'Đã cọc' : b.paymentStatus}
-                                                </span>
-                                                {b.finalPrice != null && (
-                                                    <span className={s.price}>{formatPrice(b.finalPrice)}</span>
-                                                )}
-                                            </div>
-                                        )}
-                                        {!b.paymentStatus && b.totalPrice != null && (
-                                            <span className={s.price}>{formatPrice(b.totalPrice)}</span>
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                    {t.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                        <div className={s.pagination}>
-                            <button
-                                className={s.paginationBtn}
-                                disabled={page <= 1}
-                                onClick={() => setPage(page - 1)}
-                            >
-                                <ChevronLeft size={16} />
-                            </button>
-                            <span className={s.paginationInfo}>{page}/{totalPages}</span>
-                            <button
-                                className={s.paginationBtn}
-                                disabled={page >= totalPages}
-                                onClick={() => setPage(page + 1)}
-                            >
-                                <ChevronRight size={16} />
-                            </button>
+                    {/* Content */}
+                    {loading ? (
+                        <div className={s.loadingCenter}><Spin size="large" /></div>
+                    ) : bookings.length === 0 ? (
+                        <div className={s.emptyState}>
+                            <div className={s.emptyStateIcon}>📚</div>
+                            <div className={s.emptyStateText}>Chưa có booking nào</div>
+                            <div className={s.emptyStateSub}>Hãy đặt gia sư mới để bắt đầu học</div>
                         </div>
+                    ) : (
+                        <>
+                            <div className={s.cardList}>
+                                {bookings.map((b: any) => {
+                                    const st = STATUS_MAP[b.status] || { label: b.status, cls: '' };
+                                    return (
+                                        <div
+                                            key={b.bookingId || b.id}
+                                            className={s.card}
+                                            onClick={() => navigate(`/student-portal/booking/${b.bookingId || b.id}`)}
+                                        >
+                                            <div
+                                                className={s.cardIcon}
+                                                style={{ background: 'rgba(99,102,241,0.08)', color: '#6366F1' }}
+                                            >
+                                                <BookOpen size={20} />
+                                            </div>
+                                            <div className={s.cardBody}>
+                                                <div className={s.cardTitle}>
+                                                    {b.subjectName || b.subject?.subjectName || `Booking #${b.bookingId || b.id}`}
+                                                </div>
+                                                <div className={s.cardMeta}>
+                                                    <User size={12} /> {b.tutorName || b.tutor?.fullName || 'N/A'}
+                                                    <span>•</span>
+                                                    <Clock size={12} /> {b.createdAt ? dayjs(b.createdAt).format('DD/MM/YYYY') : 'N/A'}
+                                                </div>
+                                            </div>
+                                            <div className={s.cardRight}>
+                                                <span className={`${s.badge} ${st.cls}`}>{st.label}</span>
+                                                {b.paymentStatus && (
+                                                    <>
+                                                        <span
+                                                            className={s.paymentBadge}
+                                                            style={{
+                                                                background: b.paymentStatus === 'Paid' ? '#D1FAE5' : '#FEF3C7',
+                                                                color: b.paymentStatus === 'Paid' ? '#065F46' : '#92400E',
+                                                            }}
+                                                        >
+                                                            {b.paymentStatus === 'Paid' ? 'Đã thanh toán' :
+                                                                b.paymentStatus === 'DepositPaid' ? 'Đã cọc' : b.paymentStatus}
+                                                        </span>
+                                                        {b.finalPrice != null && (
+                                                            <span className={s.price}>{formatPrice(b.finalPrice)}</span>
+                                                        )}
+                                                    </>
+                                                )}
+                                                {!b.paymentStatus && b.totalPrice != null && (
+                                                    <span className={s.price}>{formatPrice(b.totalPrice)}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <div className={s.pagination}>
+                                    <button
+                                        className={s.paginationBtn}
+                                        disabled={page <= 1}
+                                        onClick={() => setPage(page - 1)}
+                                    >
+                                        <ChevronLeft size={16} />
+                                    </button>
+                                    <span className={s.paginationInfo}>{page}/{totalPages}</span>
+                                    <button
+                                        className={s.paginationBtn}
+                                        disabled={page >= totalPages}
+                                        onClick={() => setPage(page + 1)}
+                                    >
+                                        <ChevronRight size={16} />
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
-                </>
-            )}
+                </div>
+            </div>
         </div>
     );
 };

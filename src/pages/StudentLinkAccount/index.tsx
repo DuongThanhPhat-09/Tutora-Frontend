@@ -1,14 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, type KeyboardEvent, type ClipboardEvent } from 'react';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { linkWithCode } from '../../services/student.service';
+import { linkWithCode, studentSelfLink } from '../../services/student.service';
 
 const CODE_LENGTH = 6;
+
+type LinkMode = 'student-code' | 'parent-code';
 
 const StudentLinkAccount = () => {
   const [chars, setChars] = useState<string[]>(Array(CODE_LENGTH).fill(''));
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [mode, setMode] = useState<LinkMode>('student-code');
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const navigate = useNavigate();
 
@@ -39,6 +43,12 @@ const StudentLinkAccount = () => {
     inputRefs.current[focusIdx]?.focus();
   };
 
+  const handleModeSwitch = (newMode: LinkMode) => {
+    setMode(newMode);
+    setChars(Array(CODE_LENGTH).fill(''));
+    inputRefs.current[0]?.focus();
+  };
+
   const code = chars.join('');
   const isComplete = code.length === CODE_LENGTH;
 
@@ -46,19 +56,37 @@ const StudentLinkAccount = () => {
     if (!isComplete) return;
     setLoading(true);
     try {
-      await linkWithCode(code);
+      if (mode === 'student-code') {
+        await linkWithCode(code);
+      } else {
+        await studentSelfLink(code);
+      }
       setSuccess(true);
       message.success('Liên kết tài khoản thành công!');
     } catch (err: any) {
       const errorCode = err?.response?.data?.message || '';
-      if (errorCode.includes('LINK_CODE_NOT_FOUND')) {
-        message.error('Mã liên kết không hợp lệ');
-      } else if (errorCode.includes('LINK_CODE_EXPIRED')) {
-        message.error('Mã liên kết đã hết hạn. Yêu cầu phụ huynh tạo mã mới.');
-      } else if (errorCode.includes('STUDENT_ALREADY_LINKED')) {
-        message.error('Học sinh này đã được liên kết với một tài khoản khác');
+      if (mode === 'student-code') {
+        if (errorCode.includes('LINK_CODE_NOT_FOUND')) {
+          message.error('Mã liên kết không hợp lệ');
+        } else if (errorCode.includes('LINK_CODE_EXPIRED')) {
+          message.error('Mã liên kết đã hết hạn. Yêu cầu phụ huynh tạo mã mới.');
+        } else if (errorCode.includes('STUDENT_ALREADY_LINKED')) {
+          message.error('Học sinh này đã được liên kết với một tài khoản khác');
+        } else {
+          message.error('Liên kết thất bại. Vui lòng thử lại.');
+        }
       } else {
-        message.error('Liên kết thất bại. Vui lòng thử lại.');
+        if (errorCode.includes('PARENT_CODE_NOT_FOUND')) {
+          message.error('Mã mời không hợp lệ');
+        } else if (errorCode.includes('PARENT_CODE_EXPIRED')) {
+          message.error('Mã mời đã hết hạn. Yêu cầu phụ huynh tạo mã mới.');
+        } else if (errorCode.includes('STUDENT_ALREADY_HAS_PARENT')) {
+          message.error('Bạn đã được liên kết với một phụ huynh.');
+        } else if (errorCode.includes('STUDENT_NOT_FOUND')) {
+          message.error('Không tìm thấy hồ sơ học sinh. Vui lòng đăng ký trước.');
+        } else {
+          message.error('Liên kết thất bại. Vui lòng thử lại.');
+        }
       }
     } finally {
       setLoading(false);
@@ -77,7 +105,7 @@ const StudentLinkAccount = () => {
           </div>
           <h2 style={successTitle}>Liên kết thành công!</h2>
           <p style={successDesc}>Tài khoản của bạn đã được liên kết với hồ sơ học sinh. Bạn có thể xem lịch học và thông tin từ trang dashboard.</p>
-          <button style={primaryBtn} onClick={() => navigate('/student/dashboard')} type="button">
+          <button style={primaryBtn} onClick={() => navigate('/student-portal/dashboard')} type="button">
             Về trang Dashboard
           </button>
         </div>
@@ -99,7 +127,31 @@ const StudentLinkAccount = () => {
 
         <h1 style={headingStyle}>Liên kết tài khoản</h1>
         <p style={subheadingStyle}>
-          Nhập mã 6 ký tự mà phụ huynh đã tạo để liên kết tài khoản học sinh của bạn.
+          Nhập mã 6 ký tự để liên kết tài khoản học sinh của bạn với phụ huynh.
+        </p>
+
+        {/* Mode tabs */}
+        <div style={tabRow}>
+          <button
+            style={mode === 'student-code' ? tabActive : tabInactive}
+            onClick={() => handleModeSwitch('student-code')}
+            type="button"
+          >
+            Mã học sinh
+          </button>
+          <button
+            style={mode === 'parent-code' ? { ...tabActive, borderColor: '#3b82f6', color: '#3b82f6' } : tabInactive}
+            onClick={() => handleModeSwitch('parent-code')}
+            type="button"
+          >
+            Mã mời phụ huynh
+          </button>
+        </div>
+
+        <p style={modeDesc}>
+          {mode === 'student-code'
+            ? 'Nhập mã liên kết mà phụ huynh tạo từ hồ sơ học sinh.'
+            : 'Nhập mã mời mà phụ huynh tạo từ trang quản lý.'}
         </p>
 
         {/* OTP inputs */}
@@ -111,6 +163,7 @@ const StudentLinkAccount = () => {
               style={{
                 ...otpInput,
                 ...(char ? otpInputFilled : {}),
+                ...(mode === 'parent-code' && char ? { borderColor: '#3b82f6' } : {}),
               }}
               type="text"
               inputMode="text"
@@ -127,6 +180,7 @@ const StudentLinkAccount = () => {
         <button
           style={{
             ...primaryBtn,
+            ...(mode === 'parent-code' ? { background: '#3b82f6' } : {}),
             ...((!isComplete || loading) ? disabledBtn : {}),
           }}
           onClick={handleSubmit}
@@ -137,7 +191,10 @@ const StudentLinkAccount = () => {
         </button>
 
         <p style={helpText}>
-          Chưa có mã? Nhờ phụ huynh vào trang quản lý học sinh, chọn <strong>Mã liên kết</strong> ở menu của hồ sơ bạn.
+          {mode === 'student-code'
+            ? <>Chưa có mã? Nhờ phụ huynh vào trang quản lý học sinh, chọn <strong>Mã liên kết</strong> ở menu của hồ sơ bạn.</>
+            : <>Chưa có mã mời? Nhờ phụ huynh vào trang quản lý, nhấn nút <strong>Invite Code</strong> để tạo mã.</>
+          }
         </p>
       </div>
     </div>
@@ -167,7 +224,29 @@ const headingStyle: React.CSSProperties = {
 };
 const subheadingStyle: React.CSSProperties = {
   fontSize: 14, color: '#737373', lineHeight: 1.6,
-  textAlign: 'center', margin: '0 0 32px',
+  textAlign: 'center', margin: '0 0 20px',
+};
+const tabRow: React.CSSProperties = {
+  display: 'flex', gap: 0, marginBottom: 16,
+  border: '1px solid #e5e5e5', borderRadius: 10,
+  overflow: 'hidden', width: '100%',
+};
+const tabActive: React.CSSProperties = {
+  flex: 1, padding: '10px 0',
+  border: 'none', cursor: 'pointer',
+  fontSize: 13, fontWeight: 600,
+  background: '#1a2238', color: '#fff',
+  borderColor: '#1a2238',
+};
+const tabInactive: React.CSSProperties = {
+  flex: 1, padding: '10px 0',
+  border: 'none', cursor: 'pointer',
+  fontSize: 13, fontWeight: 500,
+  background: '#fff', color: '#737373',
+};
+const modeDesc: React.CSSProperties = {
+  fontSize: 12, color: '#9ca3af', textAlign: 'center',
+  margin: '0 0 20px', lineHeight: 1.5,
 };
 const otpRow: React.CSSProperties = {
   display: 'flex', gap: 10, marginBottom: 28,

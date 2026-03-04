@@ -30,8 +30,8 @@ const AdminSidebar = () => {
                 {/* Navigation */}
                 <nav className="admin-nav">
                     <a
-                        className={`admin-nav-item ${isActive('/admin/dashboard') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/dashboard')}
+                        className={`admin-nav-item ${isActive('/admin-portal/dashboard') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/dashboard')}
                         title="Bảng điều khiển"
                     >
                         <span className="material-symbols-outlined admin-nav-icon icon-filled">dashboard</span>
@@ -39,8 +39,8 @@ const AdminSidebar = () => {
                     </a>
 
                     <a
-                        className={`admin-nav-item ${isActive('/admin/users') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/users')}
+                        className={`admin-nav-item ${isActive('/admin-portal/users') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/users')}
                         title="Quản lý người dùng"
                     >
                         <span className="material-symbols-outlined admin-nav-icon">group</span>
@@ -48,8 +48,8 @@ const AdminSidebar = () => {
                     </a>
 
                     <a
-                        className={`admin-nav-item ${isActive('/admin/vetting') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/vetting')}
+                        className={`admin-nav-item ${isActive('/admin-portal/vetting') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/vetting')}
                         title="Yêu cầu kiểm duyệt"
                     >
                         <span className="material-symbols-outlined admin-nav-icon">description</span>
@@ -59,8 +59,8 @@ const AdminSidebar = () => {
 
                     {/* MVP Phase 1: Tạm ẩn tính năng quản lý khiếu nại */}
                     {/* <a
-                        className={`admin-nav-item ${location.pathname.startsWith('/admin/disputes') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/disputes')}
+                        className={`admin-nav-item ${location.pathname.startsWith('/admin-portal/disputes') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/disputes')}
                         title="Khiếu nại"
                     >
                         <span className="material-symbols-outlined admin-nav-icon">gavel</span>
@@ -69,8 +69,8 @@ const AdminSidebar = () => {
                     </a> */}
 
                     <a
-                        className={`admin-nav-item ${location.pathname.startsWith('/admin/warnings') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/warnings')}
+                        className={`admin-nav-item ${location.pathname.startsWith('/admin-portal/warnings') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/warnings')}
                         title="Cảnh báo"
                     >
                         <span className="material-symbols-outlined admin-nav-icon">warning</span>
@@ -78,8 +78,8 @@ const AdminSidebar = () => {
                     </a>
 
                     <a
-                        className={`admin-nav-item ${isActive('/admin/financials') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/financials')}
+                        className={`admin-nav-item ${isActive('/admin-portal/financials') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/financials')}
                         title="Tài chính"
                     >
                         <span className="material-symbols-outlined admin-nav-icon">account_balance</span>
@@ -87,8 +87,8 @@ const AdminSidebar = () => {
                     </a>
 
                     <a
-                        className={`admin-nav-item ${location.pathname.startsWith('/admin/payout') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/payouts')}
+                        className={`admin-nav-item ${location.pathname.startsWith('/admin-portal/payout') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/payouts')}
                         title="Payout"
                     >
                         <span className="material-symbols-outlined admin-nav-icon">monitoring</span>
@@ -96,8 +96,8 @@ const AdminSidebar = () => {
                     </a>
 
                     <a
-                        className={`admin-nav-item ${isActive('/admin/settings') ? 'admin-nav-item-active' : ''}`}
-                        onClick={() => navigate('/admin/settings')}
+                        className={`admin-nav-item ${isActive('/admin-portal/settings') ? 'admin-nav-item-active' : ''}`}
+                        onClick={() => navigate('/admin-portal/settings')}
                         title="Cài đặt"
                     >
                         <span className="material-symbols-outlined admin-nav-icon">settings</span>

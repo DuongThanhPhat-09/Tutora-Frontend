@@ -466,22 +466,224 @@
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .tutor-search-page .tutor-card {
         width: 100%;
+        border-radius: 10px;
     }
 
+    /* Ultra-compact card body */
+    .tutor-search-page .tutor-card-body {
+        padding: 8px 10px 6px;
+        gap: 5px;
+    }
+
+    .tutor-search-page .tutor-card-header {
+        gap: 6px;
+    }
+
+    .tutor-search-page .tutor-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .tutor-search-page .tutor-verified-badge {
+        width: 10px;
+        height: 10px;
+        right: -1px;
+        bottom: -1px;
+    }
+
+    .tutor-search-page .tutor-verified-badge svg {
+        width: 5px;
+        height: 5px;
+    }
+
+    .tutor-search-page .tutor-info {
+        gap: 1px;
+    }
+
+    .tutor-search-page .tutor-name {
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .tutor-search-page .tutor-type-badge {
+        padding: 1px 4px;
+        font-size: 6px;
+        letter-spacing: 0.5px;
+    }
+
+    .tutor-search-page .tutor-credential {
+        font-size: 7px;
+        line-height: 9px;
+    }
+
+    .tutor-search-page .tutor-badges {
+        gap: 4px;
+    }
+
+    .tutor-search-page .rating-star {
+        font-size: 11px;
+    }
+
+    .tutor-search-page .rating-value {
+        font-size: 10px;
+    }
+
+    /* University row ultra-compact */
+    .tutor-search-page .tutor-university-row {
+        gap: 3px;
+    }
+
+    .tutor-search-page .university-icon {
+        width: 11px;
+        height: 11px;
+    }
+
+    .tutor-search-page .university-icon svg {
+        width: 10px;
+        height: 6px;
+    }
+
+    .tutor-search-page .university-name {
+        font-size: 9px;
+        line-height: 12px;
+    }
+
+    .tutor-search-page .class-type-badge {
+        font-size: 6px;
+        gap: 2px;
+        letter-spacing: 0.5px;
+    }
+
+    /* Subject tags ultra-compact */
+    .tutor-search-page .tutor-subjects {
+        gap: 3px;
+        max-height: 34px;
+    }
+
+    .tutor-search-page .subject-tag {
+        padding: 1px 6px;
+        font-size: 8px;
+        line-height: 12px;
+        border-radius: 4px;
+    }
+
+    /* Stats row ultra-compact */
+    .tutor-search-page .tutor-stats {
+        border-radius: 6px;
+    }
+
+    .tutor-search-page .tutor-stats .stat-item {
+        padding: 4px 6px;
+        gap: 0;
+    }
+
+    .tutor-search-page .tutor-stats .stat-label {
+        font-size: 6px;
+        letter-spacing: 0.4px;
+        line-height: 9px;
+    }
+
+    .tutor-search-page .tutor-stats .stat-value {
+        font-size: 10px;
+        line-height: 13px;
+    }
+
+    /* Highlights ultra-compact */
+    .tutor-search-page .tutor-highlights {
+        padding-top: 0;
+        gap: 2px;
+    }
+
+    .tutor-search-page .highlight-icon {
+        width: 8px;
+        height: 8px;
+        margin-top: 1px;
+    }
+
+    .tutor-search-page .highlight-icon svg {
+        width: 5px;
+        height: 3.5px;
+    }
+
+    .tutor-search-page .highlight-text {
+        font-size: 8px;
+        line-height: 10px;
+    }
+
+    /* Footer ultra-compact */
+    .tutor-search-page .tutor-card-footer {
+        padding: 6px 10px;
+        gap: 8px;
+    }
+
+    .tutor-search-page .pricing-label {
+        font-size: 6px;
+        line-height: 8px;
+    }
+
+    .tutor-search-page .price-amount {
+        font-size: 13px;
+        line-height: 17px;
+    }
+
+    .tutor-search-page .price-unit {
+        font-size: 8px;
+    }
+
+    .tutor-search-page .tutor-actions {
+        gap: 4px;
+    }
+
+    .tutor-search-page .btn-details {
+        height: 26px;
+        width: auto;
+        padding: 0 10px;
+        font-size: 8px;
+        border-radius: 6px;
+        letter-spacing: 0.8px;
+    }
+
+    .tutor-search-page .btn-start-plan {
+        padding: 5px 10px;
+        border-radius: 6px;
+        gap: 4px;
+    }
+
+    .tutor-search-page .btn-start-plan-text {
+        font-size: 8px;
+        letter-spacing: 0.6px;
+    }
+
+    .tutor-search-page .btn-start-plan-icon {
+        width: 8px;
+        height: 8px;
+    }
+
+    .tutor-search-page .btn-start-plan-icon svg {
+        width: 7px;
+        height: 3px;
+    }
+}
+
+@media (max-width: 420px) {
     .tutor-search-page .tutor-card-footer {
         flex-direction: column;
-        gap: 16px;
+        gap: 10px;
     }
 
     .tutor-search-page .tutor-actions {
         width: 100%;
     }
 
-    .tutor-search-page .btn-details,
+    .tutor-search-page .btn-details {
+        flex: 0 0 auto;
+    }
+
     .tutor-search-page .btn-start-plan {
         flex: 1;
+        justify-content: center;
     }
 }

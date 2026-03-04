@@ -18,10 +18,10 @@ const Header = () => {
     if (!userInfo?.role) return "/login";
 
     switch (userInfo.role.toLowerCase()) {
-      case 'admin': return "/admin/dashboard";
+      case 'admin': return "/admin-portal/dashboard";
       case 'tutor': return "/tutor-portal";
-      case 'parent': return "/parent/dashboard";
-      case 'student': return "/student/dashboard";
+      case 'parent': return "/parent-portal/dashboard";
+      case 'student': return "/student-portal/dashboard";
       default: return "/";
     }
   };

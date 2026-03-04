@@ -37,10 +37,10 @@ const LoginForm: React.FC = () => {
       const roleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
       const role = (payload[roleClaim] || '').toLowerCase();
       switch (role) {
-        case 'admin': return '/admin/dashboard';
+        case 'admin': return '/admin-portal/dashboard';
         case 'tutor': return '/tutor-portal';
-        case 'parent': return '/parent/dashboard';
-        case 'student': return '/student/dashboard';
+        case 'parent': return '/parent-portal/dashboard';
+        case 'student': return '/student-portal/dashboard';
         default: return '/';
       }
     } catch {
@@ -113,8 +113,8 @@ const LoginForm: React.FC = () => {
               id="email"
               name="email"
               type="text"
-              label="Email hoặc SĐT"
-              placeholder="name@example.com"
+              label="Email, SĐT hoặc Username"
+              placeholder="name@example.com hoặc username"
               icon="mail"
               value={formData.email}
               onChange={handleChange}

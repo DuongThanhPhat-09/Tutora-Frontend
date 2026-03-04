@@ -227,225 +227,243 @@ const TutorPortalClasses: React.FC = () => {
 
     return (
         <div className={styles.classManagement}>
-            <div className={styles.mainContent}>
-                {/* Header */}
-                <div className={styles.header}>
-                    <h1 className={styles.title}>Quản lý lớp học</h1>
-                    <button className={styles.createBtn} onClick={() => navigate('/tutor-portal/schedule')}>
-                        <PlusIcon />
-                        <span>Tạo lớp học</span>
-                    </button>
-                </div>
-
-                {/* Filters */}
-                <div className={styles.filters}>
-                    <div className={styles.searchWrapper}>
-                        <SearchIcon />
-                        <input
-                            type="text"
-                            className={styles.searchInput}
-                            placeholder="Tìm kiếm lớp học hoặc học sinh..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+            {/* Coming Soon Overlay */}
+            <div className={styles.comingSoonOverlay}>
+                <div className={styles.comingSoonCard}>
+                    <div className={styles.comingSoonIcon}>🚀</div>
+                    <h2 className={styles.comingSoonTitle}>Chức năng đang được phát triển</h2>
+                    <p className={styles.comingSoonDesc}>
+                        Tính năng quản lý lớp học đang được hoàn thiện và sẽ sớm được cập nhật.
+                        Cảm ơn bạn đã kiên nhẫn chờ đợi!
+                    </p>
+                    <div className={styles.comingSoonBadge}>
+                        <span className={styles.comingSoonDot}></span>
+                        Đang phát triển
                     </div>
-                    <select
-                        className={styles.filterBtn}
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                    >
-                        <option value="">Trạng thái: Tất cả</option>
-                        <option value="scheduled">Đã lên lịch</option>
-                        <option value="in_progress">Đang học</option>
-                        <option value="pending_report">Chờ báo cáo</option>
-                        <option value="pending_parent_confirmation">Chờ xác nhận</option>
-                        <option value="completed">Hoàn thành</option>
-                        <option value="cancelled">Đã hủy</option>
-                    </select>
-                    <select
-                        className={styles.sortBtn}
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                    >
-                        <option value="nextLesson">Sắp xếp: Buổi học tiếp theo</option>
-                        <option value="subjectName">Sắp xếp: Tên môn học</option>
-                        <option value="completedLessons">Sắp xếp: Tiến độ</option>
-                    </select>
-                </div>
-
-                {/* Table */}
-                <div className={styles.tableContainer}>
-                    {loading ? (
-                        <>
-                            {console.log('🔄 Showing loading state')}
-                            <div style={{ textAlign: 'center', padding: '40px' }}>
-                                <div className={styles.spinner}></div>
-                                <p>Đang tải dữ liệu...</p>
-                            </div>
-                        </>
-                    ) : filteredClasses.length === 0 ? (
-                        <>
-                            {console.log('⚠️ Showing empty state')}
-                            <div style={{ textAlign: 'center', padding: '40px' }}>
-                                <p>Không tìm thấy lớp học nào</p>
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            {console.log('✅ Rendering table with', filteredClasses.length, 'classes')}
-                            <table className={styles.table}>
-                                <thead>
-                                    <tr>
-                                        <th>LỚP HỌC</th>
-                                        <th>LỊCH HỌC</th>
-                                        <th>HỌC SINH</th>
-                                        <th>BUỔI<br />TIẾP THEO</th>
-                                        <th>TIẾN ĐỘ</th>
-                                        <th className={styles.alignRight}>HÀNH ĐỘNG</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {paginatedClasses.map((classData) => (
-                                        <tr
-                                            key={classData.bookingId}
-                                            className={styles.clickableRow}
-                                            onClick={() => handleOpenClass(classData.bookingId)}
-                                        >
-                                            <td>
-                                                <div className={styles.classInfo}>
-                                                    <div className={styles.className}>{classData.subjectName}</div>
-                                                    <div className={styles.classTags}>
-                                                        <span className={styles.tag}>{classData.totalLessons} buổi</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className={styles.scheduleText}>
-                                                    {classData.schedule}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className={styles.studentsList}>
-                                                    <div className={styles.studentAvatar}>
-                                                        {classData.studentName.substring(0, 2).toUpperCase()}
-                                                    </div>
-                                                    <span style={{ marginLeft: '8px', fontSize: '13px' }}>
-                                                        {classData.studentName}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                {classData.nextLesson ? (
-                                                    <div className={styles.nextLessonText}>
-                                                        {formatDate(classData.nextLesson.scheduledStart).split('\n').map((line, i) => (
-                                                            <div key={i}>{line}</div>
-                                                        ))}
-                                                    </div>
-                                                ) : (
-                                                    <div className={styles.nextLessonText}>
-                                                        Không có
-                                                    </div>
-                                                )}
-                                            </td>
-                                            <td>
-                                                <div className={styles.healthBadges}>
-                                                    <span className={styles.hwBadge}>
-                                                        {classData.completedLessons}/{classData.totalLessons}<br />Hoàn thành
-                                                    </span>
-                                                    <span className={styles.scoresBadge}>
-                                                        {classData.hasHomework ? '✓' : '-'}<br />BTVN
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className={styles.actions}>
-                                                    <button
-                                                        className={styles.openBtn}
-                                                        onClick={(e) => { e.stopPropagation(); handleOpenClass(classData.bookingId); }}
-                                                    >
-                                                        Mở
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-
-                            {/* Pagination */}
-                            {filteredClasses.length > ITEMS_PER_PAGE && (
-                                <div className={styles.pagination}>
-                                    <span className={styles.paginationInfo}>
-                                        Hiển thị {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
-                                        {Math.min(currentPage * ITEMS_PER_PAGE, filteredClasses.length)} trong số{' '}
-                                        {filteredClasses.length} lớp học
-                                    </span>
-                                    <div className={styles.paginationControls}>
-                                        <button
-                                            className={styles.pageBtn}
-                                            onClick={() => setCurrentPage(currentPage - 1)}
-                                            disabled={currentPage === 1}
-                                        >
-                                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                                stroke="currentColor" strokeWidth="1.5">
-                                                <path d="M9 3L5 7L9 11" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </button>
-
-                                        {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                                            let pageNum: number;
-                                            if (totalPages <= 5) {
-                                                pageNum = i + 1;
-                                            } else if (currentPage <= 3) {
-                                                pageNum = i + 1;
-                                            } else if (currentPage >= totalPages - 2) {
-                                                pageNum = totalPages - 4 + i;
-                                            } else {
-                                                pageNum = currentPage - 2 + i;
-                                            }
-                                            return (
-                                                <button
-                                                    key={pageNum}
-                                                    className={`${styles.pageNumber} ${currentPage === pageNum ? styles.pageActive : ''}`}
-                                                    onClick={() => setCurrentPage(pageNum)}
-                                                >
-                                                    {pageNum}
-                                                </button>
-                                            );
-                                        })}
-
-                                        {totalPages > 5 && currentPage < totalPages - 2 && (
-                                            <>
-                                                <span className={styles.paginationEllipsis}>...</span>
-                                                <button
-                                                    className={styles.pageNumber}
-                                                    onClick={() => setCurrentPage(totalPages)}
-                                                >
-                                                    {totalPages}
-                                                </button>
-                                            </>
-                                        )}
-
-                                        <button
-                                            className={styles.pageBtn}
-                                            onClick={() => setCurrentPage(currentPage + 1)}
-                                            disabled={currentPage === totalPages}
-                                        >
-                                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
-                                                stroke="currentColor" strokeWidth="1.5">
-                                                <path d="M5 3L9 7L5 11" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </>
-                    )}
                 </div>
             </div>
 
-            {/* Right Sidebar - Temporarily hidden (using mock data) */}
-            {/* <aside className={styles.sidebar}>
+            {/* Blurred original content */}
+            <div className={styles.blurredContent}>
+                <div className={styles.mainContent}>
+                    {/* Header */}
+                    <div className={styles.header}>
+                        <h1 className={styles.title}>Quản lý lớp học</h1>
+                        <button className={styles.createBtn} onClick={() => navigate('/tutor-portal/schedule')}>
+                            <PlusIcon />
+                            <span>Tạo lớp học</span>
+                        </button>
+                    </div>
+
+                    {/* Filters */}
+                    <div className={styles.filters}>
+                        <div className={styles.searchWrapper}>
+                            <SearchIcon />
+                            <input
+                                type="text"
+                                className={styles.searchInput}
+                                placeholder="Tìm kiếm lớp học hoặc học sinh..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <select
+                            className={styles.filterBtn}
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="">Trạng thái: Tất cả</option>
+                            <option value="scheduled">Đã lên lịch</option>
+                            <option value="in_progress">Đang học</option>
+                            <option value="pending_report">Chờ báo cáo</option>
+                            <option value="pending_parent_confirmation">Chờ xác nhận</option>
+                            <option value="completed">Hoàn thành</option>
+                            <option value="cancelled">Đã hủy</option>
+                        </select>
+                        <select
+                            className={styles.sortBtn}
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                        >
+                            <option value="nextLesson">Sắp xếp: Buổi học tiếp theo</option>
+                            <option value="subjectName">Sắp xếp: Tên môn học</option>
+                            <option value="completedLessons">Sắp xếp: Tiến độ</option>
+                        </select>
+                    </div>
+
+                    {/* Table */}
+                    <div className={styles.tableContainer}>
+                        {loading ? (
+                            <>
+                                {console.log('🔄 Showing loading state')}
+                                <div style={{ textAlign: 'center', padding: '40px' }}>
+                                    <div className={styles.spinner}></div>
+                                    <p>Đang tải dữ liệu...</p>
+                                </div>
+                            </>
+                        ) : filteredClasses.length === 0 ? (
+                            <>
+                                {console.log('⚠️ Showing empty state')}
+                                <div style={{ textAlign: 'center', padding: '40px' }}>
+                                    <p>Không tìm thấy lớp học nào</p>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {console.log('✅ Rendering table with', filteredClasses.length, 'classes')}
+                                <table className={styles.table}>
+                                    <thead>
+                                        <tr>
+                                            <th>LỚP HỌC</th>
+                                            <th>LỊCH HỌC</th>
+                                            <th>HỌC SINH</th>
+                                            <th>BUỔI<br />TIẾP THEO</th>
+                                            <th>TIẾN ĐỘ</th>
+                                            <th className={styles.alignRight}>HÀNH ĐỘNG</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {paginatedClasses.map((classData) => (
+                                            <tr
+                                                key={classData.bookingId}
+                                                className={styles.clickableRow}
+                                                onClick={() => handleOpenClass(classData.bookingId)}
+                                            >
+                                                <td>
+                                                    <div className={styles.classInfo}>
+                                                        <div className={styles.className}>{classData.subjectName}</div>
+                                                        <div className={styles.classTags}>
+                                                            <span className={styles.tag}>{classData.totalLessons} buổi</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className={styles.scheduleText}>
+                                                        {classData.schedule}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className={styles.studentsList}>
+                                                        <div className={styles.studentAvatar}>
+                                                            {classData.studentName.substring(0, 2).toUpperCase()}
+                                                        </div>
+                                                        <span style={{ marginLeft: '8px', fontSize: '13px' }}>
+                                                            {classData.studentName}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {classData.nextLesson ? (
+                                                        <div className={styles.nextLessonText}>
+                                                            {formatDate(classData.nextLesson.scheduledStart).split('\n').map((line, i) => (
+                                                                <div key={i}>{line}</div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className={styles.nextLessonText}>
+                                                            Không có
+                                                        </div>
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <div className={styles.healthBadges}>
+                                                        <span className={styles.hwBadge}>
+                                                            {classData.completedLessons}/{classData.totalLessons}<br />Hoàn thành
+                                                        </span>
+                                                        <span className={styles.scoresBadge}>
+                                                            {classData.hasHomework ? '✓' : '-'}<br />BTVN
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div className={styles.actions}>
+                                                        <button
+                                                            className={styles.openBtn}
+                                                            onClick={(e) => { e.stopPropagation(); handleOpenClass(classData.bookingId); }}
+                                                        >
+                                                            Mở
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+
+                                {/* Pagination */}
+                                {filteredClasses.length > ITEMS_PER_PAGE && (
+                                    <div className={styles.pagination}>
+                                        <span className={styles.paginationInfo}>
+                                            Hiển thị {(currentPage - 1) * ITEMS_PER_PAGE + 1}-
+                                            {Math.min(currentPage * ITEMS_PER_PAGE, filteredClasses.length)} trong số{' '}
+                                            {filteredClasses.length} lớp học
+                                        </span>
+                                        <div className={styles.paginationControls}>
+                                            <button
+                                                className={styles.pageBtn}
+                                                onClick={() => setCurrentPage(currentPage - 1)}
+                                                disabled={currentPage === 1}
+                                            >
+                                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                                    stroke="currentColor" strokeWidth="1.5">
+                                                    <path d="M9 3L5 7L9 11" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </button>
+
+                                            {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                                                let pageNum: number;
+                                                if (totalPages <= 5) {
+                                                    pageNum = i + 1;
+                                                } else if (currentPage <= 3) {
+                                                    pageNum = i + 1;
+                                                } else if (currentPage >= totalPages - 2) {
+                                                    pageNum = totalPages - 4 + i;
+                                                } else {
+                                                    pageNum = currentPage - 2 + i;
+                                                }
+                                                return (
+                                                    <button
+                                                        key={pageNum}
+                                                        className={`${styles.pageNumber} ${currentPage === pageNum ? styles.pageActive : ''}`}
+                                                        onClick={() => setCurrentPage(pageNum)}
+                                                    >
+                                                        {pageNum}
+                                                    </button>
+                                                );
+                                            })}
+
+                                            {totalPages > 5 && currentPage < totalPages - 2 && (
+                                                <>
+                                                    <span className={styles.paginationEllipsis}>...</span>
+                                                    <button
+                                                        className={styles.pageNumber}
+                                                        onClick={() => setCurrentPage(totalPages)}
+                                                    >
+                                                        {totalPages}
+                                                    </button>
+                                                </>
+                                            )}
+
+                                            <button
+                                                className={styles.pageBtn}
+                                                onClick={() => setCurrentPage(currentPage + 1)}
+                                                disabled={currentPage === totalPages}
+                                            >
+                                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                                                    stroke="currentColor" strokeWidth="1.5">
+                                                    <path d="M5 3L9 7L5 11" strokeLinecap="round" strokeLinejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                {/* Right Sidebar - Temporarily hidden (using mock data) */}
+                {/* <aside className={styles.sidebar}>
                 <div className={styles.sidebarSection}>
                     <div className={styles.sidebarHeader}>
                         <h3 className={styles.sidebarTitle}>Lớp học cần<br />chú ý</h3>
@@ -483,6 +501,7 @@ const TutorPortalClasses: React.FC = () => {
                     </div>
                 </div>
             </aside> */}
+            </div> {/* end blurredContent */}
         </div>
     );
 };

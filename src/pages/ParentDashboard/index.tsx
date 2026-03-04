@@ -267,7 +267,7 @@ const ParentDashboard = () => {
         {/* Stats Grid */}
         <div className={styles.statsGrid}>
           {/* Total Bookings */}
-          <div className={styles.statCard} onClick={() => navigate('/parent/booking')} style={{ cursor: 'pointer' }}>
+          <div className={styles.statCard} onClick={() => navigate('/parent-portal/booking')} style={{ cursor: 'pointer' }}>
             <div className={styles.statHeader}>
               <div className={styles.statIconWrap}><BookingIcon /></div>
               <span className={`${styles.statBadge} ${styles.badgeGreen}`}>{activeBookings} active</span>
@@ -278,7 +278,7 @@ const ParentDashboard = () => {
           </div>
 
           {/* Children */}
-          <div className={styles.statCard} onClick={() => navigate('/parent/student')} style={{ cursor: 'pointer' }}>
+          <div className={styles.statCard} onClick={() => navigate('/parent-portal/student')} style={{ cursor: 'pointer' }}>
             <div className={styles.statHeader}>
               <div className={styles.statIconWrap}><ChildrenIcon /></div>
               <span className={`${styles.statBadge} ${styles.badgeBlue}`}>Linked</span>
@@ -289,7 +289,7 @@ const ParentDashboard = () => {
           </div>
 
           {/* Lessons this week */}
-          <div className={styles.statCard} onClick={() => navigate('/parent/lessons')} style={{ cursor: 'pointer' }}>
+          <div className={styles.statCard} onClick={() => navigate('/parent-portal/lessons')} style={{ cursor: 'pointer' }}>
             <div className={styles.statHeader}>
               <div className={styles.statIconWrap}><SessionsIcon /></div>
               <span className={`${styles.statBadge} ${styles.badgeGreen}`}>Tuần này</span>
@@ -315,11 +315,11 @@ const ParentDashboard = () => {
 
         {/* Quick Actions */}
         <div className={styles.quickActions}>
-          <button className={styles.quickActionBtn} onClick={() => navigate('/parent/messages')}>
+          <button className={styles.quickActionBtn} onClick={() => navigate('/parent-portal/messages')}>
             <MessageIcon />
             <span>Tin nhắn</span>
           </button>
-          <button className={styles.quickActionBtn} onClick={() => navigate('/parent/student')}>
+          <button className={styles.quickActionBtn} onClick={() => navigate('/parent-portal/student')}>
             <ChildrenActionIcon />
             <span>Quản lý học sinh</span>
           </button>
@@ -335,7 +335,7 @@ const ParentDashboard = () => {
           <div className={styles.lessonsCard}>
             <div className={styles.lessonsHeader}>
               <h3>Buổi học sắp tới</h3>
-              <a href="/parent/lessons" className={styles.viewAllLink}>Xem lịch đầy đủ &rarr;</a>
+              <a href="/parent-portal/lessons" className={styles.viewAllLink}>Xem lịch đầy đủ &rarr;</a>
             </div>
             <div className={styles.lessonsList}>
               {upcomingLessons.length > 0 ? upcomingLessons.map((lesson) => (
@@ -362,7 +362,7 @@ const ParentDashboard = () => {
                     </span>
                     <button
                       className={styles.lessonViewBtn}
-                      onClick={() => navigate(`/parent/lessons`)}
+                      onClick={() => navigate(`/parent-portal/lessons`)}
                     >
                       Xem
                     </button>
@@ -399,7 +399,7 @@ const ParentDashboard = () => {
                       <span className={styles.sessionInfoLabel}>Học sinh</span>
                       <span className={styles.sessionInfoValue}>{nextLesson.student?.fullName || '—'}</span>
                     </div>
-                    <button className={styles.sessionBtn} onClick={() => navigate('/parent/lessons')}>
+                    <button className={styles.sessionBtn} onClick={() => navigate('/parent-portal/lessons')}>
                       Xem chi tiết
                     </button>
                   </>
@@ -430,7 +430,7 @@ const ParentDashboard = () => {
                       <a
                         href="#"
                         className={styles.attentionLink}
-                        onClick={(e) => { e.preventDefault(); navigate(`/parent/booking/${booking.bookingId}`); }}
+                        onClick={(e) => { e.preventDefault(); navigate(`/parent-portal/booking/${booking.bookingId}`); }}
                       >
                         Xem chi tiết →
                       </a>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getStudents } from '../../services/student.service';
 import { createBooking, validatePromotion } from '../../services/booking.service';
+import { getCurrentUserRole, getUserIdFromToken } from '../../services/auth.service';
 import type { StudentType } from '../../types/student.type';
 import type { CreateBookingPayload, PromotionValidateResult } from '../../services/booking.service';
 import type { SubjectInfo, AvailabilitySlot } from '../../services/tutorDetail.service';
@@ -143,47 +144,53 @@ interface StepProps {
     availabilities: AvailabilitySlot[];
     slotDuration: number;
     setSlotDuration: React.Dispatch<React.SetStateAction<number>>;
+    userRole: string | null;
 }
 
 // Step 1: Select Student & Subject
-const StepStudentSubject = ({ formData, setFormData, students, loadingStudents, availableSubjects }: StepProps) => (
+const StepStudentSubject = ({ formData, setFormData, students, loadingStudents, availableSubjects, userRole }: StepProps) => (
     <div className="bm-step">
-        <div className="bm-step-title">Chọn học sinh</div>
-        {loadingStudents ? (
-            <div className="bm-loading">Đang tải danh sách học sinh...</div>
-        ) : students.length === 0 ? (
-            <div className="bm-empty-msg">
-                <p>Chưa có hồ sơ học sinh nào.</p>
-                <a href="/parent/student" target="_blank" className="bm-btn-add-student">
-                    + Thêm hồ sơ học sinh
-                </a>
-            </div>
-        ) : (
-            <div className="bm-student-grid">
-                {students.map((s) => (
-                    <div
-                        key={s.studentId}
-                        className={`bm-student-card ${formData.studentId === s.studentId ? 'selected' : ''}`}
-                        onClick={() => setFormData((d) => ({ ...d, studentId: s.studentId }))}
-                    >
-                        <div className="bm-student-avatar">
-                            {s.avatarURL ? (
-                                <img src={s.avatarURL} alt={s.fullName} />
-                            ) : (
-                                s.fullName.charAt(0)
-                            )}
-                        </div>
-                        <div className="bm-student-info">
-                            <span className="bm-student-name">{s.fullName}</span>
-                            <span className="bm-student-grade">{s.gradeLevel || s.school}</span>
-                        </div>
-                        {formData.studentId === s.studentId && <div className="bm-check">✓</div>}
+        {/* Only show student selection for Parent role */}
+        {userRole === 'Parent' && (
+            <>
+                <div className="bm-step-title">Chọn học sinh</div>
+                {loadingStudents ? (
+                    <div className="bm-loading">Đang tải danh sách học sinh...</div>
+                ) : students.length === 0 ? (
+                    <div className="bm-empty-msg">
+                        <p>Chưa có hồ sơ học sinh nào.</p>
+                        <a href="/parent-portal/student" target="_blank" className="bm-btn-add-student">
+                            + Thêm hồ sơ học sinh
+                        </a>
                     </div>
-                ))}
-            </div>
+                ) : (
+                    <div className="bm-student-grid">
+                        {students.map((s) => (
+                            <div
+                                key={s.studentId}
+                                className={`bm-student-card ${formData.studentId === s.studentId ? 'selected' : ''}`}
+                                onClick={() => setFormData((d) => ({ ...d, studentId: s.studentId }))}
+                            >
+                                <div className="bm-student-avatar">
+                                    {s.avatarURL ? (
+                                        <img src={s.avatarURL} alt={s.fullName} />
+                                    ) : (
+                                        s.fullName.charAt(0)
+                                    )}
+                                </div>
+                                <div className="bm-student-info">
+                                    <span className="bm-student-name">{s.fullName}</span>
+                                    <span className="bm-student-grade">{s.gradeLevel || s.school}</span>
+                                </div>
+                                {formData.studentId === s.studentId && <div className="bm-check">✓</div>}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </>
         )}
 
-        <div className="bm-step-title" style={{ marginTop: 24 }}>Chọn môn học</div>
+        <div className="bm-step-title" style={{ marginTop: userRole === 'Parent' ? 24 : 0 }}>Chọn môn học</div>
         {availableSubjects.length === 0 ? (
             <div className="bm-empty-msg">Gia sư này chưa cập nhật môn học.</div>
         ) : (
@@ -731,14 +738,19 @@ const STEPS = [
 ];
 
 const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subjects, availabilities }: BookingModalProps) => {
+    const userRole = getCurrentUserRole();
+    const currentUserId = getUserIdFromToken();
+
     const [step, setStep] = useState(0);
     const [students, setStudents] = useState<StudentType[]>([]);
     const [loadingStudents, setLoadingStudents] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [bookingSuccess, setBookingSuccess] = useState(false);
+    const [successBookingId, setSuccessBookingId] = useState<number | null>(null);
     const [slotDuration, setSlotDuration] = useState(2);
     const [formData, setFormData] = useState<BookingFormData>({
-        studentId: '',
+        studentId: userRole === 'Student' ? (currentUserId || '') : '',
         subjectId: 0,
         teachingMode: 'online',
         startDate: new Date().toISOString().split('T')[0],
@@ -755,9 +767,10 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
         subjects.some(tutorSubj => tutorSubj.subjectId === s.id)
     );
 
-    // Fetch students on modal open
+    // Fetch students on modal open (only for Parent role)
     useEffect(() => {
         if (!isOpen) return;
+        if (userRole !== 'Parent') return; // Students don't need to fetch student profiles
         const fetchStudents = async () => {
             setLoadingStudents(true);
             try {
@@ -774,16 +787,18 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
             }
         };
         fetchStudents();
-    }, [isOpen]);
+    }, [isOpen, userRole]);
 
     // Reset form when modal closes
     useEffect(() => {
         if (!isOpen) {
             setStep(0);
             setSubmitError(null);
+            setBookingSuccess(false);
+            setSuccessBookingId(null);
             setSlotDuration(2);
             setFormData({
-                studentId: '',
+                studentId: userRole === 'Student' ? (currentUserId || '') : '',
                 subjectId: 0,
                 teachingMode: 'online',
                 startDate: new Date().toISOString().split('T')[0],
@@ -797,11 +812,22 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
         }
     }, [isOpen]);
 
+    // Auto-dismiss error toast after 5 seconds
+    useEffect(() => {
+        if (!submitError) return;
+        const timer = setTimeout(() => setSubmitError(null), 5000);
+        return () => clearTimeout(timer);
+    }, [submitError]);
+
     if (!isOpen) return null;
 
     const canNext = () => {
         switch (step) {
-            case 0: return formData.studentId !== '' && formData.subjectId !== 0;
+            case 0:
+                // Student role: only need subject selected (studentId is auto-set)
+                if (userRole === 'Student') return formData.subjectId !== 0;
+                // Parent role: need both student and subject selected
+                return formData.studentId !== '' && formData.subjectId !== 0;
             case 1: {
                 if (formData.teachingMode === 'offline' || formData.teachingMode === 'hybrid') {
                     return formData.locationCity.trim() !== '' && formData.locationDistrict.trim() !== '';
@@ -836,9 +862,13 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
                 promotionCode: formData.promotionCode || undefined,
             };
 
-            await createBooking(payload);
-            alert('✅ Booking đã được tạo thành công! Gia sư sẽ xác nhận trong thời gian sớm nhất.');
-            onClose();
+            const result = await createBooking(payload);
+            setSuccessBookingId(result.content?.bookingId || null);
+            setBookingSuccess(true);
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+                onClose();
+            }, 5000);
         } catch (err: any) {
             console.error('createBooking failed:', err);
             const msg = err.response?.data?.message || 'Có lỗi xảy ra khi tạo booking. Vui lòng thử lại.';
@@ -859,11 +889,67 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
         availabilities: availabilities || [],
         slotDuration,
         setSlotDuration,
+        userRole,
     };
 
     return (
         <div className="bm-overlay" onClick={onClose}>
             <div className="bm-modal" onClick={(e) => e.stopPropagation()}>
+                {/* ===== SUCCESS OVERLAY ===== */}
+                {bookingSuccess && (
+                    <div className="bm-success-overlay">
+                        <div className="bm-success-content">
+                            <div className="bm-success-icon-wrapper">
+                                <div className="bm-success-icon">
+                                    <svg viewBox="0 0 52 52" className="bm-success-checkmark">
+                                        <circle className="bm-success-circle" cx="26" cy="26" r="25" fill="none" />
+                                        <path className="bm-success-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h3 className="bm-success-title">Đặt lịch thành công!</h3>
+                            <p className="bm-success-desc">
+                                Yêu cầu booking của bạn đã được gửi đến <strong>{tutorName}</strong>.
+                                Gia sư sẽ xác nhận trong thời gian sớm nhất.
+                            </p>
+                            {successBookingId && (
+                                <div className="bm-success-booking-id">
+                                    Mã booking: <strong>#{successBookingId}</strong>
+                                </div>
+                            )}
+                            <div className="bm-success-steps">
+                                <div className="bm-success-step">
+                                    <div className="bm-success-step-num">1</div>
+                                    <span>Gia sư xem xét yêu cầu</span>
+                                </div>
+                                <div className="bm-success-step">
+                                    <div className="bm-success-step-num">2</div>
+                                    <span>Xác nhận & thanh toán</span>
+                                </div>
+                                <div className="bm-success-step">
+                                    <div className="bm-success-step-num">3</div>
+                                    <span>Bắt đầu học!</span>
+                                </div>
+                            </div>
+                            <button className="bm-success-close-btn" onClick={onClose} type="button">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== ERROR TOAST ===== */}
+                {submitError && (
+                    <div className="bm-toast-error">
+                        <div className="bm-toast-error-icon">✕</div>
+                        <div className="bm-toast-error-content">
+                            <div className="bm-toast-error-title">Đặt lịch thất bại</div>
+                            <div className="bm-toast-error-msg">{submitError}</div>
+                        </div>
+                        <button className="bm-toast-error-close" onClick={() => setSubmitError(null)} type="button">✕</button>
+                    </div>
+                )}
+
                 {/* Modal Header */}
                 <div className="bm-header">
                     <div className="bm-header-info">
@@ -893,11 +979,6 @@ const BookingModal = ({ isOpen, onClose, tutorName, tutorId, hourlyRate, subject
                     {step === 2 && <StepSchedule {...stepProps} />}
                     {step === 3 && <StepReview {...stepProps} />}
                 </div>
-
-                {/* Error */}
-                {submitError && (
-                    <div className="bm-error-bar">{submitError}</div>
-                )}
 
                 {/* Footer */}
                 <div className="bm-footer">

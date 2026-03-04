@@ -12,8 +12,7 @@ import { getAvailability, deleteAvailability, DAY_OF_WEEK_MAP } from '../../serv
 import type { AvailabilitySlot } from '../../services/availability.service';
 import { getUserIdFromToken } from '../../services/auth.service';
 import { getTutorCalendar } from '../../services/lesson.service';
-import { type CalendarDayDto } from '../../components/CalendarView/CalendarView';
-import type { LessonResponse } from '../../services/lesson.service';
+import type { CalendarDay, CalendarLesson } from '../../services/lesson.service';
 
 // Mở rộng dayjs với các plugin
 dayjs.extend(weekday);
@@ -122,12 +121,12 @@ const TutorPortalSchedule: React.FC = () => {
     const [deletingSlotId, setDeletingSlotId] = useState<number | null>(null);
 
     // FROM MILESTONE_3: State cho lessons tab
-    const [calendarData, setCalendarData] = useState<CalendarDayDto[]>([]);
+    const [calendarData, setCalendarData] = useState<CalendarDay[]>([]);
     const [isLoadingLessons, setIsLoadingLessons] = useState(false);
 
     // Flatten calendar data into lessons array for the lessons tab grid
-    const lessons: LessonResponse[] = useMemo(() => {
-        return calendarData.flatMap(day => (day.lessons || []) as unknown as LessonResponse[]);
+    const lessons: CalendarLesson[] = useMemo(() => {
+        return calendarData.flatMap(day => day.lessons || []);
     }, [calendarData]);
 
     // Zoom state
@@ -223,13 +222,24 @@ const TutorPortalSchedule: React.FC = () => {
     const fetchCalendar = useCallback(async () => {
         setIsLoadingLessons(true);
         try {
+            // Debug: log logged-in user info
+            const userId = getUserIdFromToken();
             const startDate = dayjs().subtract(7, 'day').format('YYYY-MM-DD');
             const endDate = dayjs().add(30, 'day').format('YYYY-MM-DD');
-            const response = await getTutorCalendar(startDate, endDate);
+            console.log('📅 [DEBUG] fetchCalendar called with:', { userId, startDate, endDate });
 
-            // Map specific fields if necessary or cast directly (same interface fields mostly)
-            setCalendarData((response.content || []) as unknown as CalendarDayDto[]);
-        } catch (error) {
+            const response = await getTutorCalendar(startDate, endDate);
+            console.log('📅 [DEBUG] /tutorlesson/calendar response:', JSON.stringify(response, null, 2));
+            console.log('📅 [DEBUG] content length:', (response.content || []).length);
+
+            setCalendarData(response.content || []);
+        } catch (error: any) {
+            console.error('❌ fetchCalendar error:', error);
+            console.error('❌ Error details:', {
+                status: error?.response?.status,
+                data: error?.response?.data,
+                message: error?.message,
+            });
             toast.error('Không thể tải lịch dạy. Vui lòng thử lại.');
         } finally {
             setIsLoadingLessons(false);
@@ -300,8 +310,8 @@ const TutorPortalSchedule: React.FC = () => {
     };
 
     // Helper: check if a day has lessons
-    const getDayLessons = (date: Dayjs): LessonResponse[] => {
-        return lessons.filter((l: LessonResponse) => dayjs(l.scheduledStart).isSame(date, 'day'));
+    const getDayLessons = (date: Dayjs): CalendarLesson[] => {
+        return lessons.filter((l: CalendarLesson) => dayjs(l.scheduledStart).isSame(date, 'day'));
     };
 
     const handleAddAvailabilityClick = () => {
@@ -689,7 +699,7 @@ const TutorPortalSchedule: React.FC = () => {
                                                 {dayLessons.length > 0 && (
                                                     <div className={styles.monthCellDots}>
                                                         {dayLessons.slice(0, 3).map((l, j) => (
-                                                            <div key={j} className={styles.monthDotLesson} title={`${l.subject?.subjectName || ''} ${dayjs(l.scheduledStart).format('HH:mm')}`} />
+                                                            <div key={j} className={styles.monthDotLesson} title={`${l.subjectName || ''} ${dayjs(l.scheduledStart).format('HH:mm')}`} />
                                                         ))}
                                                         {dayLessons.length > 3 && <span className={styles.monthMore}>+{dayLessons.length - 3}</span>}
                                                     </div>
@@ -758,13 +768,13 @@ const TutorPortalSchedule: React.FC = () => {
                                                                 >
                                                                     <div className={styles.lessonContent}>
                                                                         <span className={styles.lessonLabel}>
-                                                                            {lesson.subject?.subjectName || 'N/A'}
+                                                                            {lesson.subjectName || 'N/A'}
                                                                         </span>
                                                                         <span className={styles.lessonTime}>
                                                                             {start.format('HH:mm')} - {end.format('HH:mm')}
                                                                         </span>
                                                                         <span className={styles.lessonStudent}>
-                                                                            {lesson.student?.fullName || 'Unknown'}
+                                                                            {lesson.studentName || 'Unknown'}
                                                                         </span>
                                                                     </div>
                                                                 </div>

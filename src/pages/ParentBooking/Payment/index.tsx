@@ -56,7 +56,7 @@ const PaymentPage = () => {
                 }
             } catch (error) {
                 antMessage.error('Không thể tải thông tin thanh toán.');
-                navigate('/parent/booking');
+                navigate('/parent-portal/booking');
             } finally {
                 setLoading(false);
             }
@@ -182,10 +182,10 @@ const PaymentPage = () => {
                         <h1>Thanh toán hoàn tất!</h1>
                         <p>Cảm ơn bạn đã tin tưởng TUTORA. Buổi học của bạn đã được lên lịch.</p>
                         <div className={styles.successActions}>
-                            <Button type="primary" size="large" onClick={() => navigate(`/parent/booking/${bookingId}`)}>
+                            <Button type="primary" size="large" onClick={() => navigate(`/parent-portal/booking/${bookingId}`)}>
                                 Xem chi tiết lịch học
                             </Button>
-                            <Button size="large" onClick={() => navigate('/parent/booking')}>
+                            <Button size="large" onClick={() => navigate('/parent-portal/booking')}>
                                 Quản lý lớp học
                             </Button>
                         </div>

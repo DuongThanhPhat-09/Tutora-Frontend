@@ -69,7 +69,7 @@ const ProfileCompleteness: React.FC<ProfileCompletenessProps> = ({
             key: 'identity',
             label: 'Xác minh danh tính',
             completed: hasIdentity,
-            percentage: 20
+            percentage: 25
         });
 
         // Introduction video: 10%
@@ -78,7 +78,7 @@ const ProfileCompleteness: React.FC<ProfileCompletenessProps> = ({
             key: 'video',
             label: 'Video giới thiệu',
             completed: hasVideo,
-            percentage: 10
+            percentage: 15
         });
 
         // About Me (bio >= 100 chars): 15%
