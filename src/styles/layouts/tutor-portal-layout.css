@@ -124,15 +124,24 @@
 /* Sidebar User Profile */
 .tutor-portal-sidebar-user {
     border-top: 1.2px solid rgba(255, 255, 255, 0.1);
-    padding: 12px 8px;
+    padding: 12px 6px;
+    overflow: hidden;
 }
 
 .tutor-portal-user-card {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10.5px;
-    padding: 10.5px;
+    padding: 8px;
     border-radius: 10.5px;
+    background-color: transparent;
+    overflow: hidden;
+    transition: background-color 0.2s ease, justify-content 0.3s ease;
+}
+
+.tutor-portal-sidebar:hover .tutor-portal-user-card {
+    justify-content: flex-start;
     background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -366,8 +375,8 @@
     color: #fff;
 }
 
-/* Logout Button */
-.tutor-portal-logout-btn {
+/* Logout Button (Header) */
+.tutor-portal-header-logout-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -380,7 +389,7 @@
     transition: all 0.2s ease;
 }
 
-.tutor-portal-logout-btn:hover {
+.tutor-portal-header-logout-btn:hover {
     background-color: rgba(99, 27, 27, 0.08);
     border-color: rgba(99, 27, 27, 0.3);
     color: #631b1b;
@@ -388,6 +397,7 @@
 
 /* ===== MAIN CONTENT AREA ===== */
 .tutor-portal-main {
+    --sidebar-width: 68px;
     margin-left: 68px;
     flex: 1;
     display: flex;
@@ -400,6 +410,7 @@
 
 /* Push content when sidebar is hovered */
 .tutor-portal-sidebar:hover~.tutor-portal-main {
+    --sidebar-width: 224px;
     margin-left: 224px;
 }
 
@@ -527,6 +538,7 @@
     }
 
     .tutor-portal-sidebar:hover~.tutor-portal-main {
+        --sidebar-width: 280px;
         margin-left: 280px;
     }
 
@@ -541,6 +553,7 @@
     }
 
     .tutor-portal-sidebar:hover~.tutor-portal-main {
+        --sidebar-width: 320px;
         margin-left: 320px;
     }
 
