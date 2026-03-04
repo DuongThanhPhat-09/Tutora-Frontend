@@ -605,7 +605,7 @@ const TestimonialsSection: React.FC<{ data: TutorProfileFormData }> = ({ data })
 
 const BookingSidebar: React.FC<{ data: TutorProfileFormData }> = ({ data }) => {
     const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('vi-VN').format(price);
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
     };
 
     // Group availability by day
@@ -621,110 +621,58 @@ const BookingSidebar: React.FC<{ data: TutorProfileFormData }> = ({ data }) => {
     return (
         <aside className="booking-sidebar" style={{ position: 'relative', top: 0 }}>
             <div className="booking-card">
-                {/* Price Header */}
+                {/* Fixed Header */}
                 <div className="booking-header">
                     <span className="booking-label">Bắt đầu lộ trình học thuật</span>
                     <div className="price-display">
                         <b className="price-amount">
-                            {data.hourlyRate > 0 ? `${formatPrice(data.hourlyRate)}đ` : 'Liên hệ'}
+                            {data.hourlyRate > 0
+                                ? formatPrice(Math.round(data.hourlyRate * 1.05))
+                                : 'Liên hệ'}
                         </b>
                         <b className="price-unit">/ BUỔI HỌC</b>
                     </div>
                 </div>
 
-                {/* Availability Schedule - Redesigned */}
-                {hasAvailability ? (
-                    <div style={{ marginTop: '14px' }}>
-                        <div style={{
-                            fontSize: '11px',
-                            letterSpacing: '1.1px',
-                            textTransform: 'uppercase' as const,
-                            fontWeight: 700,
-                            color: 'rgba(26, 34, 56, 0.4)',
-                            marginBottom: '14px'
-                        }}>
-                            LỊCH DẠY
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px'
-                        }}>
-                            {Object.entries(availabilityByDay).map(([dayName, slots]) => (
-                                <div key={dayName} style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '12px',
-                                    padding: '12px 14px',
-                                    backgroundColor: 'rgba(242, 240, 228, 0.5)',
-                                    borderRadius: '12px',
-                                    border: '1px solid rgba(62, 47, 40, 0.08)'
-                                }}>
-                                    <div style={{
-                                        minWidth: '70px',
-                                        fontSize: '13px',
-                                        fontWeight: 700,
-                                        color: '#1a2238'
-                                    }}>
-                                        {dayName}
+                {/* Scrollable Body */}
+                <div className="booking-card-body">
+                    {/* Availability Schedule */}
+                    {hasAvailability ? (
+                        <div className="availability-schedule-container">
+                            <div className="schedule-label">LỊCH DẠY</div>
+                            <div className="schedule-list">
+                                {Object.entries(availabilityByDay).map(([dayName, slots]) => (
+                                    <div key={dayName} className="schedule-day-row">
+                                        <div className="schedule-day-name">{dayName}</div>
+                                        <div className="schedule-slots">
+                                            {slots.map((s, idx) => (
+                                                <span key={idx} className="schedule-time-chip">
+                                                    {s.startTime} - {s.endTime}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div style={{
-                                        flex: 1,
-                                        display: 'flex',
-                                        flexWrap: 'wrap',
-                                        gap: '6px'
-                                    }}>
-                                        {slots.map((s, idx) => (
-                                            <span key={idx} style={{
-                                                padding: '4px 10px',
-                                                backgroundColor: '#fff',
-                                                borderRadius: '6px',
-                                                fontSize: '11px',
-                                                fontWeight: 600,
-                                                color: 'rgba(62, 47, 40, 0.7)',
-                                                border: '1px solid rgba(62, 47, 40, 0.1)'
-                                            }}>
-                                                {s.startTime} - {s.endTime}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ) : (
-                    <div style={{
-                        marginTop: '14px',
-                        padding: '20px 14px',
-                        backgroundColor: 'rgba(242, 240, 228, 0.5)',
-                        borderRadius: '12px',
-                        textAlign: 'center',
-                        color: 'rgba(62, 47, 40, 0.5)',
-                        fontSize: '12px',
-                        fontStyle: 'italic'
-                    }}>
-                        Chưa cập nhật lịch dạy
-                    </div>
-                )}
+                    ) : (
+                        <div className="empty-availability">
+                            Chưa cập nhật lịch dạy
+                        </div>
+                    )}
 
-                {/* Trial Lesson Price */}
-                {data.trialLessonPrice && data.trialLessonPrice > 0 && (
-                    <div style={{
-                        marginTop: '14px',
-                        fontSize: '10px',
-                        fontWeight: 700,
-                        letterSpacing: '1.05px',
-                        textTransform: 'uppercase' as const,
-                        color: 'rgba(62, 47, 40, 0.4)'
-                    }}>
-                        Buổi học thử: {formatPrice(data.trialLessonPrice)} VND
-                    </div>
-                )}
+                    {/* Trial Lesson Price */}
+                    {data.trialLessonPrice && data.trialLessonPrice > 0 && (
+                        <div className="trial-price-label">
+                            Buổi học thử: {formatPrice(data.trialLessonPrice)}
+                        </div>
+                    )}
+                </div>
 
-                {/* Action Buttons */}
+                {/* Fixed Footer — Action Buttons */}
                 <div className="booking-actions">
                     <button className="btn-start">
-                        <b>BẮT ĐẦU NGAY</b>
+                        <b>ĐẶT LỊCH NGAY</b>
                     </button>
                     <button className="btn-chat">
                         <b>CHAT TƯ VẤN</b>
