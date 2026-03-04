@@ -291,6 +291,10 @@
     line-height: 15px;
     text-transform: uppercase;
     color: var(--color-gold);
+    max-width: none;
+    overflow: visible;
+    text-overflow: unset;
+    white-space: nowrap;
 }
 
 /* ===== ABOUT SECTION ===== */
