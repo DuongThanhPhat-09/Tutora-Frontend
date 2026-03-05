@@ -6,8 +6,10 @@ import axios from 'axios';
 // Uses Vite proxy → backend
 // ============================================
 
+const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5166') + '/api';
+
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: API_BASE_URL,
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
@@ -125,7 +127,7 @@ export const getTutorFullProfile = async (
         console.log('📄 Fetching tutor full profile for:', tutorId);
 
         const response = await api.get<ApiResponse<TutorFullProfile>>(
-            `/Tutor/${tutorId}/full-profile-landing-page`
+            `/tutors/${tutorId}/full-profile-landing-page`
         );
 
         console.log('✅ Tutor full profile fetched:', response.data);
