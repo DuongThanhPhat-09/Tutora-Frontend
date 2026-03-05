@@ -153,7 +153,7 @@ const StudentDashboard = () => {
               {userName}.
             </h1>
             <p className={styles.greetingSubtitle}>
-              Chào mừng bạn quay lại hệ thống Agora LMS.
+              Chào mừng bạn quay lại hệ thống Tutora.
             </p>
           </div>
 

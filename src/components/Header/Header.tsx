@@ -60,14 +60,11 @@ const Header = () => {
       <div className="header-content">
         <Link to="/" className="logo-link">
           <div className="logo-icon">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="white">
-              <path d="M14 2L2 8V20L14 26L26 20V8L14 2ZM14 4.5L22.5 9V19L14 23.5L5.5 19V9L14 4.5Z" />
-              <path d="M14 8L8 11V17L14 20L20 17V11L14 8Z" />
-            </svg>
+            <img src="/tutora-logo.png" alt="Tutora" width="38" height="38" />
           </div>
           <div className="logo-text">
             <span className="logo-name">TUTORA</span>
-            <span className="logo-tagline">Academic Heritage</span>
+            <span className="logo-tagline">Nền tảng gia sư K-12</span>
           </div>
         </Link>
         <nav className="main-nav">
@@ -78,7 +75,7 @@ const Header = () => {
             LỘ TRÌNH HỌC
           </a>
           <a href="/#lms" className="nav-link">
-            LMS ENGINE
+            THEO DÕI HỌC TẬP
           </a>
           <a href="/#about" className="nav-link">
             VỀ CHÚNG TÔI
@@ -185,7 +182,7 @@ const Header = () => {
               className="mobile-nav-link"
               onClick={() => setIsMenuOpen(false)}
             >
-              LMS ENGINE
+              THEO DÕI HỌC TẬP
             </a>
             <a
               href="/#about"

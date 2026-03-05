@@ -11,35 +11,32 @@ const StarIcon = () => (
 
 // Trusted Universities Banner
 const TrustedBanner = () => {
-    const universities = [
-        { name: "Oxford University", highlight: false },
-        { name: "Stanford GSB", highlight: true },
-        { name: "MIT Academy", highlight: false },
-        { name: "Harvard University", highlight: false, italic: true },
-        { name: "NUS Singapore", highlight: false },
+    const investors = [
+        { name: "Dream-lab.ai", highlight: true },
+        { name: "FPT University", highlight: false },
     ];
 
     return (
         <div className="trusted-banner">
             <div className="trusted-content">
                 <div className="trusted-scroll">
-                    <span className="trusted-label">TRUSTED BY STUDENTS AT:</span>
-                    {universities.map((uni, index) => (
+                    <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
+                    {investors.map((inv, index) => (
                         <span
                             key={index}
-                            className={`university-name ${uni.highlight ? 'highlight' : ''} ${uni.italic ? 'italic' : ''}`}
+                            className={`university-name ${inv.highlight ? 'highlight' : ''}`}
                         >
-                            {uni.name}
+                            {inv.name}
                         </span>
                     ))}
-                    {/* Duplicate for seamless scroll */}
-                    <span className="trusted-label">TRUSTED BY STUDENTS AT:</span>
-                    {universities.map((uni, index) => (
+                    <span className="trusted-label">·</span>
+                    <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
+                    {investors.map((inv, index) => (
                         <span
                             key={`dup-${index}`}
-                            className={`university-name ${uni.highlight ? 'highlight' : ''} ${uni.italic ? 'italic' : ''}`}
+                            className={`university-name ${inv.highlight ? 'highlight' : ''}`}
                         >
-                            {uni.name}
+                            {inv.name}
                         </span>
                     ))}
                 </div>
@@ -58,26 +55,25 @@ const HeroSection = () => {
                 <div className="hero-left">
                     <div className="hero-badge">
                         <span className="badge-dot"></span>
-                        <span className="badge-text">Top 5% Verified Tutors Worldwide</span>
+                        <span className="badge-text">Gia sư được xác minh hồ sơ & đánh giá sau mỗi buổi học</span>
                     </div>
 
                     <h1 className="hero-title">
-                        <span className="title-line">Kiến tạo</span>
+                        <span className="title-line">Tìm gia sư</span>
                         <span className="title-line">
-                            <em className="title-accent">di sản</em>
-                            <span className="title-regular"> học</span>
+                            <em className="title-accent">phù hợp.</em>
                         </span>
-                        <span className="title-line">thuật cho chính</span>
-                        <span className="title-line">bạn.</span>
+                        <span className="title-line">Theo dõi tiến bộ</span>
+                        <span className="title-line">từng buổi.</span>
                     </h1>
 
                     <p className="hero-description">
-                        Vượt xa việc dạy kèm truyền thống. Chúng tôi kết nối bạn với những bộ óc xuất sắc nhất để xây dựng một lộ trình tương lai vững chắc.
+                        Tutora giúp phụ huynh tìm gia sư đã được xác minh, đặt lịch học online, và nhận báo cáo tiến độ sau mỗi buổi — tất cả trên một nền tảng duy nhất.
                     </p>
 
                     <div className="hero-buttons">
-                        <button className="btn-primary" onClick={() => navigate('/tutor-search')}>TÌM GIA SƯ ELITE</button>
-                        <button className="btn-secondary" onClick={() => navigate('/register')}>TRỞ THÀNH GIA SƯ</button>
+                        <button className="btn-primary" onClick={() => navigate('/tutor-search')}>TÌM GIA SƯ</button>
+                        <button className="btn-secondary" onClick={() => navigate('/register')}>ĐĂNG KÝ DẠY KÈM</button>
                     </div>
                 </div>
 
@@ -91,15 +87,15 @@ const HeroSection = () => {
                         />
                         <div className="hero-image-gradient"></div>
                         <div className="hero-lms-badge">
-                            <span className="lms-title">TUTORA LMS ENGINE.</span>
-                            <span className="lms-subtitle">Theo dõi tiến độ học thuật thời gian thực.</span>
+                            <span className="lms-title">TUTORA — Theo dõi học tập.</span>
+                            <span className="lms-subtitle">Báo cáo tiến độ tự động sau mỗi buổi học.</span>
                         </div>
                     </div>
 
                     {/* Rating Badge */}
                     <div className="rating-badge">
                         <span className="rating-number">4.9/5</span>
-                        <span className="rating-label">Average Rating</span>
+                        <span className="rating-label">Đánh giá trung bình</span>
                     </div>
                 </div>
             </div>
@@ -110,34 +106,88 @@ const HeroSection = () => {
 // Statistics Section
 const StatisticsSection = () => {
     const stats = [
-        { value: "500+", label: "Gia sư Elite", sublabel: "Tuyển chọn Top 5%" },
-        { value: "98%", label: "Ivy Target", sublabel: "Tỉ lệ đạt mục tiêu" },
-        { value: "12K+", label: "Giờ giảng", sublabel: "Mỗi tháng tại TUTORA" },
-        { value: "24/7", label: "LMS Support", sublabel: "Báo cáo thông minh" },
+        {
+            value: "01",
+            label: "Xác minh hồ sơ",
+            sublabel: "CMND, bằng cấp & phỏng vấn trước khi dạy",
+            icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                </svg>
+            )
+        },
+        {
+            value: "02",
+            label: "Giữ tiền an toàn",
+            sublabel: "Tiền chỉ chuyển sau khi buổi học hoàn tất",
+            icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0110 0v4"></path>
+                </svg>
+            )
+        },
+        {
+            value: "03",
+            label: "Báo cáo tự động",
+            sublabel: "Phụ huynh nhận báo cáo ngay sau buổi học",
+            icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            )
+        },
+        {
+            value: "04",
+            label: "Đổi gia sư dễ dàng",
+            sublabel: "Không hài lòng? Đổi mà không mất lịch sử học",
+            icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 1l4 4-4 4"></path>
+                    <path d="M3 11V9a4 4 0 014-4h14"></path>
+                    <path d="M7 23l-4-4 4-4"></path>
+                    <path d="M21 13v2a4 4 0 01-4 4H3"></path>
+                </svg>
+            )
+        },
     ];
 
     return (
         <section className="statistics-section">
-            <div className="statistics-gradient"></div>
+            <div className="statistics-glow-bg"></div>
             <div className="statistics-container">
                 {/* Left Content */}
                 <div className="statistics-left">
+                    <div className="security-badge">
+                        <span className="security-icon">🛡️</span>
+                        <span>An tâm tuyệt đối</span>
+                    </div>
                     <h2 className="statistics-title">
-                        SỰ TIN TƯỞNG<br />
-                        ĐẾN TỪ <span className="title-gold">KẾT QUẢ.</span>
+                        TUTORA BẢO VỆ<br />
+                        CẢ PHỤ HUYNH <span className="title-gold">LẪN GIA SƯ.</span>
                     </h2>
                     <p className="statistics-description">
-                        "Chúng tôi không chỉ hứa hẹn, chúng tôi minh bạch hóa mọi bước tiến của học viên thông qua dữ liệu học thuật chính xác."
+                        "Cơ chế giữ tiền trung gian, xác minh gia sư, và báo cáo buổi học tự động — được thiết kế để bảo vệ quyền lợi của bạn từ ngày đầu."
                     </p>
                 </div>
 
                 {/* Right Content - Stats Grid */}
                 <div className="statistics-grid">
                     {stats.map((stat, index) => (
-                        <div key={index} className="stat-item">
+                        <div key={index} className="stat-card">
                             <span className="stat-value">{stat.value}</span>
-                            <span className="stat-label">{stat.label}</span>
-                            <span className="stat-sublabel">{stat.sublabel}</span>
+                            <div className="stat-icon-wrapper">
+                                {stat.icon}
+                            </div>
+                            <div className="stat-content">
+                                <span className="stat-label">{stat.label}</span>
+                                <span className="stat-sublabel">{stat.sublabel}</span>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -149,9 +199,9 @@ const StatisticsSection = () => {
 // Features Section (Tutor Benefits)
 const FeaturesSection = () => {
     const benefits = [
-        "Mức thù lao xứng tầm với trình độ chuyên gia.",
-        "Cổng quản lý LMS tự động hóa mọi báo cáo.",
-        "Lịch trình linh hoạt theo phong cách làm việc Elite.",
+        "Tự đặt giá, tự chọn lịch — bạn quyết định dạy bao nhiêu giờ/tuần.",
+        "Thanh toán bảo đảm qua Escrow — không lo bị quỵt tiền sau buổi dạy.",
+        "Công cụ quản lý sẵn sàng — lịch dạy, báo cáo tự động gửi phụ huynh.",
     ];
 
     return (
@@ -160,25 +210,25 @@ const FeaturesSection = () => {
             <div className="features-cards">
                 <div className="feature-column">
                     <div className="feature-card-image">
-                        <img src="/collaboration-1.png" alt="Join the Elite" />
+                        <img src="/collaboration-1.png" alt="Tham gia đội ngũ gia sư" />
                     </div>
                     <div className="feature-card green">
-                        <h3 className="feature-card-title">Join the Elite.</h3>
+                        <h3 className="feature-card-title">Tham gia đội ngũ gia sư.</h3>
                         <p className="feature-card-description">
-                            Hệ thống hỗ trợ gia sư chuyên nghiệp nhất để bạn tập trung hoàn toàn vào học thuật.
+                            Nền tảng hỗ trợ đầy đủ để bạn tập trung hoàn toàn vào giảng dạy.
                         </p>
                     </div>
                 </div>
 
                 <div className="feature-column offset">
                     <div className="feature-card gold">
-                        <h3 className="feature-card-title">High Impact.</h3>
+                        <h3 className="feature-card-title">Hiệu quả rõ rệt.</h3>
                         <p className="feature-card-description">
-                            Xây dựng tầm ảnh hưởng và uy tín trong cộng đồng tinh hoa.
+                            Giúp học sinh tiến bộ thực sự, và phụ huynh sẽ giới thiệu bạn cho người khác.
                         </p>
                     </div>
                     <div className="feature-card-image">
-                        <img src="/collaboration-2.png" alt="High Impact" />
+                        <img src="/collaboration-2.png" alt="Hiệu quả rõ rệt" />
                     </div>
                 </div>
             </div>
@@ -186,14 +236,14 @@ const FeaturesSection = () => {
             {/* Right: Content */}
             <div className="features-content">
                 <h2 className="features-title">
-                    TRUYỀN LỬA<br />
-                    <span className="title-green">TRI THỨC.</span><br />
-                    NHẬN XỨNG<br />
-                    ĐÁNG.
+                    HÀNG TRĂM<br />
+                    PHỤ HUYNH<br />
+                    <span className="title-green">ĐANG TÌM.</span><br />
+                    HỌ CHỈ THIẾU BẠN.
                 </h2>
 
                 <p className="features-description">
-                    TUTORA tìm kiếm những chuyên gia có tâm và có tầm. Chúng tôi mang đến cho bạn nền tảng công nghệ mạnh mẽ và cộng đồng học viên tiềm năng nhất.
+                    Hàng trăm phụ huynh đang đăng ký tìm gia sư mỗi tháng. Đăng ký ngay để bắt đầu nhận học sinh và có thu nhập ổn định theo lịch của bạn.
                 </p>
 
                 <ul className="benefits-list">
@@ -207,7 +257,7 @@ const FeaturesSection = () => {
                     ))}
                 </ul>
 
-                <button className="btn-apply" onClick={() => window.location.href = '/register'}>NỘP HỒ SƠ GIA SƯ ELITE</button>
+                <button className="btn-apply" onClick={() => window.location.href = '/register'}>ĐĂNG KÝ DẠY KÈM</button>
             </div>
         </section>
     );
@@ -217,22 +267,22 @@ const FeaturesSection = () => {
 const TestimonialsSection = () => {
     const testimonials = [
         {
-            quote: "Quy trình kiểm định gia sư của TUTORA cực kỳ chuyên nghiệp. Con tôi không chỉ học giỏi hơn mà còn tự tin hơn trong việc tư duy logic.",
-            name: "Trần Minh Anh",
-            role: "Parent of IB Student",
-            initial: "T",
+            quote: "Chủ yếu là sinh viên giỏi tại các trường đại học lớn và giáo viên có kinh nghiệm. Mỗi gia sư đều được xác minh hồ sơ — CMND, bằng cấp và phỏng vấn — trước khi nhận học sinh.",
+            name: "Gia sư trên Tutora là ai?",
+            role: "Về gia sư",
+            initial: "G",
         },
         {
-            quote: "LMS của TUTORA giúp tôi tiết kiệm 70% thời gian quản lý hồ sơ học viên. Tôi có thể tập trung hoàn toàn vào việc giảng dạy đỉnh cao.",
-            name: "David Nguyen",
-            role: "Elite Tutor (CS)",
-            initial: "D",
+            quote: "Giá do gia sư tự đặt. Phụ huynh chỉ trả thêm 5% phí dịch vụ cho Tutora. Không có phí ẩn, không thu trước khi buổi học diễn ra.",
+            name: "Chi phí học trên Tutora thế nào?",
+            role: "Về chi phí",
+            initial: "C",
         },
         {
-            quote: "TUTORA không chỉ là gia sư, họ là người cố vấn lộ trình. Nhờ sự hướng dẫn sát sao, tôi đã chinh phục được ước mơ du học.",
-            name: "Lê Hoàng Nam",
-            role: "Undergrad @ Stanford",
-            initial: "L",
+            quote: "Bạn có thể đổi gia sư bất cứ lúc nào. Lịch sử học tập của con được lưu lại đầy đủ, gia sư mới tiếp tục ngay mà không cần bắt đầu lại từ đầu.",
+            name: "Nếu không hài lòng với gia sư?",
+            role: "Về hỗ trợ",
+            initial: "N",
         },
     ];
 
@@ -242,13 +292,13 @@ const TestimonialsSection = () => {
                 {/* Header */}
                 <div className="testimonials-header">
                     <div className="testimonials-title-group">
-                        <span className="testimonials-label">Wall of Trust</span>
+                        <span className="testimonials-label">Câu hỏi thường gặp</span>
                         <h2 className="testimonials-title">
-                            CHIA SẺ TỪ<br />NGƯỜI TRONG CUỘC.
+                            PHỤ HUYNH<br />THƯỜNG HỎI GÌ?
                         </h2>
                     </div>
                     <p className="testimonials-description">
-                        "Lắng nghe những trải nghiệm thực tế từ các học viên và gia sư đã đồng hành cùng TUTORA."
+                        "Những câu hỏi phổ biến nhất từ phụ huynh khi lần đầu tìm hiểu về Tutora."
                     </p>
                 </div>
 
@@ -261,7 +311,7 @@ const TestimonialsSection = () => {
                                     <StarIcon key={i} />
                                 ))}
                             </div>
-                            <p className="testimonial-quote">"{testimonial.quote}"</p>
+                            <p className="testimonial-quote">{testimonial.quote}</p>
                             <div className="testimonial-author">
                                 <div className="author-avatar">
                                     <span>{testimonial.initial}</span>

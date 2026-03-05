@@ -2,10 +2,7 @@
 
 // Logo Icon (TUTORA symbol)
 export const LogoIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="currentColor">
-        <path d="M14 2L2 8V20L14 26L26 20V8L14 2ZM14 4.5L22.5 9V19L14 23.5L5.5 19V9L14 4.5Z" />
-        <path d="M14 8L8 11V17L14 20L20 17V11L14 8Z" />
-    </svg>
+    <img src="/tutora-logo.png" alt="Tutora" width="36" height="36" />
 );
 
 // Notification Bell Icon

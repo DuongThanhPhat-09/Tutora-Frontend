@@ -36,8 +36,6 @@
 .footer-logo-icon {
     width: 42px;
     height: 42px;
-    border-radius: var(--radius-md);
-    background-color: var(--color-burgundy);
     display: flex;
     align-items: center;
     justify-content: center;

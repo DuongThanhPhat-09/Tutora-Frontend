@@ -3,22 +3,22 @@ import "./Footer.css";
 const Footer = () => {
     const footerLinks = {
         academic: [
-            "Danh sách Gia sư",
-            "Học thử đánh giá",
-            "Gia sư Elite",
-            "Lớp học nhóm",
+            "Tìm gia sư",
+            "Đăng ký dạy kèm",
+            "Cách hoạt động",
+            "Môn học hỗ trợ",
         ],
         platform: [
-            "LMS Dashboard",
+            "Theo dõi học tập",
             "Báo cáo tiến độ",
             "Lộ trình cá nhân",
-            "Thư viện số",
+            "Hỗ trợ phụ huynh",
         ],
         resources: [
+            "Về chúng tôi",
             "Trở thành Gia sư",
-            "Đối tác giáo dục",
-            "Hỗ trợ 24/7",
-            "Cộng đồng",
+            "Liên hệ hỗ trợ",
+            "Câu hỏi thường gặp",
         ],
     };
 
@@ -30,12 +30,12 @@ const Footer = () => {
                     <div className="footer-brand">
                         <div className="footer-logo">
                             <div className="footer-logo-icon">
-                                <span>A</span>
+                                <img src="/tutora-logo.png" alt="Tutora" width="38" height="38" />
                             </div>
                             <span className="footer-logo-text">TUTORA.</span>
                         </div>
                         <p className="footer-tagline">
-                            "Elevating educational standards through verified elite expertise."
+                            "Kết nối phụ huynh với gia sư uy tín. Minh bạch — Bảo đảm — Tiện lợi."
                         </p>
                     </div>
 
@@ -70,11 +70,11 @@ const Footer = () => {
 
                 {/* Footer Bottom */}
                 <div className="footer-bottom">
-                    <span className="copyright">© 2024 TUTORA ACADEMIC SYSTEM. ALL RIGHTS RESERVED.</span>
+                    <span className="copyright">© 2026 Tutora. All Rights Reserved.</span>
                     <div className="footer-legal">
-                        <a href="#">Privacy</a>
-                        <a href="#">Terms</a>
-                        <a href="#">Cookies</a>
+                        <a href="#">Chính sách bảo mật</a>
+                        <a href="#">Điều khoản sử dụng</a>
+                        <a href="#">Quy chế hoạt động</a>
                     </div>
                 </div>
             </div>

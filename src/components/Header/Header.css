@@ -36,10 +36,8 @@
 }
 
 .logo-icon {
-    width: 35px;
-    height: 35px;
-    border-radius: var(--radius-sm);
-    background-color: var(--color-navy);
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
