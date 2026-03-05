@@ -375,7 +375,7 @@ const TutorPortalDashboard: React.FC = () => {
                                 <StarIcon />
                             </div>
                         </div>
-                        <div className={styles.statValue}>{stats.averageRating.toFixed(1)}</div>
+                        <div className={styles.statValue}>{(stats.averageRating || 0).toFixed(1)}</div>
                         <div className={styles.statLabel}>Đánh giá trung bình ({stats.totalReviews} đánh giá)</div>
                     </div>
                     <div className={styles.statCard}>

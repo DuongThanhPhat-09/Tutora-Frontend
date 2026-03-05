@@ -456,7 +456,7 @@ const TestimonialsSection = ({ feedbacks, totalFeedbacks, tutorId }: {
                 }}>
                     <div style={{ textAlign: 'center', minWidth: '80px' }}>
                         <div style={{ fontSize: '32px', fontWeight: 700, color: '#1a2238' }}>
-                            {stats.averageRating.toFixed(1)}
+                            {(stats.averageRating || 0).toFixed(1)}
                         </div>
                         <div style={{ display: 'flex', gap: '2px', justifyContent: 'center', margin: '4px 0' }}>
                             {[1, 2, 3, 4, 5].map(i => <StarIcon key={i} filled={i <= Math.round(stats.averageRating)} />)}
