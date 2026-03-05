@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createChannel } from '../../services/chat.service';
 import { getCurrentUser, getCurrentUserRole } from '../../services/auth.service';
+import { toast } from 'react-toastify';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import BookingModal from './BookingModal';
@@ -822,7 +823,7 @@ const TutorDetailPage = () => {
     const requireLogin = (): boolean => {
         const user = getCurrentUser();
         if (!user) {
-            alert('Vui lòng đăng nhập để sử dụng tính năng này.');
+            toast.info('Vui lòng đăng nhập để sử dụng tính năng này.');
             navigate('/login');
             return false;
         }
