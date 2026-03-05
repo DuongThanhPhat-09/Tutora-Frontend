@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { createChannel } from '../../services/chat.service';
-import { getCurrentUserRole } from '../../services/auth.service';
+import { getCurrentUser, getCurrentUserRole } from '../../services/auth.service';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import BookingModal from './BookingModal';
@@ -818,9 +818,21 @@ const TutorDetailPage = () => {
     const [showBooking, setShowBooking] = useState(false);
     const [chatLoading, setChatLoading] = useState(false);
 
+    // Login guard: check if user is logged in before actions
+    const requireLogin = (): boolean => {
+        const user = getCurrentUser();
+        if (!user) {
+            alert('Vui lòng đăng nhập để sử dụng tính năng này.');
+            navigate('/login');
+            return false;
+        }
+        return true;
+    };
+
     // Handle "CHAT TƯ VẤN" button
     const handleChatTuVan = async () => {
         if (!id || chatLoading) return;
+        if (!requireLogin()) return;
         setChatLoading(true);
         try {
             const res = await createChannel(id);
@@ -920,7 +932,7 @@ const TutorDetailPage = () => {
                         hourlyRate={profile.hourlyRate}
                         trialLessonPrice={profile.trialLessonPrice}
                         availabilities={profile.availabilities}
-                        onBooking={() => setShowBooking(true)}
+                        onBooking={() => { if (requireLogin()) setShowBooking(true); }}
                         onChat={handleChatTuVan}
                     />
                 </div>
@@ -933,10 +945,10 @@ const TutorDetailPage = () => {
                     <span className="mobile-cta-price-amount">{formatCurrency(profile.hourlyRate ? Math.round(profile.hourlyRate * 1.05) : null)}</span>
                     <span className="mobile-cta-price-unit">/ buổi học</span>
                 </div>
-                <button className="mobile-cta-book" onClick={() => setShowBooking(true)}>
+                <button className="mobile-cta-book" onClick={() => { if (requireLogin()) setShowBooking(true); }}>
                     <b>ĐẶT LỊCH</b>
                 </button>
-                <button className="mobile-cta-chat" onClick={handleChatTuVan}>
+                <button className="mobile-cta-chat" onClick={() => { if (requireLogin()) handleChatTuVan(); }}>
                     <b>CHAT</b>
                 </button>
             </div>
