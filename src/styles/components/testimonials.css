@@ -19,9 +19,8 @@
 .testimonials-header {
     display: flex;
     align-items: flex-end;
-    gap: 319px;
+    justify-content: space-between;
     padding: 0 38px;
-    height: 158px;
 }
 
 .testimonials-title-group {
@@ -57,118 +56,115 @@
     max-width: 336px;
 }
 
-.testimonials-grid {
-    display: flex;
-    justify-content: center;
-    gap: 35px;
-    height: 353.7px;
-}
-
-.testimonial-card {
-    width: 409px;
-    padding: 41.8px;
-    background-color: var(--color-cream-light-50);
-    border: 1px solid var(--color-cream-light);
-    border-radius: var(--radius-2xl);
+/* ===== FAQ ACCORDION ===== */
+.faq-list {
     display: flex;
     flex-direction: column;
-    gap: 34.3px;
+    padding: 0 38px;
 }
 
-.testimonial-stars {
-    display: flex;
-    gap: 3.5px;
+.faq-item {
+    border-bottom: 0.8px solid var(--color-navy-05);
 }
 
-.testimonial-quote {
-    font-family: var(--font-serif);
-    font-size: 17.5px;
-    font-style: italic;
-    line-height: 28.44px;
-    color: var(--color-navy);
-    flex: 1;
-}
-
-.testimonial-author {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding-top: 28.7px;
+.faq-item:first-child {
     border-top: 0.8px solid var(--color-navy-05);
 }
 
-.author-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: var(--radius-md);
-    background-color: var(--color-navy);
+.faq-question {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
 }
 
-.author-avatar span {
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 21px;
-    color: var(--color-white);
-}
-
-.author-info {
+.faq-question-left {
     display: flex;
-    flex-direction: column;
-    gap: 1.8px;
+    align-items: center;
+    gap: 24px;
 }
 
-.author-name {
+.faq-tag {
     font-size: 12px;
     font-weight: 700;
-    letter-spacing: 1.2px;
-    line-height: 18px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
+    color: var(--color-burgundy);
+    white-space: nowrap;
+    min-width: 140px;
+}
+
+.faq-question-text {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 28px;
     color: var(--color-navy);
 }
 
-.author-role {
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    line-height: 15px;
-    text-transform: uppercase;
-    color: var(--color-burgundy-60);
+.faq-chevron {
+    color: var(--color-navy-40);
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+.faq-item.open .faq-chevron {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 200px;
+    padding-bottom: 28px;
+}
+
+.faq-answer-text {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-style: italic;
+    line-height: 29px;
+    color: var(--color-navy-60);
+    padding-left: 164px;
 }
 
 /* ===== TESTIMONIALS RESPONSIVE ===== */
-@media (max-width: 1400px) {
-    .testimonials-header {
-        gap: 100px;
-    }
-}
-
 @media (max-width: 1200px) {
     .testimonials-header {
         flex-direction: column;
-        gap: 32px;
-        height: auto;
+        align-items: flex-start;
+        gap: 20px;
     }
 }
 
 @media (max-width: 992px) {
-    .testimonials-grid {
-        flex-direction: column;
-        align-items: center;
-        height: auto;
-        gap: 24px;
-    }
-
-    .testimonial-card {
-        width: 100%;
-        max-width: 409px;
-    }
-
     .testimonials-title {
         font-size: 48px;
         line-height: 48px;
+    }
+
+    .faq-question-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .faq-tag {
+        min-width: unset;
+    }
+
+    .faq-answer-text {
+        padding-left: 0;
     }
 }
 
@@ -182,30 +178,13 @@
         padding: 0;
     }
 
-    .testimonials-title-group {
-        align-items: center;
-        text-align: center;
-    }
-
     .testimonials-title {
         font-size: 36px;
         line-height: 36px;
     }
 
-    .testimonials-description {
-        text-align: center;
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .testimonial-card {
-        padding: 24px;
-    }
-
-    .testimonial-quote {
-        font-size: 15px;
-        line-height: 24px;
+    .faq-list {
+        padding: 0;
     }
 }
 

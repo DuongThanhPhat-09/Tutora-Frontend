@@ -41,7 +41,7 @@
     flex-shrink: 0;
 }
 
-.university-name {
+.trusted-banner .university-name {
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 1.3px;
@@ -51,11 +51,11 @@
     flex-shrink: 0;
 }
 
-.university-name.highlight {
+.trusted-banner .university-name.highlight {
     color: var(--color-gold);
 }
 
-.university-name.italic {
+.trusted-banner .university-name.italic {
     font-family: var(--font-serif);
     font-style: italic;
     font-size: 13px;

@@ -1,13 +1,7 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-
-// Star icon component for ratings
-const StarIcon = () => (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7 0L8.5716 4.83688H13.6574L9.5429 7.82624L11.1145 12.6631L7 9.67376L2.8855 12.6631L4.4571 7.82624L0.342604 4.83688H5.4284L7 0Z" fill="#D4B483" />
-    </svg>
-);
 
 // Trusted Universities Banner
 const TrustedBanner = () => {
@@ -263,28 +257,41 @@ const FeaturesSection = () => {
     );
 };
 
-// Testimonials Section
+// FAQ Section
 const TestimonialsSection = () => {
-    const testimonials = [
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    const faqs = [
         {
-            quote: "Chủ yếu là sinh viên giỏi tại các trường đại học lớn và giáo viên có kinh nghiệm. Mỗi gia sư đều được xác minh hồ sơ — CMND, bằng cấp và phỏng vấn — trước khi nhận học sinh.",
-            name: "Gia sư trên Tutora là ai?",
-            role: "Về gia sư",
-            initial: "G",
+            question: "Tutora có uy tín không? Mới quá?",
+            answer: "Tutora được đầu tư bởi Dream-lab.ai và FPT University. Chúng tôi sử dụng cơ chế giữ tiền trung gian (Escrow) — tiền của bạn chỉ được chuyển cho gia sư sau khi buổi học hoàn tất.",
+            tag: "Về độ tin cậy",
         },
         {
-            quote: "Giá do gia sư tự đặt. Phụ huynh chỉ trả thêm 5% phí dịch vụ cho Tutora. Không có phí ẩn, không thu trước khi buổi học diễn ra.",
-            name: "Chi phí học trên Tutora thế nào?",
-            role: "Về chi phí",
-            initial: "C",
+            question: "Gia sư trên Tutora là ai?",
+            answer: "Chủ yếu là sinh viên giỏi tại các trường đại học lớn và giáo viên có kinh nghiệm. Mỗi gia sư đều được xác minh hồ sơ — CMND, bằng cấp và phỏng vấn — trước khi nhận học sinh.",
+            tag: "Về gia sư",
         },
         {
-            quote: "Bạn có thể đổi gia sư bất cứ lúc nào. Lịch sử học tập của con được lưu lại đầy đủ, gia sư mới tiếp tục ngay mà không cần bắt đầu lại từ đầu.",
-            name: "Nếu không hài lòng với gia sư?",
-            role: "Về hỗ trợ",
-            initial: "N",
+            question: "Chi phí học trên Tutora thế nào?",
+            answer: "Giá do gia sư tự đặt. Phụ huynh chỉ trả thêm 5% phí dịch vụ cho Tutora. Không có phí ẩn, không thu trước khi buổi học diễn ra.",
+            tag: "Về chi phí",
+        },
+        {
+            question: "Tôi có thể theo dõi con học không?",
+            answer: "Có. Sau mỗi buổi, phụ huynh nhận báo cáo chi tiết: nội dung đã học, bài tập, và nhận xét của gia sư.",
+            tag: "Về theo dõi",
+        },
+        {
+            question: "Nếu không hài lòng với gia sư?",
+            answer: "Bạn có thể đổi gia sư bất cứ lúc nào. Lịch sử học tập của con được lưu lại đầy đủ, gia sư mới tiếp tục ngay mà không cần bắt đầu lại từ đầu.",
+            tag: "Về hỗ trợ",
         },
     ];
+
+    const toggle = (index: number) => {
+        setOpenIndex(prev => prev === index ? null : index);
+    };
 
     return (
         <section className="testimonials-section">
@@ -302,27 +309,27 @@ const TestimonialsSection = () => {
                     </p>
                 </div>
 
-                {/* Testimonial Cards */}
-                <div className="testimonials-grid">
-                    {testimonials.map((testimonial, index) => (
-                        <div key={index} className="testimonial-card">
-                            <div className="testimonial-stars">
-                                {[...Array(5)].map((_, i) => (
-                                    <StarIcon key={i} />
-                                ))}
-                            </div>
-                            <p className="testimonial-quote">{testimonial.quote}</p>
-                            <div className="testimonial-author">
-                                <div className="author-avatar">
-                                    <span>{testimonial.initial}</span>
+                {/* FAQ Accordion */}
+                <div className="faq-list">
+                    {faqs.map((faq, index) => {
+                        const isOpen = openIndex === index;
+                        return (
+                            <div key={index} className={`faq-item${isOpen ? ' open' : ''}`}>
+                                <button className="faq-question" onClick={() => toggle(index)}>
+                                    <div className="faq-question-left">
+                                        <span className="faq-tag">{faq.tag}</span>
+                                        <span className="faq-question-text">{faq.question}</span>
+                                    </div>
+                                    <svg className="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                                <div className="faq-answer">
+                                    <p className="faq-answer-text">{faq.answer}</p>
                                 </div>
-                                <div className="author-info">
-                                    <span className="author-name">{testimonial.name}</span>
-                                    <span className="author-role">{testimonial.role}</span>
-                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </section>
