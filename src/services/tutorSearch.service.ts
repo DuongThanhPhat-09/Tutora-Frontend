@@ -6,9 +6,11 @@ import axios from 'axios';
 // Uses Vite proxy → backend
 // ============================================
 
+const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL || 'http://localhost:5166') + '/api';
+
 const api = axios.create({
-    baseURL: '/api',
-    timeout: 3000, // 3s timeout – fail fast khi backend chưa sẵn sàng
+    baseURL: API_BASE_URL,
+    timeout: 10000, // 10s timeout cho production
     headers: {
         'Content-Type': 'application/json',
     },
