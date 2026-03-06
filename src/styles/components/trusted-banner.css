@@ -10,14 +10,22 @@
 .trusted-content {
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .trusted-scroll {
     display: flex;
     align-items: center;
-    gap: 112px;
-    animation: scroll 30s linear infinite;
+    animation: scroll 25s linear infinite;
     white-space: nowrap;
+}
+
+.trusted-scroll-group {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 0 20px;
+    flex-shrink: 0;
 }
 
 @keyframes scroll {
@@ -38,6 +46,13 @@
     text-transform: uppercase;
     color: var(--color-cream-light);
     opacity: 0.4;
+    flex-shrink: 0;
+}
+
+.trusted-separator {
+    font-size: 18px;
+    color: var(--color-cream-light);
+    opacity: 0.3;
     flex-shrink: 0;
 }
 

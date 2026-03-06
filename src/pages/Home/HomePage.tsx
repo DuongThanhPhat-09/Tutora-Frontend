@@ -10,29 +10,37 @@ const TrustedBanner = () => {
         { name: "FPT University", highlight: false },
     ];
 
+    const renderGroup = (keyPrefix: string) => (
+        <div className="trusted-scroll-group" key={keyPrefix}>
+            <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
+            {investors.map((inv, index) => (
+                <span
+                    key={`${keyPrefix}-${index}`}
+                    className={`university-name ${inv.highlight ? 'highlight' : ''}`}
+                >
+                    {inv.name}
+                </span>
+            ))}
+            <span className="trusted-separator">·</span>
+            <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
+            {investors.map((inv, index) => (
+                <span
+                    key={`${keyPrefix}-dup-${index}`}
+                    className={`university-name ${inv.highlight ? 'highlight' : ''}`}
+                >
+                    {inv.name}
+                </span>
+            ))}
+            <span className="trusted-separator">·</span>
+        </div>
+    );
+
     return (
         <div className="trusted-banner">
             <div className="trusted-content">
                 <div className="trusted-scroll">
-                    <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
-                    {investors.map((inv, index) => (
-                        <span
-                            key={index}
-                            className={`university-name ${inv.highlight ? 'highlight' : ''}`}
-                        >
-                            {inv.name}
-                        </span>
-                    ))}
-                    <span className="trusted-label">·</span>
-                    <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
-                    {investors.map((inv, index) => (
-                        <span
-                            key={`dup-${index}`}
-                            className={`university-name ${inv.highlight ? 'highlight' : ''}`}
-                        >
-                            {inv.name}
-                        </span>
-                    ))}
+                    {renderGroup('a')}
+                    {renderGroup('b')}
                 </div>
             </div>
         </div>

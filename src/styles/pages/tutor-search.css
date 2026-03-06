@@ -464,7 +464,7 @@
     align-items: center;
 }
 
-.university-name {
+.tutor-card .university-name {
     font-size: 12px;
     color: rgba(26, 34, 56, 0.5);
     overflow: hidden;
@@ -845,7 +845,7 @@
         gap: 5px;
     }
 
-    .university-name {
+    .tutor-card .university-name {
         font-size: 11px;
     }
 
