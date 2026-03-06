@@ -99,10 +99,16 @@
     }
 
     /* 7. ENABLE GPU ACCELERATION for scrolling containers */
-    [class*="scroll"],
+    [class*="scroll"]:not(.trusted-scroll),
     [class*="list"],
     [class*="grid"] {
         -webkit-overflow-scrolling: touch;
+    }
+
+    /* 8. PRESERVE trusted-banner scroll animation on mobile */
+    .trusted-scroll {
+        animation: trusted-scroll 25s linear infinite !important;
+        will-change: transform;
     }
 
     /* 8. REDUCE BOX-SHADOW COMPLEXITY

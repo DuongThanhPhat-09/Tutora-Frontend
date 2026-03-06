@@ -136,52 +136,71 @@ const RegisterForm: React.FC = () => {
 
                     {/* Role Selection */}
                     <div className="animate-fade-in-up delay-175">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Tôi là <span className="text-red-500">*</span>
+                        <label className="register-form__role-label">
+                            Tôi là <span className="register-form__role-required">*</span>
                         </label>
-                        <div className="flex gap-3">
-                            <label className="flex-1 cursor-pointer">
+                        <div className="register-form__role-grid">
+                            <label className="register-form__role-option">
                                 <input
                                     type="radio"
                                     name="role"
                                     value="Student"
                                     checked={formData.role === "Student"}
                                     onChange={handleChange}
-                                    className="peer hidden"
+                                    className="register-form__role-input"
                                 />
-                                <div className="border-2 border-gray-300 rounded-lg p-3 text-center transition-all peer-checked:border-blue-600 peer-checked:bg-blue-50 hover:border-blue-400">
-                                    <div className="text-2xl mb-1">🎓</div>
-                                    <div className="text-sm font-medium text-gray-700 peer-checked:text-blue-600">Học sinh</div>
+                                <div className={`register-form__role-card ${formData.role === "Student" ? "register-form__role-card--active register-form__role-card--student" : ""}`}>
+                                    <div className={`register-form__role-icon ${formData.role === "Student" ? "register-form__role-icon--student" : ""}`}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                                            <path d="M6 12v5c0 1.657 2.686 3 6 3s6-1.343 6-3v-5" />
+                                        </svg>
+                                    </div>
+                                    <span className="register-form__role-name">Học sinh</span>
                                 </div>
                             </label>
 
-                            <label className="flex-1 cursor-pointer">
+                            <label className="register-form__role-option">
                                 <input
                                     type="radio"
                                     name="role"
                                     value="Parent"
                                     checked={formData.role === "Parent"}
                                     onChange={handleChange}
-                                    className="peer hidden"
+                                    className="register-form__role-input"
                                 />
-                                <div className="border-2 border-gray-300 rounded-lg p-3 text-center transition-all peer-checked:border-green-600 peer-checked:bg-green-50 hover:border-green-400">
-                                    <div className="text-2xl mb-1">👨‍👩‍👧</div>
-                                    <div className="text-sm font-medium text-gray-700 peer-checked:text-green-600">Phụ huynh</div>
+                                <div className={`register-form__role-card ${formData.role === "Parent" ? "register-form__role-card--active register-form__role-card--parent" : ""}`}>
+                                    <div className={`register-form__role-icon ${formData.role === "Parent" ? "register-form__role-icon--parent" : ""}`}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                            <circle cx="12" cy="7" r="4" />
+                                            <path d="M16 3.13a4 4 0 010 7.75" />
+                                            <path d="M21 21v-2a4 4 0 00-3-3.87" />
+                                        </svg>
+                                    </div>
+                                    <span className="register-form__role-name">Phụ huynh</span>
                                 </div>
                             </label>
 
-                            <label className="flex-1 cursor-pointer">
+                            <label className="register-form__role-option">
                                 <input
                                     type="radio"
                                     name="role"
                                     value="Tutor"
                                     checked={formData.role === "Tutor"}
                                     onChange={handleChange}
-                                    className="peer hidden"
+                                    className="register-form__role-input"
                                 />
-                                <div className="border-2 border-gray-300 rounded-lg p-3 text-center transition-all peer-checked:border-purple-600 peer-checked:bg-purple-50 hover:border-purple-400">
-                                    <div className="text-2xl mb-1">👨‍🏫</div>
-                                    <div className="text-sm font-medium text-gray-700 peer-checked:text-purple-600">Gia sư</div>
+                                <div className={`register-form__role-card ${formData.role === "Tutor" ? "register-form__role-card--active register-form__role-card--tutor" : ""}`}>
+                                    <div className={`register-form__role-icon ${formData.role === "Tutor" ? "register-form__role-icon--tutor" : ""}`}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+                                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+                                            <line x1="9" y1="7" x2="17" y2="7" />
+                                            <line x1="9" y1="11" x2="14" y2="11" />
+                                        </svg>
+                                    </div>
+                                    <span className="register-form__role-name">Gia sư</span>
                                 </div>
                             </label>
                         </div>
