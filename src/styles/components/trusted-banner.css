@@ -16,8 +16,9 @@
 .trusted-scroll {
     display: flex;
     align-items: center;
-    animation: scroll 25s linear infinite;
+    animation: trusted-scroll 25s linear infinite;
     white-space: nowrap;
+    will-change: transform;
 }
 
 .trusted-scroll-group {
@@ -28,13 +29,13 @@
     flex-shrink: 0;
 }
 
-@keyframes scroll {
+@keyframes trusted-scroll {
     0% {
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
 
     100% {
-        transform: translateX(-50%);
+        transform: translate3d(-50%, 0, 0);
     }
 }
 
