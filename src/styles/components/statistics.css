@@ -218,23 +218,57 @@
 
 @media (max-width: 768px) {
     .statistics-section {
-        padding: 32px;
+        padding: 24px 16px;
         border-radius: var(--radius-xl);
+        width: calc(100% - 24px);
+    }
+
+    .statistics-glow-bg {
+        display: none;
     }
 
     .statistics-title {
-        font-size: 32px;
+        font-size: 28px;
         line-height: 1.2;
     }
 
-    .statistics-grid .stat-value {
-        font-size: 48px;
-    }
-}
-
-@media (max-width: 480px) {
     .statistics-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        max-width: 100%;
+    }
+
+    .statistics-grid .stat-card {
+        padding: 16px;
+        min-height: 140px;
+        gap: 10px;
+    }
+
+    .statistics-grid .stat-value {
+        font-size: 36px;
+        top: 12px;
+        right: 12px;
+    }
+
+    .statistics-grid .stat-icon-wrapper {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        margin-bottom: 4px;
+    }
+
+    .statistics-grid .stat-icon-wrapper svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .statistics-grid .stat-label {
+        font-size: 13px;
+    }
+
+    .statistics-grid .stat-sublabel {
+        font-size: 11px;
+        line-height: 1.4;
     }
 }
 

@@ -193,27 +193,68 @@
 
 @media (max-width: 768px) {
     .features-section {
-        padding: 24px 21px;
+        flex-direction: column;
+        padding: 24px 16px;
+        gap: 32px;
+    }
+
+    .features-cards {
+        flex-direction: row;
+        width: 100%;
+        max-width: 100%;
+        gap: 12px;
+        order: 1;
+    }
+
+    .features-content {
+        width: 100%;
+        max-width: 100%;
+        order: 2;
+        gap: 24px;
+    }
+
+    .feature-column {
+        flex: 1;
+        max-width: none;
+        gap: 12px;
+    }
+
+    .feature-column.offset {
+        padding-top: 0;
+    }
+
+    .feature-card {
+        padding: 20px;
+        gap: 8px;
+    }
+
+    .feature-card-title {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .feature-card-description {
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .feature-card-image img {
+        height: 180px;
     }
 
     .features-title {
-        font-size: 36px;
+        font-size: 32px;
         line-height: 36px;
         text-align: center;
     }
 
     .features-description {
         text-align: center;
+        font-size: 15px;
     }
 
-    .feature-card-image img {
-        height: 300px;
-    }
-}
-
-@media (max-width: 480px) {
     .benefits-list {
-        gap: 16px;
+        gap: 14px;
     }
 
     .benefit-text {
