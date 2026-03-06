@@ -30,3 +30,6 @@
 @import "./styles/components/category-tabs.css";
 @import "./styles/components/filter-bar.css";
 @import "./styles/components/tutor-card.css";
+
+/* ===== MOBILE PERFORMANCE ===== */
+@import "./styles/base/mobile-performance.css";

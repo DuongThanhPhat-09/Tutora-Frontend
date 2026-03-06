@@ -39,6 +39,7 @@
     border-radius: 50%;
     filter: blur(100px);
     opacity: 0.15;
+    will-change: transform;
 }
 
 .login-page__blob--gold {
@@ -293,7 +294,7 @@
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .login-form__button:hover {
@@ -352,7 +353,7 @@
     border: 2px solid transparent;
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
 
 .login-form__social-btn:hover {
@@ -529,5 +530,27 @@
 
     .login-form__social-btn {
         gap: 8px;
+    }
+}
+
+/* Mobile Performance Optimizations */
+@media (max-width: 768px) {
+    .login-page__blob {
+        display: none;
+    }
+
+    .animate-fade-in-up {
+        animation: none;
+        opacity: 1;
+    }
+
+    .login-form__button,
+    .login-form__social-btn {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .login-form__button:hover,
+    .login-form__social-btn:hover {
+        transform: none;
     }
 }

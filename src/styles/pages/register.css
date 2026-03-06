@@ -40,6 +40,7 @@
     border-radius: 50%;
     filter: blur(100px);
     opacity: 0.15;
+    will-change: transform;
 }
 
 .register-page__blob--gold {
@@ -343,7 +344,7 @@
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .register-form__button:hover {
@@ -401,7 +402,7 @@
     border: 2px solid transparent;
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
 
 .register-form__social-btn:hover {
@@ -590,5 +591,27 @@
 
     .register-form__social-btn {
         gap: 10px;
+    }
+}
+
+/* Mobile Performance Optimizations */
+@media (max-width: 768px) {
+    .register-page__blob {
+        display: none;
+    }
+
+    .animate-fade-in-up {
+        animation: none;
+        opacity: 1;
+    }
+
+    .register-form__button,
+    .register-form__social-btn {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .register-form__button:hover,
+    .register-form__social-btn:hover {
+        transform: none;
     }
 }
