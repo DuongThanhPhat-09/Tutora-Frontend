@@ -414,6 +414,10 @@
 
 /* Tablet and below - Hide hero, center form */
 @media (max-width: 960px) {
+    .login-page__main {
+        padding-bottom: 40px;
+    }
+
     .login-page__content {
         grid-template-columns: 1fr;
         justify-items: center;
@@ -448,7 +452,7 @@
 @media (max-height: 700px) {
     .login-page__main {
         padding-top: 80px;
-        padding-bottom: 24px;
+        padding-bottom: 40px;
     }
 
     .login-form__header {
