@@ -348,9 +348,41 @@ const TutorPortalSchedule: React.FC = () => {
 
     return (
         <div className={styles.schedulePage}>
+            {/* === MOBILE GOOGLE-CALENDAR HEADER (hidden on desktop via CSS) === */}
+            <div className={styles.mobileGcalHeader}>
+                <button className={styles.mobileMonthBtn} onClick={handlePrev}>
+                    <ChevronLeftIcon />
+                </button>
+                <span className={styles.mobileMonthLabel}>{`Tháng ${currentDate.format('M')}`}</span>
+                <button className={styles.mobileMonthBtn} onClick={handleNext}>
+                    <ChevronRightIcon />
+                </button>
+                <button
+                    className={`${styles.mobileTodayBtn} ${isCurrentPeriod ? styles.disabled : ''}`}
+                    onClick={handleToday}
+                    disabled={isCurrentPeriod}
+                >
+                    Hôm nay
+                </button>
+                <div className={styles.mobileTabSwitch}>
+                    <button
+                        className={`${styles.mobileTabBtn} ${activeTab === 'settings' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('settings')}
+                    >
+                        ⚙
+                    </button>
+                    <button
+                        className={`${styles.mobileTabBtn} ${activeTab === 'lessons' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('lessons')}
+                    >
+                        📅
+                    </button>
+                </div>
+            </div>
+
             {/* Nội dung chính */}
             <div className={styles.mainContainer}>
-                {/* Phần đầu trang */}
+                {/* Phần đầu trang (hidden on mobile via CSS) */}
                 <div className={styles.headerSection}>
                     <div className={styles.headerTop}>
                         <h1 className={styles.pageTitle}>Lịch dạy</h1>
@@ -791,6 +823,14 @@ const TutorPortalSchedule: React.FC = () => {
                     </div>
                 )}
             </div>
+
+            {/* FAB — Mobile only (hidden on desktop via CSS) */}
+            <button className={styles.fab} onClick={handleAddAvailabilityClick}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 5V19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d="M5 12H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+            </button>
 
             {/* Modal thêm lịch rảnh */}
             <AddAvailabilityModal

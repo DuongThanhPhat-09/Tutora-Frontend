@@ -221,7 +221,106 @@
 }
 
 @media (max-width: 768px) {
+    .header {
+        padding: 10px 12px;
+    }
+
     .header-content {
-        padding: 0 20px;
+        padding: 0 16px;
+        height: 56px;
+        border-radius: var(--radius-md);
+    }
+
+    /* Touch-optimized mobile elements */
+    .mobile-menu-btn {
+        padding: 12px;
+        min-width: 44px;
+        min-height: 44px;
+        justify-content: center;
+        align-items: center;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .mobile-nav-link {
+        padding: 12px 0;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .mobile-auth .btn-login,
+    .mobile-auth .btn-signup {
+        min-height: 48px;
+        padding: 12px 20px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .logo-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-name {
+        font-size: 15px;
+    }
+
+    .logo-tagline {
+        font-size: 7px;
+        letter-spacing: 1.2px;
+    }
+
+    /* Mobile menu full-width with safe area */
+    .mobile-menu {
+        padding: 20px 16px;
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        margin-top: 8px;
+        border-radius: var(--radius-md);
+    }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .header {
+        padding: 8px 8px;
+    }
+
+    .header-content {
+        padding: 0 12px;
+        height: 50px;
+    }
+
+    .logo-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .logo-letter {
+        font-size: 14px;
+    }
+
+    .logo-name {
+        font-size: 14px;
+    }
+
+    .logo-tagline {
+        display: none;
+    }
+
+    .mobile-menu {
+        padding: 16px 12px;
+    }
+
+    .mobile-auth {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .mobile-auth .btn-login,
+    .mobile-auth .btn-signup {
+        width: 100%;
     }
 }

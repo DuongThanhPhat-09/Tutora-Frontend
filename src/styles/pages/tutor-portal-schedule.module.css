@@ -10,12 +10,25 @@
 /* Page Layout - Full Height, No Page Scroll */
 .schedulePage {
     display: flex;
+    flex-direction: column;
     background-color: #f2f0e4;
     height: calc(100vh - 56px);
     /* Subtract header height */
     overflow: hidden;
     font-family: 'IBM Plex Sans', sans-serif;
     position: relative;
+}
+
+/* ===== MOBILE GOOGLE-CALENDAR HEADER (hidden on desktop) ===== */
+.mobileGcalHeader {
+    display: none;
+    /* Shown only on mobile via media query */
+}
+
+/* ===== FLOATING ACTION BUTTON (hidden on desktop) ===== */
+.fab {
+    display: none;
+    /* Shown only on mobile via media query */
 }
 
 /* Main Container - Takes full width, shrinks when sidebar opens */
@@ -1276,19 +1289,9 @@
         width: 340px;
     }
 
-    /* Allow horizontal scroll for calendar on smaller screens */
     .calendarGrid {
         margin: 16px;
         min-width: 0;
-    }
-
-    .calendarHeader,
-    .timeRow {
-        min-width: 800px;
-    }
-
-    .calendarBody {
-        overflow-x: auto;
     }
 }
 
@@ -1296,80 +1299,287 @@
 @media (max-width: 768px) {
     .schedulePage {
         height: calc(100vh - 56px);
-    }
-
-    .headerSection {
-        padding: 16px 16px 0;
-    }
-
-    .headerTop {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
     }
 
-    .headerActions {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .tabs {
-        gap: 16px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .tab {
-        white-space: nowrap;
+    /* === HIDE DESKTOP HEADER & CONTROLS ON MOBILE === */
+    .headerSection {
+        display: none;
     }
 
     .calendarControls {
-        flex-direction: column;
-        gap: 12px;
-        padding: 12px 16px;
-    }
-
-    .viewToggle {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .dateNav {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-    .dateRange {
-        min-width: auto;
+        display: none;
     }
 
     .legend {
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 12px 16px;
+        display: none;
     }
 
-    .legendItem {
-        margin-right: 0;
+    /* === SHOW MOBILE GCAL HEADER === */
+    .mobileGcalHeader {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 8px 12px;
+        background-color: #f2f0e4;
+        border-bottom: 1px solid rgba(26, 34, 56, 0.08);
+        flex-shrink: 0;
+        z-index: 10;
     }
 
-    .timezone {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 4px;
+    .mobileMonthBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+        border-radius: 50%;
+        background: none;
+        border: none;
+        color: #1a2238;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
     }
 
+    .mobileMonthBtn:hover {
+        background-color: rgba(26, 34, 56, 0.06);
+    }
+
+    .mobileMonthLabel {
+        font-family: 'Bricolage Grotesque', serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a2238;
+        white-space: nowrap;
+        letter-spacing: -0.02em;
+        min-width: 80px;
+    }
+
+    .mobileTodayBtn {
+        margin-left: auto;
+        padding: 4px 12px;
+        border-radius: 16px;
+        border: 1px solid rgba(26, 34, 56, 0.15);
+        background: none;
+        font-family: 'IBM Plex Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: #1a2238;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .mobileTodayBtn:hover:not(:disabled) {
+        background-color: rgba(26, 34, 56, 0.06);
+    }
+
+    .mobileTodayBtn.disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+
+    .mobileTabSwitch {
+        display: flex;
+        gap: 2px;
+        margin-left: 8px;
+        padding: 2px;
+        border-radius: 8px;
+        background-color: rgba(26, 34, 56, 0.06);
+    }
+
+    .mobileTabBtn {
+        padding: 5px 10px;
+        border-radius: 6px;
+        background: none;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        -webkit-tap-highlight-color: transparent;
+        line-height: 1;
+        opacity: 0.5;
+    }
+
+    .mobileTabBtn.active {
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        opacity: 1;
+    }
+
+    /* === SHOW FAB === */
+    .fab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 24px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #4f8cff 0%, #3b7dff 100%);
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(79, 140, 255, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1);
+        z-index: 50;
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .fab:active {
+        transform: scale(0.92);
+    }
+
+    /* === COMPACT CALENDAR — fills remaining space === */
     .calendarGrid {
-        margin: 12px;
-        border-radius: 14px;
+        margin: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        flex: 1;
     }
 
+    /* Remove scrollbar gutter so header and body grids align */
+    .calendarBody {
+        scrollbar-gutter: auto;
+        overflow-y: auto;
+    }
+
+    .calendarBody::-webkit-scrollbar {
+        width: 0;
+        display: none;
+    }
+
+    /* Shrink time column */
+    .calendarHeader {
+        grid-template-columns: 36px repeat(7, 1fr);
+        border-bottom: 1px solid rgba(26, 34, 56, 0.08);
+        background: #f2f0e4;
+    }
+
+    .timeRow {
+        grid-template-columns: 36px repeat(7, 1fr);
+    }
+
+    .timeColumn {
+        min-width: 0;
+    }
+
+    .timeLabel {
+        padding: 4px 3px;
+        font-size: 9px;
+        line-height: 12px;
+        color: rgba(26, 34, 56, 0.4);
+    }
+
+    /* Google Calendar-style compact day headers */
     .dayColumn {
-        padding: 10px 8px;
+        padding: 4px 1px 6px;
+        min-width: 0;
+        gap: 0;
+    }
+
+    .dayName {
+        font-size: 10px;
+        letter-spacing: 0;
+        color: rgba(26, 34, 56, 0.5);
     }
 
     .dayNumber {
-        font-size: 18px;
+        font-size: 16px;
+        line-height: 22px;
+        font-weight: 700;
+    }
+
+    .monthName {
+        display: none;
+    }
+
+    /* Today circle highlight (like Google Calendar) */
+    .today .dayNumber {
+        background: #4f8cff;
+        color: #fff;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        line-height: 28px;
+    }
+
+    /* Lesson & session blocks */
+    .sessionBlock {
+        padding: 6px;
+        border-radius: 5px;
+        border-left-width: 2px;
+    }
+
+    .sessionName {
+        font-size: 8px;
+        line-height: 11px;
+    }
+
+    .sessionSubject {
+        font-size: 7px;
+        line-height: 10px;
+    }
+
+    .lessonBlock {
+        padding: 4px;
+        border-radius: 5px;
+        border-left-width: 2px;
+    }
+
+    .lessonLabel {
+        font-size: 8px;
+    }
+
+    .lessonTime {
+        font-size: 7px;
+    }
+
+    .lessonStudent {
+        font-size: 7px;
+    }
+
+    /* Available blocks */
+    .availableBlock {
+        padding: 6px 8px;
+        border-radius: 6px;
+        min-height: 40px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .availableLabel {
+        font-size: 8px;
+        letter-spacing: 0.3px;
+    }
+
+    .availableTime {
+        font-size: 8px;
+    }
+
+    .slotActions {
+        gap: 4px;
+    }
+
+    .editSlotBtn,
+    .deleteSlotBtn {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+    }
+
+    .editSlotBtn svg,
+    .editSlotBtn span,
+    .deleteSlotBtn svg,
+    .deleteSlotBtn span {
+        font-size: 11px;
     }
 
     /* Full width sidebar on mobile */
@@ -1389,34 +1599,96 @@
     .smallBtn {
         flex: none;
     }
+
+    /* Month view */
+    .monthGrid {
+        margin: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+    }
+
+    .monthCell {
+        min-height: 60px;
+        padding: 4px;
+    }
+
+    .monthCellDay {
+        font-size: 12px;
+    }
+
+    .monthHeaderCell {
+        font-size: 9px;
+        padding: 8px 2px;
+        letter-spacing: 0.3px;
+    }
+
+    /* Empty state */
+    .emptyState {
+        margin: 16px;
+        border-radius: 16px;
+    }
 }
 
 /* Small mobile */
 @media (max-width: 480px) {
+    .calendarHeader {
+        grid-template-columns: 32px repeat(7, 1fr);
+    }
 
-    .calendarHeader,
     .timeRow {
-        min-width: 600px;
+        grid-template-columns: 32px repeat(7, 1fr);
     }
 
     .timeLabel {
-        padding: 8px 6px;
-        font-size: 10px;
-    }
-
-
-
-
-    .sessionBlock {
-        padding: 8px;
-    }
-
-    .sessionName {
-        font-size: 9px;
-    }
-
-    .sessionSubject {
+        padding: 4px 2px;
         font-size: 8px;
+        line-height: 10px;
+    }
+
+    .dayColumn {
+        padding: 6px 1px;
+    }
+
+    .dayName {
+        font-size: 8px;
+        letter-spacing: 0;
+    }
+
+    .dayNumber {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    .monthName {
+        font-size: 7px;
+    }
+
+    .calendarGrid {
+        margin: 4px;
+        border-radius: 10px;
+    }
+
+    .calendarControls {
+        padding: 8px 12px;
+    }
+
+    .legend {
+        padding: 8px 12px;
+    }
+
+    .headerSection {
+        padding: 12px 12px 0;
+    }
+
+    .addBtn {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+
+    .syncBtn {
+        padding: 6px 10px;
+        font-size: 11px;
     }
 }
 

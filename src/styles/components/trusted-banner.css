@@ -77,3 +77,60 @@
     font-size: 13px;
     color: var(--color-white-80);
 }
+
+/* ===== RESPONSIVE — MOBILE ===== */
+@media (max-width: 768px) {
+    .trusted-banner {
+        padding: 10px 0;
+    }
+
+    .trusted-scroll {
+        /* Faster scroll on smaller viewport */
+        animation-duration: 18s;
+    }
+
+    .trusted-scroll-group {
+        gap: 24px;
+        padding: 0 12px;
+    }
+
+    .trusted-label {
+        font-size: 8px;
+        letter-spacing: 2.5px;
+    }
+
+    .trusted-separator {
+        font-size: 14px;
+    }
+
+    .trusted-banner .university-name {
+        font-size: 12px;
+        letter-spacing: 0.8px;
+    }
+
+    .trusted-banner .university-name.italic {
+        font-size: 11px;
+    }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .trusted-banner {
+        padding: 8px 0;
+    }
+
+    .trusted-scroll-group {
+        gap: 18px;
+        padding: 0 8px;
+    }
+
+    .trusted-banner .university-name {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    .trusted-label {
+        font-size: 7px;
+        letter-spacing: 2px;
+    }
+}

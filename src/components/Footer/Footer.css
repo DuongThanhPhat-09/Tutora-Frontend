@@ -174,5 +174,76 @@
 
     .footer-legal {
         gap: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .footer-tagline {
+        font-size: 15px;
+    }
+
+    .footer-logo-text {
+        font-size: 22px;
+    }
+
+    .footer-links-title {
+        font-size: 11px;
+        letter-spacing: 2.5px;
+    }
+
+    /* Touch-friendly footer links */
+    .footer-links a {
+        padding: 6px 0;
+        display: inline-block;
+    }
+
+    .footer-legal a {
+        padding: 6px 0;
+        display: inline-block;
+    }
+
+    /* Safe area for notch devices */
+    .footer-bottom {
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .footer {
+        padding: 48px 16px 24px;
+    }
+
+    .footer-main {
+        gap: 24px;
+    }
+
+    .footer-brand {
+        gap: 16px;
+        padding-bottom: 16px;
+    }
+
+    .footer-tagline {
+        font-size: 14px;
+    }
+
+    .footer-logo-text {
+        font-size: 20px;
+    }
+
+    .footer-links-column {
+        gap: 16px;
+    }
+
+    .footer-legal {
+        gap: 16px;
+    }
+
+    .copyright {
+        font-size: 9px;
+    }
+
+    .footer-legal a {
+        font-size: 9px;
     }
 }

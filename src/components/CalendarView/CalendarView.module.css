@@ -306,3 +306,197 @@
     font-size: 16px;
     color: #666;
 }
+
+/* ===== RESPONSIVE — MOBILE ===== */
+@media (max-width: 768px) {
+    .calendarContainer {
+        padding: 16px;
+        gap: 16px;
+        border-radius: 12px;
+    }
+
+    /* Controls — stack vertically */
+    .calendarControls {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .viewToggle {
+        order: -1;
+        justify-content: center;
+    }
+
+    .viewBtn {
+        flex: 1;
+        text-align: center;
+        padding: 8px 12px;
+        font-size: 12px;
+        min-height: 36px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .dateNav {
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .dateRange {
+        font-size: 14px;
+        min-width: 120px;
+    }
+
+    .navBtn {
+        width: 36px;
+        height: 36px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .nowBtn {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-height: 36px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    /* Legend — wrap and center */
+    .legend {
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .legendItem {
+        font-size: 11px;
+        gap: 5px;
+    }
+
+    .legendDot {
+        width: 8px;
+        height: 8px;
+    }
+
+    .timezone {
+        font-size: 11px;
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Calendar grid — fit all 7 days on mobile without scroll */
+    .calendarGrid {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Remove min-width and prevent horizontal overflow */
+    .calendarHeader,
+    .calendarBody {
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    .timeRow {
+        min-height: 56px;
+        min-width: 0;
+    }
+
+    /* Shrink time column to save space */
+    .timeColumn {
+        width: 36px;
+    }
+
+    .timeLabel {
+        width: 36px;
+        font-size: 9px;
+        padding: 4px 2px 0 0;
+    }
+
+    /* Each day/time column shrinks to fit viewport */
+    .dayColumn,
+    .timeCell {
+        padding: 6px 1px;
+        min-width: 0;
+        flex: 1 1 0;
+    }
+
+    .dayName {
+        font-size: 10px;
+    }
+
+    .dayNumber {
+        font-size: 16px;
+    }
+
+    .monthName {
+        font-size: 10px;
+    }
+
+    .calendarBody {
+        max-height: 450px;
+    }
+
+    /* Lesson blocks — prevent text from forcing column width */
+    .lessonBlock {
+        padding: 4px 4px;
+        border-radius: 5px;
+        margin: 2px 2px 0;
+        width: calc(100% - 4px);
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .lessonBlock:hover {
+        transform: none;
+    }
+
+    .lessonLabel {
+        font-size: 10px;
+    }
+
+    .lessonTime {
+        font-size: 9px;
+    }
+
+    .lessonStudent {
+        font-size: 9px;
+    }
+
+    /* Empty & loading states */
+    .emptyState {
+        padding: 40px 16px;
+    }
+
+    .emptyTitle {
+        font-size: 16px;
+    }
+
+    .emptyDescription {
+        font-size: 13px;
+    }
+
+    .loadingOverlay {
+        min-height: 250px;
+        font-size: 14px;
+    }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .calendarContainer {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .viewBtn {
+        font-size: 11px;
+        padding: 6px 8px;
+    }
+
+    .dateRange {
+        font-size: 13px;
+    }
+}

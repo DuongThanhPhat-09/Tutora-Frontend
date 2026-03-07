@@ -241,3 +241,77 @@
 .paymentBtn:hover {
     background: #047857;
 }
+
+/* ===== RESPONSIVE — MOBILE ===== */
+@media (max-width: 768px) {
+    .card {
+        max-width: 100%;
+        width: 100%;
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .infoRow {
+        font-size: 13px;
+    }
+
+    .label {
+        min-width: 60px;
+        font-size: 12px;
+    }
+
+    .value {
+        font-size: 13px;
+    }
+
+    /* Touch-friendly action buttons */
+    .acceptBtn,
+    .declineBtn {
+        padding: 12px;
+        font-size: 13px;
+        min-height: 44px;
+        border-radius: 10px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .paymentBtn {
+        padding: 12px;
+        font-size: 14px;
+        min-height: 44px;
+        border-radius: 10px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .statusBadge {
+        padding: 6px 10px;
+        font-size: 11px;
+        border-radius: 6px;
+    }
+
+    .paymentPrompt {
+        padding: 12px;
+        border-radius: 10px;
+    }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .card {
+        padding: 12px;
+    }
+
+    .actions {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .totalPrice {
+        font-size: 14px;
+    }
+
+    .headerTitle {
+        font-size: 10px;
+    }
+}

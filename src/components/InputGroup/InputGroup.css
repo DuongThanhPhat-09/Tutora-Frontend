@@ -91,3 +91,40 @@
     -webkit-text-fill-color: var(--color-navy) !important;
     transition: background-color 5000s ease-in-out 0s;
 }
+
+/* ===== RESPONSIVE — MOBILE ===== */
+@media (max-width: 768px) {
+    .input-group__input {
+        /* iOS prevents zoom on inputs with font-size >= 16px */
+        font-size: 16px;
+        padding: 16px 16px 16px 48px;
+        min-height: 48px;
+        border-radius: var(--radius-md);
+    }
+
+    .input-group__label {
+        font-size: 11px;
+    }
+
+    .input-group__link {
+        font-size: 12px;
+        /* Larger touch target */
+        padding: 4px 0;
+    }
+
+    .input-group__icon {
+        font-size: 18px;
+        left: 16px;
+    }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .input-group__input {
+        padding: 14px 14px 14px 44px;
+    }
+
+    .input-group__icon {
+        left: 14px;
+    }
+}

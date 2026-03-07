@@ -98,3 +98,67 @@
 .deleteBtn .material-symbols-outlined {
     color: #d32f2f;
 }
+
+/* ===== RESPONSIVE — MOBILE ===== */
+@media (max-width: 768px) {
+    .notificationItem {
+        padding: 14px 12px;
+        gap: 10px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .iconWrapper {
+        width: 36px;
+        height: 36px;
+    }
+
+    .icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .title {
+        font-size: 14px;
+    }
+
+    .message {
+        font-size: 13px;
+        /* Allow wrapping on mobile */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Bigger touch targets for action buttons */
+    .markReadBtn,
+    .deleteBtn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+    }
+
+    .actions {
+        gap: 6px;
+    }
+}
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .notificationItem {
+        padding: 12px 10px;
+    }
+
+    .title {
+        font-size: 13px;
+    }
+
+    .message {
+        font-size: 12px;
+    }
+
+    .time {
+        font-size: 11px;
+    }
+}
