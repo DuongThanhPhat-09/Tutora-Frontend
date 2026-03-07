@@ -180,6 +180,7 @@
 
 .mobile-auth {
     display: flex;
+    align-items: center;
     gap: 12px;
 }
 
@@ -187,6 +188,17 @@
 .mobile-auth .btn-signup {
     flex: 1;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10.5px 28px;
+    border-radius: var(--radius-md);
+    box-sizing: border-box;
+}
+
+.mobile-auth .btn-login {
+    border: 1.5px solid var(--color-navy-20, rgba(26, 34, 56, 0.2));
+    background: transparent;
 }
 
 /* ===== HEADER RESPONSIVE ===== */
