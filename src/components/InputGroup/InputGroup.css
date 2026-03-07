@@ -48,6 +48,8 @@
     color: var(--color-navy-40);
     transition: color 0.2s ease;
     pointer-events: none;
+    display: flex;
+    align-items: center;
 }
 
 .input-group:focus-within .input-group__icon {

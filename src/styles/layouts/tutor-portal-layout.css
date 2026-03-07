@@ -500,6 +500,11 @@
         transition: none;
     }
 
+    /* Prevent sidebar hover from pushing main content on mobile/tablet */
+    .tutor-portal-sidebar:hover~.tutor-portal-main {
+        margin-left: 0;
+    }
+
     .tutor-portal-header-search {
         max-width: 300px;
     }

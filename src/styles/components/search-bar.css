@@ -190,3 +190,37 @@
         letter-spacing: 0.5px;
     }
 }
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .tutor-search-page .search-bar {
+        padding: 4px 4px 4px 12px;
+        gap: 6px;
+    }
+
+    .tutor-search-page .search-input {
+        font-size: 13px;
+    }
+
+    .tutor-search-page .search-input::placeholder {
+        font-size: 12px;
+    }
+
+    .tutor-search-page .btn-search {
+        padding: 8px 14px;
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+
+    .tutor-search-page .trending-container {
+        gap: 8px;
+    }
+
+    .tutor-search-page .trending-label {
+        font-size: 8px;
+    }
+
+    .tutor-search-page .trending-tag {
+        font-size: 8px;
+    }
+}

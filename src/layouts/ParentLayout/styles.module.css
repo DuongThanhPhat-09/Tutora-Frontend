@@ -715,6 +715,11 @@
         transition: none;
     }
 
+    /* Prevent sidebar hover from pushing main content on mobile/tablet */
+    .sidebar:hover~.main {
+        margin-left: 0;
+    }
+
     .headerSearch {
         max-width: 300px;
     }

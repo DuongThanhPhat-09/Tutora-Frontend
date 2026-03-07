@@ -7,6 +7,7 @@ import type {
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import CustomDropdown from "../../components/CustomDropdown/CustomDropdown";
 import "../../styles/pages/tutor-search.css";
 
 // SVG Icons
@@ -62,14 +63,14 @@ const FilterIcon = () => (
 // ============================================
 const categories = [
     { id: "all", name: "Tất cả", icon: <CategoryIcon /> },
-    { id: "science", name: "Khoa học", icon: <CategoryIcon /> },
-    { id: "language", name: "Ngôn ngữ", icon: <CategoryIcon /> },
-    { id: "art", name: "Nghệ thuật", icon: <CategoryIcon /> },
-    { id: "it_tech", name: "IT & Tech", icon: <CategoryIcon /> },
+    { id: "Math", name: "Toán", icon: <CategoryIcon /> },
+    { id: "Physics", name: "Vật Lý", icon: <CategoryIcon /> },
+    { id: "Chemistry", name: "Hóa Học", icon: <CategoryIcon /> },
+    { id: "English", name: "Tiếng Anh", icon: <CategoryIcon /> },
 ];
 
 // Trending tags
-const trendingTags = ["SAT Prep", "Calculus III", "UX Design", "Ancient History"];
+const trendingTags = ["Toán", "Vật Lý", "Hóa Học", "Tiếng Anh"];
 
 // ============================================
 // Filter options (khớp với backend TutorSearchParameters)
@@ -409,68 +410,44 @@ const FilterBar = ({
                 <div className="filter-groups">
                     <div className="filter-group">
                         <span className="filter-label">Cấp học</span>
-                        <div className="filter-select-wrapper">
-                            <select
-                                className="filter-select"
-                                value={gradeLevel}
-                                onChange={(e) => onGradeLevelChange(e.target.value)}
-                            >
-                                <option value="">Tất cả</option>
-                                {gradeLevelGroups.map((group) => (
-                                    <optgroup key={group.label} label={group.label}>
-                                        {group.options.map((opt) => (
-                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                        ))}
-                                    </optgroup>
-                                ))}
-                            </select>
-                        </div>
+                        <CustomDropdown
+                            variant="filter"
+                            value={gradeLevel}
+                            onChange={onGradeLevelChange}
+                            optionGroups={gradeLevelGroups}
+                            placeholder={{ value: "", label: "Tất cả" }}
+                        />
                     </div>
                     <div className="filter-divider"></div>
                     <div className="filter-group">
                         <span className="filter-label">Ngân sách</span>
-                        <div className="filter-select-wrapper">
-                            <select
-                                className="filter-select"
-                                value={budgetRange}
-                                onChange={(e) => onBudgetRangeChange(e.target.value)}
-                            >
-                                {budgetRangeOptions.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                        </div>
+                        <CustomDropdown
+                            variant="filter"
+                            value={budgetRange}
+                            onChange={onBudgetRangeChange}
+                            options={budgetRangeOptions}
+                        />
                     </div>
                     <div className="filter-divider"></div>
                     <div className="filter-group">
                         <span className="filter-label">Hình thức</span>
-                        <div className="filter-select-wrapper">
-                            <select
-                                className="filter-select"
-                                value={teachingMode}
-                                onChange={(e) => onTeachingModeChange(e.target.value)}
-                            >
-                                {teachingModeOptions.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                        </div>
+                        <CustomDropdown
+                            variant="filter"
+                            value={teachingMode}
+                            onChange={onTeachingModeChange}
+                            options={teachingModeOptions}
+                        />
                     </div>
                 </div>
                 <div className="filter-actions">
                     <div className="sort-group">
                         <span className="sort-label">Sort by</span>
-                        <div className="sort-select-wrapper">
-                            <select
-                                className="sort-select"
-                                value={sortBy}
-                                onChange={(e) => onSortByChange(e.target.value)}
-                            >
-                                {sortByOptions.map((opt) => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                        </div>
+                        <CustomDropdown
+                            variant="sort"
+                            value={sortBy}
+                            onChange={onSortByChange}
+                            options={sortByOptions}
+                        />
                     </div>
                     <button className="btn-filter" onClick={onResetFilters} title={hasActiveFilters ? "Xóa bộ lọc" : "Bộ lọc"}>
                         <span className="btn-filter-icon"><FilterIcon /></span>

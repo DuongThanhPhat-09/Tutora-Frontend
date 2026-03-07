@@ -132,3 +132,30 @@
         font-weight: 600;
     }
 }
+
+/* ===== SMALL MOBILE ===== */
+@media (max-width: 400px) {
+    .tutor-search-page .category-section {
+        padding: 8px 12px;
+    }
+
+    .tutor-search-page .category-tab {
+        padding: 6px 10px;
+        gap: 4px;
+    }
+
+    .tutor-search-page .category-tab-text {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+
+    .tutor-search-page .category-tab-icon {
+        width: 11px;
+        height: 11px;
+    }
+
+    .tutor-search-page .category-tab-icon svg {
+        width: 9px;
+        height: 9px;
+    }
+}

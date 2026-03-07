@@ -12,7 +12,6 @@ const TrustedBanner = () => {
 
     const renderGroup = (keyPrefix: string) => (
         <div className="trusted-scroll-group" key={keyPrefix}>
-            <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
             {investors.map((inv, index) => (
                 <span
                     key={`${keyPrefix}-${index}`}
@@ -22,7 +21,6 @@ const TrustedBanner = () => {
                 </span>
             ))}
             <span className="trusted-separator">·</span>
-            <span className="trusted-label">ĐƯỢC ĐẦU TƯ BỞI:</span>
             {investors.map((inv, index) => (
                 <span
                     key={`${keyPrefix}-dup-${index}`}

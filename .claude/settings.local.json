@@ -12,7 +12,8 @@
       "mcp__figma__get_figma_data",
       "Bash(find \"C:\\\\Users\\\\lequo\\\\OneDrive\\\\Documents\\\\GitHub\\\\Agora-Frontend\\\\src\\\\pages\\\\Parent\"* -type f)",
       "Bash(python3:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "WebFetch(domain:www.preply.com)"
     ]
   }
 }
